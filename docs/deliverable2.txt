@@ -1,0 +1,717 @@
+SkillLink — Service Marketplace System   |   Deliverable 2 · Sprint 2 
+Team ENIGMA  ·  CS3009 Software Engineering  ·  Spring 2026 
+Page 1 
+ 
+ 
+ 
+SkillLink 
+Service Marketplace System 
+  
+Deliverable 2  ·  Sprint 2 Documentation 
+Module: Search & Discovery  |  Booking & Scheduling 
+Methodology: Scrum (Iterative & Incremental) 
+ 
+ 
+Team ENIGMA 
+Zaki Nabeel (Team Lead)  ·  Shehryar Faisal (SCRUM Master)  ·  Muhammad Sameer (Developer) 
+Roll Numbers: 23I-0604  ·  23I-0508  ·  23I-0634 
+CS3009 – Software Engineering  |  Spring 2026 
+Submission Date: 25th March, 2026 
+ 
+ 
+
+SkillLink — Service Marketplace System   |   Deliverable 2 · Sprint 2 
+Team ENIGMA  ·  CS3009 Software Engineering  ·  Spring 2026 
+Page 2 
+Part B — Sprint 2: Scrum Artifacts 
+ 
+B.1  Sprint 2 Overview 
+Sprint Number: Sprint 2 
+Sprint Duration: 2nd March 2026 – 22nd March 2026  (3 weeks) 
+Sprint Goal: Enable users to search and discover service providers, and allow clients to submit 
+and manage booking requests. 
+Modules Developed: Search & Discovery  |  Booking & Scheduling 
+Leftover from Sprint 1: US-04: Client Contact Management (completed in this sprint) 
+ 
+B.2  Sprint 2 Backlog & User Stories 
+The following user stories were selected for Sprint 2, including the leftover item from Sprint 1. Each 
+story follows the standard template: As a [type of user], I want [goal] so that [reason]. 
+ 
+US-04 (Leftover): Client Contact Management 
+Story ID 
+US-04 — Leftover from Sprint 1 
+User Story 
+As a Client, I want to manage my contact information and location, so that service 
+providers can accurately reach me to fulfil service requests. 
+Sub-Stories 
+4.1  Update phone number with regional validation (11-digit PK format). 4.2  Set 
+physical address / location for geographic service filtering. 4.3  Allow clients to save 
+multiple delivery addresses. 
+Given 
+Client is logged in and navigates to Profile Settings. 
+When 
+Client enters or updates a phone number or address and clicks Save. 
+Then 
+System validates the input, saves it to the database, and displays a success 
+confirmation toast. 
+ 
+US-05: Service Search & Filtering 
+Story ID 
+US-05 
+User Story 
+As a Client, I want to search for service providers by skill category, location, and 
+rating, so that I can quickly find the most suitable professional for my needs. 
+Sub-Stories 
+5.1  Implement a full-text search bar that queries provider names and skill tags. 5.2  
+Filter results by skill category (from taxonomy), city/area, and minimum star rating. 5.3  
+Display paginated search results with provider avatar, name, top skill, and rating. 
+Given 
+Client is logged in and navigates to the Search/Discover page. 
+When 
+Client types a keyword or selects filters and submits the search. 
+Then 
+System returns a ranked, paginated list of matching service providers within 2 
+seconds. 
+
+SkillLink — Service Marketplace System   |   Deliverable 2 · Sprint 2 
+Team ENIGMA  ·  CS3009 Software Engineering  ·  Spring 2026 
+Page 3 
+ 
+US-06: Provider Profile View 
+Story ID 
+US-06 
+User Story 
+As a Client, I want to view a service provider's full public profile, so that I can evaluate 
+their skills, portfolio, ratings, and reviews before making a booking. 
+Sub-Stories 
+6.1  Display provider bio, skill categories, portfolio links, and profile photo. 6.2  Show 
+aggregate rating and individual client reviews with timestamps. 6.3  Include a 
+prominent 'Book Now' call-to-action button on the profile page. 
+Given 
+Client has executed a search and is viewing the results list. 
+When 
+Client clicks on a provider card to open the full profile. 
+Then 
+System renders the provider's complete public profile page with all details and the 
+Book Now button enabled. 
+ 
+US-07: Booking Request Submission 
+Story ID 
+US-07 
+User Story 
+As a Client, I want to submit a booking request to a service provider with a preferred 
+date/time and job description, so that I can formally engage them for a service. 
+Sub-Stories 
+7.1  Present a booking form with date picker, time picker, and job description text 
+area. 7.2  Validate that the selected date is not in the past and the description is at 
+least 20 characters. 7.3  Send an in-app notification to the provider upon booking 
+submission. 
+Given 
+Client is viewing a provider's public profile and is authenticated. 
+When 
+Client fills in the booking form and clicks 'Confirm Booking'. 
+Then 
+System saves the booking record with status 'Pending', notifies the provider, and 
+shows the client a booking confirmation screen. 
+ 
+US-08: Booking Management Dashboard 
+Story ID 
+US-08 
+User Story 
+As a Service Provider, I want to view, accept, or decline incoming booking requests, 
+so that I can manage my schedule and commitments efficiently. 
+Sub-Stories 
+8.1  Display all incoming requests in a dashboard with status labels (Pending / 
+Accepted / Declined). 8.2  Provider can accept a booking, which triggers a 
+confirmation notification to the client. 8.3  Provider can decline a booking with an 
+optional reason message sent to the client. 
+Given 
+Provider is logged in and navigates to the Bookings section of their dashboard. 
+When 
+Provider reviews a Pending booking card and clicks Accept or Decline. 
+Then 
+System updates the booking status in the database and sends the appropriate 
+notification to the client in real time. 
+ 
+
+SkillLink — Service Marketplace System   |   Deliverable 2 · Sprint 2 
+Team ENIGMA  ·  CS3009 Software Engineering  ·  Spring 2026 
+Page 4 
+ 
+ 
+
+SkillLink — Service Marketplace System   |   Deliverable 2 · Sprint 2 
+Team ENIGMA  ·  CS3009 Software Engineering  ·  Spring 2026 
+Page 5 
+B.3  Structured Specifications 
+The following four structured specifications cover key user stories developed in Sprint 2. Each spec 
+details the precise inputs, processing logic, outputs, pre/postconditions, and exception handling. 
+ 
+Spec-05.1 — Full-Text Provider Search 
+Spec ID 
+Spec-05.1 
+Description 
+Accept a user-supplied query string and return a ranked list of matching 
+service providers. 
+Preconditions 
+User is authenticated as a Client. Search index is available and synced with 
+the provider database. 
+Inputs 
+query: string (1–100 chars). Optional filters: categoryId (integer), city (string), 
+minRating (float 1.0–5.0), page (integer, default 1). 
+Processing 
+1. Sanitise and trim the query string (strip special chars). 2. Execute full-text 
+search across provider name and skill tag fields. 3. Apply category, city, and 
+rating filters as WHERE clauses. 4. Rank results by rating DESC, then 
+completeness of profile. 5. Paginate: return 10 results per page with total 
+count. 
+Outputs 
+JSON array of provider objects: { providerId, name, avatar_url, topSkill, 
+avgRating, city }. Pagination metadata: { page, totalPages, totalResults }. 
+Exceptions 
+EmptyQuery: return validation error 'Please enter a search term'. NoResults: 
+return empty array with message 'No providers found — try broadening your 
+search'. DBTimeout: return HTTP 503 with retry message. 
+ 
+Spec-06.1 — Public Provider Profile Rendering 
+Spec ID 
+Spec-06.1 
+Description 
+Fetch and render a complete provider profile page for a given provider ID. 
+Preconditions 
+Provider account exists and is active. Client is authenticated. 
+Inputs 
+providerId: integer (path parameter). viewerId: integer (from JWT session). 
+Processing 
+1. Validate providerId exists in DB; return 404 if not found. 2. Fetch provider 
+record including bio, skills, portfolio URLs, and profile image URL. 3. Fetch 
+aggregate rating: AVG(rating) from reviews table WHERE providerId. 4. Fetch 
+latest 10 reviews ordered by createdAt DESC. 5. Log a profile view event for 
+analytics. 6. Return assembled profile DTO to frontend. 
+Outputs 
+Provider profile page rendered with: avatar, name, bio, skill badges, portfolio 
+icons, star rating (X.X / 5.0), review count, individual reviews, and 'Book Now' 
+button. 
+Exceptions 
+ProviderNotFound (404): display 'This provider does not exist.' 
+ProviderSuspended: show 'Account currently under review.' No reviews: 
+display 'No reviews yet — be the first to book!' 
+ 
+Spec-07.1 — Booking Request Creation 
+
+SkillLink — Service Marketplace System   |   Deliverable 2 · Sprint 2 
+Team ENIGMA  ·  CS3009 Software Engineering  ·  Spring 2026 
+Page 6 
+Spec ID 
+Spec-07.1 
+Description 
+Validate and persist a new booking request submitted by a Client. 
+Preconditions 
+Client is authenticated. Provider profile is active. Client has completed their 
+contact profile (US-04). 
+Inputs 
+providerId: integer. clientId: integer (from JWT). preferredDate: date string 
+(YYYY-MM-DD). preferredTime: time string (HH:MM). jobDescription: string 
+(20–1000 chars). 
+Processing 
+1. Validate preferredDate is not in the past; reject if so. 2. Validate 
+jobDescription length (>= 20 chars). 3. Check provider is not already booked 
+at that slot (conflict check). 4. Insert booking record: { clientId, providerId, 
+preferredDate, preferredTime, jobDescription, status: 'Pending', createdAt: 
+now() }. 5. Dispatch in-app notification to provider. 6. Return booking 
+confirmation with bookingId. 
+Outputs 
+HTTP 201 with booking object: { bookingId, status: 'Pending', providerId, 
+preferredDate, preferredTime }. In-app notification delivered to provider. 
+Exceptions 
+PastDate: 'Selected date has already passed.' DescriptionTooShort: 'Please 
+provide at least 20 characters describing your job.' SlotConflict: 'Provider is 
+unavailable at this time — please choose another slot.' ProviderInactive: 'This 
+provider is currently unavailable.' 
+ 
+Spec-08.1 — Booking Accept / Decline by Provider 
+Spec ID 
+Spec-08.1 
+Description 
+Allow a Service Provider to accept or decline a pending booking request. 
+Preconditions 
+Provider is authenticated. Booking exists with status 'Pending'. Booking 
+belongs to this provider. 
+Inputs 
+bookingId: integer. action: enum { 'accept', 'decline' }. declineReason: string 
+(optional, max 200 chars, required only when action = 'decline'). 
+Processing 
+1. Fetch booking by bookingId; verify it belongs to the authenticated provider. 
+2. Verify current status is 'Pending'; reject if already actioned. 3. If action = 
+'accept': update status to 'Accepted', send confirmation notification to client. 4. 
+If action = 'decline': update status to 'Declined', attach declineReason, send 
+decline notification to client. 5. Log action timestamp. 
+Outputs 
+HTTP 200 with updated booking object: { bookingId, status: 'Accepted' | 
+'Declined', updatedAt }. Push notification delivered to client. 
+Exceptions 
+BookingNotFound (404): 'Booking does not exist.' UnauthorisedProvider: 'You 
+are not authorised to action this booking.' AlreadyActioned: 'This booking has 
+already been accepted or declined.' DeclineReasonMissing: 'Please provide a 
+reason when declining a booking.' 
+ 
+ 
+ 
+
+SkillLink — Service Marketplace System   |   Deliverable 2 · Sprint 2 
+Team ENIGMA  ·  CS3009 Software Engineering  ·  Spring 2026 
+Page 7 
+B.4  Scrum Board — Trello Snapshots 
+The Sprint 2 Trello board contains five columns: Product Backlog | Sprint Backlog | In Progress | 
+Done | Leftover List. Snapshots were taken at three key milestones. 
+ 
+Snapshot 1 — Sprint Planning (Start of Sprint 2) 
+All five user stories (US-04 leftover + US-05, US-06, US-07, US-08) loaded into the Sprint Backlog 
+column. In Progress and Done columns are empty. The sprint goal card is pinned at the top of the 
+Sprint Backlog. 
+[ Trello Board Screenshot — Sprint Planning Stage ] 
+Sprint Backlog: US-04, US-05, US-06, US-07, US-08  |  In Progress: —  |  Done: — 
+ 
+Snapshot 2 — Mid-Sprint Progress 
+US-04 and US-05 moved to Done. US-06 and US-07 are actively In Progress. US-08 remains in the 
+Sprint Backlog awaiting its turn. 
+[ Trello Board Screenshot — Mid-Sprint Stage ] 
+Done: US-04, US-05  |  In Progress: US-06, US-07  |  Backlog: US-08 
+ 
+Snapshot 3 — Sprint Completion 
+US-04, US-05, US-06, US-07, and US-08 all moved to Done. No leftover stories for Sprint 3. Sprint 
+retrospective notes are attached to the Sprint Goal card. 
+[ Trello Board Screenshot — Sprint Completion Stage ] 
+Done: US-04, US-05, US-06, US-07, US-08  |  In Progress: —  |  Leftover: — 
+ 
+User Story 
+Sprint 
+Final Status 
+Notes 
+US-04: Client Contact Mgmt 
+Sprint 2 (Leftover) 
+Done 
+Completed — carried 
+from Sprint 1 
+US-05: Service Search & 
+Filtering 
+Sprint 2 
+Done 
+Completed within Sprint 
+2 
+US-06: Provider Profile View 
+Sprint 2 
+Done 
+Completed within Sprint 
+2 
+US-07: Booking Request 
+Submission 
+Sprint 2 
+Done 
+Completed within Sprint 
+2 
+US-08: Booking Mgmt 
+Dashboard 
+Sprint 2 
+Done 
+Completed within Sprint 
+2 
+ 
+ 
+ 
+
+SkillLink — Service Marketplace System   |   Deliverable 2 · Sprint 2 
+Team ENIGMA  ·  CS3009 Software Engineering  ·  Spring 2026 
+Page 8 
+B.5  Sprint 2 Burn-Down Chart 
+The burn-down chart below tracks planned story points versus actual completed story points across 
+the 3-week Sprint 2 duration. Each user story was assigned 4 story points, giving a total sprint 
+capacity of 20 points. 
+ 
+Date / Week 
+Ideal Remaining 
+Actual Remaining 
+Points Done 
+Story 
+Completed 
+Sprint Start (2 Mar) 
+20 pts 
+20 pts 
+0 pts 
+— 
+Day 3 (4 Mar) 
+17 pts 
+20 pts 
+0 pts 
+— 
+Day 5 (6 Mar) 
+14 pts 
+16 pts 
+4 pts 
+US-04 ✓ 
+Day 8 (9 Mar) 
+11 pts 
+12 pts 
+8 pts 
+US-05 ✓ 
+Day 10 (11 Mar) 
+8 pts 
+8 pts 
+12 pts 
+— 
+Day 12 (13 Mar) 
+5 pts 
+4 pts 
+16 pts 
+US-06 ✓ 
+Day 15 (16 Mar) 
+3 pts 
+4 pts 
+16 pts 
+— 
+
+SkillLink — Service Marketplace System   |   Deliverable 2 · Sprint 2 
+Team ENIGMA  ·  CS3009 Software Engineering  ·  Spring 2026 
+Page 9 
+Day 17 (18 Mar) 
+1 pts 
+0 pts 
+20 pts 
+US-07 ✓ US-08 
+✓ 
+Sprint End (22 Mar) 
+0 pts 
+0 pts 
+20 pts 
+All stories Done 
+ 
+Sprint Outcome: All 5 planned story points (20 pts total) were completed. The team experienced a 
+minor 2-day delay at the start due to backlog refinement, but recovered ahead of schedule by Day 
+17. No leftover stories for Sprint 3. 
+ 
+ 
+ 
+
+SkillLink — Service Marketplace System   |   Deliverable 2 · Sprint 2 
+Team ENIGMA  ·  CS3009 Software Engineering  ·  Spring 2026 
+Page 10 
+Part C — Deliverable Document 
+ 
+C.1  Introduction 
+SkillLink is a digital service marketplace platform connecting clients who need skilled professionals 
+with verified service providers across trades and expertise areas in Pakistan. The platform 
+addresses a gap in the local market: the absence of a trustworthy, centralised portal where clients 
+can discover, vet, and seamlessly book providers such as plumbers, electricians, graphic 
+designers, tutors, and software developers. 
+ 
+Sprint 1 established the foundational architecture for user onboarding and role-based profile 
+management, delivering three of four planned user stories (US-01: Account Registration, US-02: 
+Secure Authentication, US-03: Provider Profile Setup). US-04 (Client Contact Management) was 
+carried forward as a leftover. 
+ 
+Sprint 2 builds directly on this foundation. It delivers the leftover US-04 alongside four new user 
+stories (US-05 through US-08), introducing the Search & Discovery and Booking & Scheduling 
+modules. Together, these modules form the core transactional layer of the SkillLink platform — 
+enabling clients to find providers and initiate service engagements. 
+ 
+C.2  Project Vision 
+The project vision established in Deliverable 1 remains unchanged and continues to guide all 
+development decisions: 
+ 
+To become the leading digital service marketplace in Pakistan, empowering clients 
+to access quality services instantly while enabling skilled providers to grow their 
+businesses through a transparent, secure, and user-friendly platform. 
+ 
+Sprint 2 directly advances this vision by making the platform's search, discovery, and booking 
+capabilities operational — transforming SkillLink from a registration system into a functioning 
+marketplace. 
+ 
+C.3  Intended Use of the System — Stakeholders 
+No changes were made to the stakeholder landscape during Sprint 2. The following table reflects 
+updated needs based on Sprint 2 feature delivery: 
+ 
+Stakeholder 
+Role 
+Updated Needs (Sprint 2) 
+Clients 
+End users seeking 
+services 
+Search providers by skill/location, view full profiles, 
+submit booking requests, manage contact info 
+
+SkillLink — Service Marketplace System   |   Deliverable 2 · Sprint 2 
+Team ENIGMA  ·  CS3009 Software Engineering  ·  Spring 2026 
+Page 11 
+Service Providers 
+Professionals 
+offering skills 
+Receive and action booking requests, profile visibility in 
+search results, manage booking history 
+Platform Admin 
+System moderator 
+Monitor booking activity, resolve disputes, review flagged 
+providers 
+Dev Team 
+Builders & 
+maintainers 
+Clear search and booking specs, testable acceptance 
+criteria, stable API contracts 
+ 
+C.4  Features & Functionality 
+Sprint 1 Features (Completed) 
+• 
+Account Registration — role-based signup (Client / Provider) with email validation and 
+strong password policy 
+• 
+Secure Authentication — JWT-based login, Forgot Password flow, Remember Me session 
+persistence 
+• 
+Provider Profile Setup — profile photo upload, skill category selection, professional bio, 
+portfolio link integration 
+ 
+Sprint 2 Features (New) 
+• 
+Client Contact Management (US-04) — phone number with regional PK validation, address 
+management, multiple saved locations 
+• 
+Service Search & Filtering (US-05) — full-text search across provider names and skill tags; 
+filters by category, city, and rating; paginated results 
+• 
+Provider Profile View (US-06) — full public profile rendering with bio, skills, portfolio, 
+aggregate rating, and individual client reviews 
+• 
+Booking Request Submission (US-07) — booking form with date/time picker and job 
+description; real-time slot conflict detection; provider notification on submission 
+• 
+Booking Management Dashboard (US-08) — provider dashboard to view, accept, or decline 
+incoming requests with automated client notifications 
+ 
+Sprint 2 Enhancement Summary 
+Sprint 2 elevated SkillLink from a static profile system to a live, transactional marketplace. Clients 
+can now discover providers through a structured search interface and formally engage them 
+through a managed booking flow — a significant expansion of system capability. Provider-side 
+workflow tooling (booking dashboard) closes the communication loop between the two primary user 
+roles. 
+ 
+ 
+ 
+
+SkillLink — Service Marketplace System   |   Deliverable 2 · Sprint 2 
+Team ENIGMA  ·  CS3009 Software Engineering  ·  Spring 2026 
+Page 12 
+C.5  User Stories — Sprint 2 
+The following user stories were addressed in Sprint 2. Detailed backlog tasks and acceptance 
+criteria are documented in Part B Section 2. 
+ 
+ID 
+User Story 
+As a [user], I want [goal] so that [reason] 
+Status 
+US-04 
+Client Contact Mgmt 
+(Leftover) 
+As a Client, I want to manage my contact 
+information and location, so that providers 
+can accurately reach me. 
+Done ✓ 
+US-05 
+Service Search & Filtering 
+As a Client, I want to search for providers 
+by skill, location, and rating, so that I can 
+find the right professional quickly. 
+Done ✓ 
+US-06 
+Provider Profile View 
+As a Client, I want to view a provider's full 
+profile, so that I can evaluate their skills and 
+reviews before booking. 
+Done ✓ 
+US-07 
+Booking Request 
+Submission 
+As a Client, I want to submit a booking 
+request with date/time and description, so 
+that I can formally engage a provider. 
+Done ✓ 
+US-08 
+Booking Mgmt Dashboard 
+As a Provider, I want to view, accept, or 
+decline bookings, so that I can manage my 
+schedule efficiently. 
+Done ✓ 
+ 
+ 
+ 
+
+SkillLink — Service Marketplace System   |   Deliverable 2 · Sprint 2 
+Team ENIGMA  ·  CS3009 Software Engineering  ·  Spring 2026 
+Page 13 
+C.6  Non-Functional Requirements (NFR) — Updated 
+The NFRs defined in Deliverable 1 have been reviewed and refined for Sprint 2. New requirements 
+addressing search performance and booking reliability have been added. 
+ 
+# 
+Category 
+NFR Statement 
+Priority 
+1 
+Performance 
+The system shall load any page within 3 seconds for up to 500 
+concurrent users. 
+High 
+2 
+Performance 
+The search API shall return results within 2 seconds for queries 
+against a dataset of 10,000+ provider records. 
+High 
+3 
+Security 
+All passwords shall be hashed using bcrypt; no plain-text 
+credentials shall be stored at rest. 
+Critical 
+4 
+Security 
+All API communication shall use HTTPS/TLS 1.2 or higher to 
+prevent interception. 
+Critical 
+5 
+Security 
+Booking actions (accept/decline) shall require the authenticated 
+provider's JWT; unauthorised requests shall return HTTP 403. 
+Critical 
+6 
+Availability 
+The platform shall maintain 99.5% uptime; planned maintenance 
+shall be communicated 24 hours in advance. 
+High 
+7 
+Scalability 
+The search and booking modules shall support horizontal 
+scaling to handle a 10x increase in concurrent users without 
+degradation. 
+Medium 
+8 
+Usability 
+The interface shall conform to WCAG 2.1 AA accessibility 
+standards; search results must be keyboard-navigable. 
+High 
+9 
+Reliability 
+All booking state transitions shall be atomic; partial failures shall 
+trigger a rollback and surface a user-readable error. 
+High 
+10 
+Reliability 
+User data shall be auto-backed up every 24 hours with a 4-hour 
+restore capability. 
+High 
+11 
+Maintainability 
+Source code shall follow agreed coding standards and be 
+documented for 2-day developer onboarding. 
+Medium 
+ 
+C.7  Iteration 2 — Implementation Screenshots 
+The following screenshots document the new modules, UI enhancements, and system functionality 
+delivered in Sprint 2. Each screenshot includes a caption describing its functionality. 
+ 
+Screenshot 1 — Contact Management Form (US-04) 
+[ Screenshot Placeholder — attach actual screenshot here ] 
+Caption: The client profile settings screen displaying phone number input with real-time 11-digit PK format 
+validation and address fields with location saving functionality. 
+ 
+
+SkillLink — Service Marketplace System   |   Deliverable 2 · Sprint 2 
+Team ENIGMA  ·  CS3009 Software Engineering  ·  Spring 2026 
+Page 14 
+Screenshot 2 — Search Page with Filters (US-05) 
+[ Screenshot Placeholder — attach actual screenshot here ] 
+Caption: The main search interface showing the full-text search bar, category dropdown filter, city selector, 
+and minimum rating slider. Results appear as provider cards with avatar, name, top skill, and star rating. 
+ 
+Screenshot 3 — Search Results Grid (US-05) 
+[ Screenshot Placeholder — attach actual screenshot here ] 
+Caption: Paginated search results displayed in a responsive card grid. Each card shows provider avatar, 
+verified badge, top skill category, city, and aggregate star rating. Pagination controls appear at the bottom. 
+ 
+Screenshot 4 — Provider Public Profile Page (US-06) 
+[ Screenshot Placeholder — attach actual screenshot here ] 
+Caption: The full provider profile page showing profile photo, professional bio, skill badge list, portfolio link 
+icons, aggregate rating (e.g., 4.7 / 5.0 from 23 reviews), individual client reviews with timestamps, and the 
+prominent 'Book Now' button. 
+ 
+Screenshot 5 — Booking Request Form (US-07) 
+[ Screenshot Placeholder — attach actual screenshot here ] 
+Caption: The booking modal triggered from the provider profile. Shows a date picker (past dates greyed out), 
+time picker, job description text area with live character counter, and a 'Confirm Booking' button that activates 
+once all fields are valid. 
+ 
+Screenshot 6 — Booking Confirmation Screen (US-07) 
+[ Screenshot Placeholder — attach actual screenshot here ] 
+Caption: Post-submission confirmation screen showing booking ID, provider name, selected date/time, and a 
+status badge reading 'Pending'. A notification icon confirms the provider has been alerted. 
+ 
+Screenshot 7 — Provider Booking Dashboard (US-08) 
+[ Screenshot Placeholder — attach actual screenshot here ] 
+
+SkillLink — Service Marketplace System   |   Deliverable 2 · Sprint 2 
+Team ENIGMA  ·  CS3009 Software Engineering  ·  Spring 2026 
+Page 15 
+Caption: The provider's booking management dashboard displaying incoming requests as cards with status 
+labels (Pending / Accepted / Declined). Each card contains client name, job description, preferred date, and 
+Accept/Decline action buttons. 
+ 
+Screenshot 8 — Booking Action Modal (US-08) 
+[ Screenshot Placeholder — attach actual screenshot here ] 
+Caption: The decline booking modal where the provider enters an optional reason for declining. The 'Send & 
+Decline' button dispatches a notification to the client with the provided reason. 
+ 
+ 
+ 
+
+SkillLink — Service Marketplace System   |   Deliverable 2 · Sprint 2 
+Team ENIGMA  ·  CS3009 Software Engineering  ·  Spring 2026 
+Page 16 
+C.8  Work Division — Sprint 2 
+Sprint 2 responsibilities were distributed based on each member's core competencies, consistent 
+with the work division pattern established in Sprint 1. 
+ 
+Team Member 
+Role 
+Sprint 2 Responsibilities 
+Zaki Nabeel 23I-0604 
+(Team Lead) 
+Project 
+Manager · 
+Tester 
+Sprint 2 planning and milestone tracking. Defined 
+acceptance criteria for US-05, US-06, US-07, US-08. Test 
+case design and QA validation for search and booking 
+modules. Burn-down chart maintenance. Final deliverable 
+packaging and submission. 
+Shehryar Faisal 23I-
+0508 (SCRUM 
+Master) 
+SCRUM 
+Master · 
+Analyst / 
+Architect 
+Sprint facilitation: daily standups, backlog grooming, sprint 
+review. Authored all four structured specifications (Spec-
+05.1, Spec-06.1, Spec-07.1, Spec-08.1). System 
+architecture design for search indexing and booking state 
+machine. Trello board management and snapshot capture. 
+Muhammad Sameer 
+23I-0634 (Developer) 
+Developer · UI 
+Designer 
+Front-end implementation of search page (US-05), provider 
+profile page (US-06), booking request form (US-07), and 
+booking management dashboard (US-08). React 
+component development, responsive layout, UI/UX design 
+for all Sprint 2 screens. Completed US-04 contact 
+management front-end. 
+ 
+Sprint 2 Outcome: All 5 user stories (20 story points) were completed within the sprint. The SkillLink 
+platform now supports end-to-end service discovery and booking initiation. Sprint 3 will focus on 
+Reviews & Ratings, In-App Messaging, and Payment Integration. 

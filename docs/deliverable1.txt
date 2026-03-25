@@ -1,0 +1,366 @@
+SkillLink — Service Marketplace System
+Deliverable 1  ·  Sprint 1
+SkillLink  ·  User Identity & Profile Management
+Page 1
+SkillLink — Service Marketplace System
+Deliverable 1 · Sprint 1 Documentation
+Module
+User Identity & Profile Management
+Sprint Goal
+Establish foundational architecture for user onboarding and role-based profile management
+Methodology
+Scrum  (Iterative & Incremental)
+Team
+Zaki Nabeel (Team Lead)  ·  Shehryar Faisal (SCRUM Master)  ·  Muhammad Sameer (Developer)
+1. Introduction
+SkillLink is a digital service marketplace platform connecting clients who need skilled professionals with service providers across trades and
+expertise. It addresses the absence of a trustworthy, centralised portal in Pakistan where clients can discover, vet, and book providers such
+as plumbers, electricians, graphic designers, tutors, and software developers.
+2. Project Vision
+Vision: To become the leading digital service marketplace in Pakistan, empowering clients to access quality services instantly while
+enabling skilled providers to grow their businesses through a transparent, secure, and user-friendly platform.
+•
+Seamless discovery of providers across 20+ skill categories.
+•
+Secure, role-based environment for clients and providers.
+•
+End-to-end service delivery — from booking to payment to
+review.
+•
+Trust through transparent profiles, reviews, and ratings.
+3. Intended Use of the System — Stakeholders
+SkillLink serves Clients (seek services), Service Providers (offer expertise), and a Platform Admin (moderation). A Dev Team maintains
+the system.
+Stakeholder
+Role
+Needs
+Clients
+End users seeking services
+Easy search, booking, secure payments, provider reviews
+Service Providers
+Professionals offering skills
+Profile visibility, booking management, earnings tracking
+Platform Admin
+System moderator
+User management, dispute resolution, platform analytics
+Dev Team
+Builders & maintainers
+Clear specs, testable stories, defined acceptance criteria
+4. Features & Overall Functionality
+Identity & Profile Mgmt
+Role-based registration, JWT login, provider profiles, portfolio links, contact management.
+Search & Discovery
+Category search, geo-filter, skill taxonomy tagging, provider profile view.
+Booking & Scheduling
+Service requests, provider accept/decline, booking history.
+Reviews & Ratings
+Post-job reviews, provider responses, aggregate ratings.
+Messaging & Payments
+In-app chat, secure payment gateway, earnings dashboard.
+Admin & Moderation
+User management, reported content review, analytics dashboard.
+5. User Stories — Sprint 1
+US-01: Account Registration
+As a new user, I want to create an account, so that I can access the SkillLink marketplace as either a Client or a Service
+Provider.
+Sub-Stories:
+•
+1.1 System shall validate email format and check for
+existing accounts.
+•
+1.2 System shall enforce a strong password policy
+(min 8 chars, 1 number, 1 special char).
+•
+1.3 User must select a role (Client or Provider) during
+signup.
+Given
+When
+Then
+User is on the signup
+page
+They submit valid
+email, password,
+and role
+Account is created
+and a verification
+email is sent
+Email already exists in
+DB
+User clicks Submit
+System displays error
+prompting login
+
+SkillLink — Service Marketplace System
+Deliverable 1  ·  Sprint 1
+SkillLink  ·  User Identity & Profile Management
+Page 2
+US-02: Secure Authentication
+As a registered user, I want to log in securely, so that I can access my personalized dashboard and manage my bookings.
+Sub-Stories:
+•
+2.1 Implement Forgot Password flow via secure email
+link.
+•
+2.2 Implement session persistence using JWT for
+Remember Me functionality.
+Given
+When
+Then
+User is on the login
+page
+They enter correct
+credentials
+Redirected to their
+role-based dashboard
+User clicks Forgot
+Password
+They enter their
+registered email
+A time-sensitive
+password reset link is
+sent
+US-03: Provider Profile Setup
+As a Service Provider, I want to set up my professional profile, so that clients can view my expertise, portfolio, and contact me
+for jobs.
+Sub-Stories:
+•
+3.1 Upload and crop a professional profile picture.
+•
+3.2 Select primary and secondary skill categories from
+a predefined taxonomy.
+•
+3.3 Write a formatted professional bio.
+Given
+When
+Then
+Provider is in profile
+settings
+They upload a
+JPG/PNG under 5
+MB
+Image is saved and
+displayed as avatar
+Provider leaves Skill
+Category blank
+They attempt to save
+System prevents
+saving and highlights
+required field
+US-04: Client Contact Management
+As a Client, I want to manage my contact information and location, so that providers can accurately reach me to fulfil service
+requests.
+Sub-Stories:
+•
+4.1 Update phone number with regional validation.
+•
+4.2 Set physical location/address for geographic
+service filtering.
+Given
+When
+Then
+Client updates phone
+number
+They enter a valid
+11-digit number
+System saves the
+update successfully
+6. Structured Specifications (US-03: Provider Profile Setup)
+Spec ID
+Spec-03.1
+Description
+Upload, validate, and store a profile avatar.
+Pre-cond
+Logged in as Service Provider.
+Inputs
+.jpg, .jpeg, .png image file.
+Process
+1. Check file format. 2. Check size vs 5 MB limit.
+3. Compress and store in cloud bucket. 4.
+Update DB record with image URL.
+Outputs
+Updated avatar confirmed on UI.
+Exceptions
+FileTooLarge (>5 MB). UnsupportedMediaType
+(bad format).
+Spec ID
+Spec-03.2
+Description
+Tag profile with searchable service categories.
+Pre-cond
+Profile page loaded with active DB connection.
+Inputs
+Array of category IDs e.g. [ID_Plumbing].
+Process
+1. User selects 1-5 skills from dropdown. 2.
+System maps IDs to user foreign key in DB.
+Outputs
+Profile metadata updated; appears in relevant
+search results.
+Exceptions
+0 skills: UI validation error. >5: disable further
+selection.
+Spec ID
+Spec-03.3
+Description
+Text area for providers to pitch services to
+clients.
+Pre-cond
+User is on the profile edit screen.
+Inputs
+Alphanumeric text string.
+Process
+1. Real-time character counter. 2. Sanitise input
+(XSS prevention). 3. Save text to DB record.
+Outputs
+Formatted text rendered on public provider
+landing page.
+Exceptions
+Length < 50 chars: show Bio too short warning,
+disable save.
+Spec ID
+Spec-03.4
+Description
+Validate and store external portfolio URLs.
+Pre-cond
+User is on the profile edit screen.
+Inputs
+URL string (GitHub, Behance, LinkedIn, etc.).
+Process
+1. Regex validates http/https format. 2. Store
+verified link in profile table.
+Outputs
+Clickable portfolio icons/links on public profile.
+Exceptions
+Invalid URL: highlight input red, prompt for
+correction.
+
+SkillLink — Service Marketplace System
+Deliverable 1  ·  Sprint 1
+SkillLink  ·  User Identity & Profile Management
+Page 3
+7. Scrum Board — Sprint 1 (Trello)
+Three Trello snapshots document Sprint 1 progression across Product Backlog, Sprint Backlog, In Progress, Done, and Leftover List
+columns.
+Snapshot 1 — Start of Sprint
+All stories in Sprint Backlog. Board empty.
+Snapshot 2 — Mid Sprint
+US-01 & US-02 Done. US-03 & US-04 In
+Progress.
+Snapshot 3 — End of Sprint
+US-01/02/03 Done. US-04 in Leftover List.
+Sprint 1 User Story Summary
+User Story
+Sprint 1
+Status
+Final Column
+Notes
+US-01: Account Registration
+Done
+Done
+Completed within Sprint 1
+US-02: Secure Authentication
+Done
+Done
+Completed within Sprint 1
+US-03: Provider Profile Setup
+Done
+Done
+Completed within Sprint 1
+US-04: Client Contact Management
+Leftover
+Leftover List
+Carried to Sprint 2
+8. Non-Functional Requirements (NFR) — Natural Language Specification
+NFRs define quality attributes the system must satisfy. Format: The system shall [condition] [measurable criterion].
+#
+Category
+NFR Statement
+Priority
+1
+Performance
+The system shall load any page within 3 seconds for up to 500 concurrent users.
+High
+2
+Security
+All passwords shall be hashed using bcrypt; no plain-text credentials shall be stored.
+Critical
+3
+Security
+All API communication shall use HTTPS/TLS 1.2 or higher to prevent interception.
+Critical
+4
+Availability
+The platform shall maintain 99.5% uptime; maintenance communicated 24 hrs in advance.
+High
+5
+Scalability
+The architecture shall support horizontal scaling for a 10x increase in registrations.
+Medium
+6
+Usability
+The interface shall conform to WCAG 2.1 AA accessibility standards.
+High
+7
+Reliability
+User data shall be auto-backed up every 24 hours with 4-hour restore capability.
+High
+8
+Maintainability
+Source code shall follow coding standards, documented for 2-day developer onboarding.
+Medium
+9. Iteration 1 — Implementation Screenshots
+Trello board snapshots in Section 7 serve as Iteration 1 implementation evidence. Application UI screenshots will be added in subsequent
+deliverables as modules are deployed.
+10. Work Division
+Sprint 1 responsibilities were distributed across three team members — all 6th-semester BS CS students at FAST NUCES Islamabad —
+based on individual core competencies.
+Name & GitHub
+Role(s)
+Bio
+Sprint 1 Responsibilities
+Zaki Nabeel
+Team Lead
+GitHub: ZakiNabeel
+Project
+Manager
+Tester
+Tech with Purpose. 6th-sem BS CS,
+FAST NUCES Islamabad. Industrial
+experience at OGDCL. Passionate about
+code, design, and leading teams through
+challenges.
+Sprint planning, milestone tracking, test case
+design, QA validation, stakeholder communication
+Shehryar Faisal
+GitHub: Shehryarf67
+SCRUM
+Master
+Analyst /
+Architect
+Loves building innovative products. Deep
+skill set in web dev and team
+management. Designs applications and
+leads teams from the front to the desired
+outcome.
+Sprint facilitation, backlog grooming, system
+architecture, structured specs, Trello board
+management
+
+SkillLink — Service Marketplace System
+Deliverable 1  ·  Sprint 1
+SkillLink  ·  User Identity & Profile Management
+Page 4
+Muhammad Sameer
+GitHub: —
+Developer
+UI Designer
+Keen eye for aesthetics, strong software
+foundation. Bridges design and
+functionality through intuitive UIs and
+clean code. Transforms complex ideas
+into seamless experiences.
+Front-end implementation, UI/UX design, React
+components, profile setup screens, responsive
+layout
+Sprint 1 Outcome: 3 of 4 planned user stories completed. US-04 (Client Contact Management) carried forward to Sprint 2 as leftover.
+Primary sprint goal — foundational user onboarding and role-based profile management — substantially achieved.
