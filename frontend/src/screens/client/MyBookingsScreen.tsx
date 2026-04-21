@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, StyleSheet, StatusBar } from 'react-native';
+import { View, Text, FlatList, StyleSheet, StatusBar, Pressable } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { colors, typography, spacing, borderRadius, shadows } from '../../theme';
 import { bookingApi } from '../../api/bookings';
 import { Booking } from '../../types';
@@ -8,10 +9,12 @@ const statusConfig: Record<string, { color: string; bg: string; label: string }>
   PENDING: { color: colors.pending, bg: '#FEF3C7', label: 'Pending' },
   ACCEPTED: { color: colors.accepted, bg: colors.accentLight, label: 'Accepted' },
   DECLINED: { color: colors.declined, bg: '#FEE2E2', label: 'Declined' },
+  PAID: { color: '#6366F1', bg: '#EEF2FF', label: 'Paid' },
   COMPLETED: { color: colors.textSecondary, bg: colors.bgInput, label: 'Completed' },
 };
 
 export default function MyBookingsScreen() {
+  const navigation = useNavigation<any>();
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -34,6 +37,27 @@ export default function MyBookingsScreen() {
         </View>
         <Text style={s.desc} numberOfLines={2}>{item.jobDescription}</Text>
         {item.declineReason && <Text style={s.reason}>Reason: {item.declineReason}</Text>}
+
+        {/* Action buttons */}
+        <View style={s.actions}>
+          {(item.status === 'PENDING' || item.status === 'ACCEPTED') && (
+            <Pressable style={s.actionBtn} onPress={() => navigation.navigate('Chat', { bookingId: item.id, otherUserName: item.providerName })}>
+              <Text style={s.actionText}>💬 Chat</Text>
+            </Pressable>
+          )}
+          {item.status === 'ACCEPTED' && (
+            <Pressable style={[s.actionBtn, { backgroundColor: colors.accentLight }]} onPress={() => navigation.navigate('Checkout', {
+              bookingId: item.id, providerName: item.providerName, jobDescription: item.jobDescription, preferredDate: item.preferredDate,
+            })}>
+              <Text style={[s.actionText, { color: colors.accent }]}>💳 Pay Now</Text>
+            </Pressable>
+          )}
+          {item.status === 'COMPLETED' && (
+            <Pressable style={[s.actionBtn, { backgroundColor: '#FEF3C7' }]} onPress={() => navigation.navigate('ReviewForm', { bookingId: item.id, providerName: item.providerName })}>
+              <Text style={[s.actionText, { color: colors.star }]}>⭐ Leave Review</Text>
+            </Pressable>
+          )}
+        </View>
       </View>
     );
   };
@@ -72,6 +96,9 @@ const s = StyleSheet.create({
   badgeText: { ...typography.captionMedium },
   desc: { ...typography.small, color: colors.textSecondary },
   reason: { ...typography.caption, color: colors.error, marginTop: spacing.sm },
+  actions: { flexDirection: 'row', gap: spacing.sm, marginTop: spacing.md, flexWrap: 'wrap' },
+  actionBtn: { paddingHorizontal: spacing.md, paddingVertical: 8, borderRadius: borderRadius.md, backgroundColor: colors.bgInput },
+  actionText: { ...typography.caption, fontWeight: '600', color: colors.textPrimary },
   empty: { alignItems: 'center', marginTop: spacing.huge },
   emptyText: { ...typography.bodyMedium, color: colors.textPrimary, marginTop: spacing.lg },
   emptyDesc: { ...typography.small, color: colors.textMuted, marginTop: spacing.xs },

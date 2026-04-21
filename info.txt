@@ -1,0 +1,171 @@
+[10:43 am, 19/04/2026] Zaki Nabeel CS-D: @Sameer 
+context for any llm to generate code
+Here's a tighter Sprint 3-specific version:
+
+CONTEXT:
+Project: SkillLink — Service Marketplace (Pakistan)
+Stack: Java 17 + Spring Boot 3 + React 18 + MySQL
+Auth: JWT, roles: CLIENT / PROVIDER / ADMIN
+
+Sprints 1 & 2 are ALREADY DONE. Do not rebuild them.
+Assume these already exist and work:
+
+Entities: User, ProviderProfile, Booking
+Booking statuses: PENDING → ACCEPTED → DECLINED → PAID → COMPLETED
+Endpoints already live:
+  POST   /api/auth/register
+  POST   /api/auth/login
+  GET    /api/providers/search
+  GET    /api/providers/{id}
+  POST   /api/bookings
+  PUT    /api/bookings/{id}/action   (accept/decline)
+
+Sprint 3 scope — build these 4 modules:
+  US-09: Reviews & Ratings
+  US-10: In-App Messaging
+  US-11: Payment Processing & Checkout
+  US-12: Admin Panel (User Management + Analytics)
+
+CODING PROMPT:
+You are a senior full-stack dev helping build Sprint 3 of SkillLink.
+
+Backend rules:
+- Java 17, Spring Boot 3, Spring Security (JWT), JPA, MySQL
+- controller → service → repository → entity
+- Always use DTOs, never expose raw entities
+- @ControllerAdvice for exceptions
+- Proper HTTP codes: 201/200/400/403/404/409
+
+Frontend rules:
+- React 18, functional components + hooks only
+- Axios, React Router, Tailwind CSS
+- JWT stored in localStorage, passed as Bearer token
+- Reusable components in components/, pages in pages/
+
+Constraints:
+- No card data stored server-side (payment is gateway-tokenised)
+- Admin endpoints must be guarded by ADMIN role check
+- Reviews only allowed when booking.status == COMPLETED
+- Messaging only allowed when booking.status == PENDING or ACCEPTED
+
+Now do the following: [YOUR TASK]
+
+Sprint 3 task sequence to follow:
+1. Schema — add tables: reviews, messages, payments, audit_log
+2. US-09 — Review entity + POST /api/reviews + aggregate rating update + React review form
+3. US-10 — Message entity + POST /api/messages + GET /api/messages/{bookingId} + React chat UI
+4. US-11 — Payment entity + POST /api/payments/checkout + earnings calc + React checkout screen
+5. US-12 — Admin endpoints: GET /api/admin/users + PUT /api/admin/users/{id}/suspend + analytics GET + React admin panel
+[10:45 am, 19/04/2026] Zaki Nabeel CS-D: @Sameer @Shehryar Faisal CS-D testing bhi karnee is baar
+_____
+how to do test, do it on the actual software?10:44 AMDeciphered practical testing execution guidance for Sprint deliverablesDeciphered practical testing execution guidance for Sprint deliverablesShort answer: yes, test on the actual software. The test cases in your deliverable aren't just for documentation — you need to actually run them and show evidence. Here's how:
+
+Two levels of testing
+1. Unit/Integration tests — written in Java (automated)
+2. Manual black-box tests — done via Postman + browser
+
+Backend — JUnit tests
+Add this to pom.xml if not already there:
+xml<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-test</artifactId>
+    <scope>test</scope>
+</dependency>
+Example test for ReviewService (this is your white-box coverage):
+java@SpringBootTest
+class ReviewServiceTest {
+
+    @Autowired ReviewService reviewService;
+    @MockBean ReviewRepository reviewRepo;
+    @MockBean BookingRepository bookingRepo;
+
+    @Test
+    void shouldThrow_whenBookingNotCompleted() {
+        Booking booking = new Booking();
+        booking.setStatus(BookingStatus.PENDING); // not COMPLETED
+        when(bookingRepo.findById(1L)).thenReturn(Optional.of(booking));
+
+        assertThrows(IllegalStateException.class, () ->
+            reviewService.submitReview(1L, 1L, 4, "Good service overall"));
+    }
+
+    @Test
+    void shouldThrow_whenDuplicateReview() {
+        Booking booking = new Booking();
+        booking.setStatus(BookingStatus.COMPLETED);
+        when(bookingRepo.findById(1L)).thenReturn(Optional.of(booking));
+        when(reviewRepo.existsByBookingIdAndClientId(1L, 1L)).thenReturn(true);
+
+        assertThrows(DuplicateReviewException.class, () ->
+            reviewService.submitReview(1L, 1L, 4, "Good service overall"));
+    }
+
+    @Test
+    void shouldSave_whenValid() {
+        Booking booking = new Booking();
+        booking.setStatus(BookingStatus.COMPLETED);
+        when(bookingRepo.findById(1L)).thenReturn(Optional.of(booking));
+        when(reviewRepo.existsByBookingIdAndClientId(1L, 1L)).thenReturn(false);
+
+        reviewService.submitReview(1L, 1L, 4, "Great experience with this provider");
+        verify(reviewRepo, times(1)).save(any());
+    }
+}
+Run all tests:
+bashmvn test
+This generates a report in target/surefire-reports/ — screenshot that for your deliverable evidence.
+
+Backend — Postman (your black-box tests)
+This is the main evidence you'll submit. For every test case in your document, hit the actual endpoint.
+Setup:
+
+Download Postman (free)
+Create a collection called "SkillLink Sprint 3 Tests"
+Set a base URL variable: {{base_url}} = http://localhost:8080
+Get a JWT token first via POST /api/auth/login, save it as a collection variable
+
+Example — TC-09-01 (valid review):
+POST {{base_url}}/api/reviews
+Authorization: Bearer {{token}}
+Body (JSON):
+{
+  "bookingId": 1,
+  "rating": 4,
+  "reviewText": "The service was professional and completed on time."
+}
+
+Expected: 201 Created
+Example — TC-09-05 (text too short):
+POST {{base_url}}/api/reviews
+Body:
+{
+  "bookingId": 1,
+  "rating": 3,
+  "reviewText": "Good"
+}
+
+Expected: 400 Bad Request, error = "TextTooShort"
+Example — TC-11-03 (booking not accepted yet):
+POST {{base_url}}/api/payments/checkout
+Body:
+{
+  "bookingId": 5,     ← this booking is still PENDING
+  "paymentMethod": "CARD",
+  "paymentToken": "tok_test_123"
+}
+
+Expected: 403, error = "BookingNotAccepted"
+For each test: screenshot the request + response. That's your test execution evidence.
+
+Frontend — manual browser testing
+Just go through the UI and test each flow:
+FlowWhat to checkSubmit reviewTry submitting with 3 chars — button should stay disabledSubmit reviewSubmit valid review — should appear on provider profileChatSend message — should appear instantly on other sidePaymentUse Stripe test card 4242 4242 4242 4242 — should go throughPaymentUse declined card 4000 0000 0000 0002 — should show errorAdminLogin as ADMIN, suspend a user — check they can't login anymore
+
+What to actually submit as evidence
+For the deliverable document, you need:
+
+JUnit test run screenshot — the green checkmarks in IntelliJ or the terminal mvn test output
+Postman screenshots — one per test case (request + response side by side)
+Browser screenshots — UI showing the feature working + error states
+
+That's it. The test cases you already have in the document map 1-to-1 to these Postman requests — just run each one and screenshot it.

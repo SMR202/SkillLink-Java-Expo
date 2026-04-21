@@ -94,3 +94,73 @@ export interface Notification {
   isRead: boolean;
   createdAt: string;
 }
+
+// Sprint 3 types
+export interface Review {
+  id: number;
+  bookingId: number;
+  clientId: number;
+  clientName: string;
+  providerId: number;
+  providerName: string;
+  rating: number;
+  comment: string;
+  providerResponse: string | null;
+  createdAt: string;
+  respondedAt: string | null;
+}
+
+export interface ChatMessage {
+  id: number;
+  bookingId: number;
+  senderId: number;
+  senderName: string;
+  content: string;
+  isRead: boolean;
+  sentAt: string;
+}
+
+export interface Payment {
+  id: number;
+  bookingId: number;
+  clientName: string;
+  providerName: string;
+  amount: number;
+  platformFee: number;
+  providerEarnings: number;
+  status: string;
+  paymentMethod: string;
+  transactionRef: string;
+  paidAt: string;
+}
+
+export interface EarningsSummary {
+  totalEarnings: number;
+  pendingPayouts: number;
+  thisMonthEarnings: number;
+  completedPayments: number;
+  totalBookingsCompleted: number;
+}
+
+export interface AdminUser {
+  id: number;
+  fullName: string;
+  email: string;
+  role: string;
+  isActive: boolean;
+  emailVerified: boolean;
+  createdAt: string;
+}
+
+export interface Analytics {
+  totalUsers: number;
+  totalClients: number;
+  totalProviders: number;
+  totalBookings: number;
+  pendingBookings: number;
+  completedBookings: number;
+  totalRevenue: number;
+  platformEarnings: number;
+  totalReviews: number;
+  averagePlatformRating: number;
+}

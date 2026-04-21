@@ -42,6 +42,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/categories/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/providers/{id}").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/search/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/reviews/provider/**").permitAll()
                 // Swagger / OpenAPI
                 .requestMatchers("/swagger-ui/**", "/api-docs/**", "/swagger-ui.html").permitAll()
                 // H2 console (dev only)

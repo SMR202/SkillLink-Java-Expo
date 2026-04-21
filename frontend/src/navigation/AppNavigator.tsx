@@ -5,8 +5,12 @@ import { ActivityIndicator, View, StyleSheet } from 'react-native';
 import AuthStack from './AuthStack';
 import ClientTabs from './ClientTabs';
 import ProviderTabs from './ProviderTabs';
+import AdminTabs from './AdminTabs';
 import ProviderProfileScreen from '../screens/client/ProviderProfileScreen';
 import BookingFormScreen from '../screens/client/BookingFormScreen';
+import ReviewFormScreen from '../screens/client/ReviewFormScreen';
+import CheckoutScreen from '../screens/client/CheckoutScreen';
+import ChatScreen from '../screens/shared/ChatScreen';
 import { useAuthStore } from '../store/authStore';
 import { colors } from '../theme';
 
@@ -37,9 +41,18 @@ export default function AppNavigator() {
       >
         {!isAuthenticated ? (
           <Stack.Screen name="Auth" component={AuthStack} />
+        ) : user?.role === 'ADMIN' ? (
+          <>
+            <Stack.Screen name="AdminMain" component={AdminTabs} />
+          </>
         ) : user?.role === 'PROVIDER' ? (
           <>
             <Stack.Screen name="ProviderMain" component={ProviderTabs} />
+            <Stack.Screen
+              name="Chat"
+              component={ChatScreen}
+              options={{ animation: 'slide_from_right' }}
+            />
           </>
         ) : (
           <>
@@ -53,6 +66,21 @@ export default function AppNavigator() {
               name="BookingForm"
               component={BookingFormScreen}
               options={{ animation: 'slide_from_bottom', presentation: 'modal' }}
+            />
+            <Stack.Screen
+              name="ReviewForm"
+              component={ReviewFormScreen}
+              options={{ animation: 'slide_from_right' }}
+            />
+            <Stack.Screen
+              name="Checkout"
+              component={CheckoutScreen}
+              options={{ animation: 'slide_from_bottom', presentation: 'modal' }}
+            />
+            <Stack.Screen
+              name="Chat"
+              component={ChatScreen}
+              options={{ animation: 'slide_from_right' }}
             />
           </>
         )}

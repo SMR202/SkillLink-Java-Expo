@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, Alert, TextInput, Modal, StatusBar } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, Alert, TextInput, Modal, StatusBar, Pressable } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { colors, typography, spacing, borderRadius, shadows } from '../../theme';
 import { bookingApi } from '../../api/bookings';
 import { Booking } from '../../types';
@@ -14,6 +15,7 @@ const statusConfig: Record<string, { color: string; bg: string; icon: string }> 
 };
 
 export default function BookingMgmtScreen() {
+  const navigation = useNavigation<any>();
   const [activeTab, setActiveTab] = useState('ALL');
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
@@ -66,6 +68,11 @@ export default function BookingMgmtScreen() {
               <Text style={s.declineText}>✕ Decline</Text>
             </TouchableOpacity>
           </View>
+        )}
+        {(item.status === 'PENDING' || item.status === 'ACCEPTED') && (
+          <Pressable style={{ paddingHorizontal: spacing.md, paddingVertical: 8, borderRadius: borderRadius.md, backgroundColor: colors.bgInput, alignSelf: 'flex-start', marginTop: spacing.sm }} onPress={() => navigation.navigate('Chat', { bookingId: item.id, otherUserName: item.clientName })}>
+            <Text style={{ ...typography.caption, fontWeight: '600', color: colors.textPrimary }}>💬 Chat with Client</Text>
+          </Pressable>
         )}
         {item.declineReason && (
           <View style={s.reasonBox}>

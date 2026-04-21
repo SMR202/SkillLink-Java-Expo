@@ -17,4 +17,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
         Long providerId, LocalDate date, LocalTime time, BookingStatus excludeStatus
     );
     boolean existsByClientIdAndProviderIdAndStatus(Long clientId, Long providerId, BookingStatus status);
+
+    // Sprint 3: Admin analytics
+    long countByStatus(BookingStatus status);
 }
