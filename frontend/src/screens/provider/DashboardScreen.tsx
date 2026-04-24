@@ -64,7 +64,7 @@ export default function DashboardScreen() {
             navigation.navigate("Earnings");
             return;
         }
-        
+
         if (action === "Reviews") {
             navigation.navigate("Reviews");
             return;

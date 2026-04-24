@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, StatusBar, Alert } from "react-native";
+import {
+    View,
+    Text,
+    StyleSheet,
+    FlatList,
+    TouchableOpacity,
+    StatusBar,
+    Alert,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { colors, typography, spacing, borderRadius } from "../../theme";
 import { reviewApi } from "../../api/reviews";
@@ -28,9 +36,11 @@ export default function ReviewsScreen() {
         try {
             const r = await reviewApi.getForProvider(user.id);
             setReviews(r.data?.content || []);
-
         } catch (e: any) {
-            Alert.alert("Error", e?.response?.data?.message || "Failed to load reviews");
+            Alert.alert(
+                "Error",
+                e?.response?.data?.message || "Failed to load reviews",
+            );
         } finally {
             setLoading(false);
         }
@@ -39,10 +49,15 @@ export default function ReviewsScreen() {
     const renderItem = ({ item }: { item: Review }) => (
         <View style={s.card}>
             <View style={s.cardTop}>
-                <View style={s.av}><Text style={s.avT}>{item.clientName?.[0]}</Text></View>
+                <View style={s.av}>
+                    <Text style={s.avT}>{item.clientName?.[0]}</Text>
+                </View>
                 <View style={{ flex: 1 }}>
                     <Text style={s.name}>{item.clientName}</Text>
-                    <Text style={s.date}>⭐ {item.rating} • {new Date(item.createdAt).toLocaleDateString()}</Text>
+                    <Text style={s.date}>
+                        ⭐ {item.rating} •{" "}
+                        {new Date(item.createdAt).toLocaleDateString()}
+                    </Text>
                 </View>
             </View>
             <Text style={s.comment}>{item.comment}</Text>
@@ -58,14 +73,16 @@ export default function ReviewsScreen() {
                 </TouchableOpacity>
                 <Text style={s.title}>My Reviews</Text>
             </View>
-            
+
             <FlatList
                 data={reviews}
                 renderItem={renderItem}
                 keyExtractor={(i) => i.id.toString()}
                 contentContainerStyle={s.list}
                 ListEmptyComponent={
-                    <Text style={s.empty}>{loading ? "Loading..." : "No reviews yet."}</Text>
+                    <Text style={s.empty}>
+                        {loading ? "Loading..." : "No reviews yet."}
+                    </Text>
                 }
             />
         </View>
@@ -82,12 +99,35 @@ const s = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: colors.border,
     },
-    back: { ...typography.button, color: colors.textSecondary, marginBottom: spacing.md },
+    back: {
+        ...typography.button,
+        color: colors.textSecondary,
+        marginBottom: spacing.md,
+    },
     title: { ...typography.h2, color: colors.textPrimary },
     list: { padding: spacing.xxl },
-    card: { backgroundColor: colors.bgCard, padding: spacing.lg, borderRadius: borderRadius.md, marginBottom: spacing.lg, borderWidth: 1, borderColor: colors.border },
-    cardTop: { flexDirection: "row", alignItems: "center", marginBottom: spacing.md },
-    av: { width: 40, height: 40, borderRadius: 20, backgroundColor: colors.bgInput, justifyContent: "center", alignItems: "center", marginRight: spacing.md },
+    card: {
+        backgroundColor: colors.bgCard,
+        padding: spacing.lg,
+        borderRadius: borderRadius.md,
+        marginBottom: spacing.lg,
+        borderWidth: 1,
+        borderColor: colors.border,
+    },
+    cardTop: {
+        flexDirection: "row",
+        alignItems: "center",
+        marginBottom: spacing.md,
+    },
+    av: {
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        backgroundColor: colors.bgInput,
+        justifyContent: "center",
+        alignItems: "center",
+        marginRight: spacing.md,
+    },
     avT: { ...typography.bodyMedium, fontWeight: "600" },
     name: { ...typography.bodyMedium, color: colors.textPrimary },
     date: { ...typography.caption, color: colors.textMuted, marginTop: 2 },
