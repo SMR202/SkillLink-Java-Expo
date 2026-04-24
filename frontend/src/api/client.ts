@@ -1,7 +1,48 @@
 import axios from 'axios';
+import Constants from 'expo-constants';
+import { Platform } from 'react-native';
 import SecureStore from '../utils/storage';
 
-const API_BASE_URL = 'http://localhost:8080/api';
+const BACKEND_PORT = '8080';
+
+const normalizeApiUrl = (url: string) => url.replace(/\/+$/, '');
+
+const extractHost = (value?: string | null) => {
+  if (!value) {
+    return null;
+  }
+
+  const withoutScheme = value.replace(/^[a-z]+:\/\//i, '');
+  const hostWithPort = withoutScheme.split('/')[0];
+  const host = hostWithPort.split(':')[0];
+  return host || null;
+};
+
+const resolveApiBaseUrl = () => {
+  const envUrl = process.env.EXPO_PUBLIC_API_URL?.trim();
+  if (envUrl) {
+    return normalizeApiUrl(envUrl);
+  }
+
+  if (Platform.OS === 'web' && typeof window !== 'undefined') {
+    return `http://${window.location.hostname}:${BACKEND_PORT}/api`;
+  }
+
+  const host =
+    extractHost(Constants.expoConfig?.hostUri) ??
+    extractHost((Constants.expoGoConfig as { debuggerHost?: string } | null)?.debuggerHost) ??
+    extractHost(Constants.linkingUri);
+
+  if (host) {
+    return `http://${host}:${BACKEND_PORT}/api`;
+  }
+
+  return Platform.OS === 'android'
+    ? `http://10.0.2.2:${BACKEND_PORT}/api`
+    : `http://localhost:${BACKEND_PORT}/api`;
+};
+
+const API_BASE_URL = resolveApiBaseUrl();
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
