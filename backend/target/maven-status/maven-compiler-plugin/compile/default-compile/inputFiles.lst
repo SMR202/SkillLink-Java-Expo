@@ -1,5 +1,6 @@
 D:\University\Projects\SkillLink\backend\src\main\java\com\skilllink\controller\CategoryController.java
 D:\University\Projects\SkillLink\backend\src\main\java\com\skilllink\repository\PaymentRepository.java
+D:\University\Projects\SkillLink\backend\src\main\java\com\skilllink\dto\request\ChangePasswordRequest.java
 D:\University\Projects\SkillLink\backend\src\main\java\com\skilllink\entity\Booking.java
 D:\University\Projects\SkillLink\backend\src\main\java\com\skilllink\repository\ReviewRepository.java
 D:\University\Projects\SkillLink\backend\src\main\java\com\skilllink\entity\ClientProfile.java

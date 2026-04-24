@@ -23,7 +23,7 @@ public class MessageService {
     @Transactional
     public MessageResponse sendMessage(Long userId, MessageRequest request) {
         Booking booking = bookingRepository.findById(request.getBookingId())
-            .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
 
         // Verify sender is client or provider of this booking
         boolean isClient = booking.getClient().getId().equals(userId);
@@ -38,13 +38,13 @@ public class MessageService {
         }
 
         User sender = userRepository.findById(userId)
-            .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         Message message = Message.builder()
-            .booking(booking)
-            .sender(sender)
-            .content(request.getContent())
-            .build();
+                .booking(booking)
+                .sender(sender)
+                .content(request.getContent())
+                .build();
         message = messageRepository.save(message);
 
         return mapToResponse(message);
@@ -52,7 +52,7 @@ public class MessageService {
 
     public List<MessageResponse> getMessages(Long userId, Long bookingId) {
         Booking booking = bookingRepository.findById(bookingId)
-            .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
 
         // Verify user is part of this booking
         boolean isClient = booking.getClient().getId().equals(userId);
@@ -62,23 +62,32 @@ public class MessageService {
         }
 
         return messageRepository.findByBookingIdOrderBySentAtAsc(bookingId)
-            .stream().map(this::mapToResponse).collect(Collectors.toList());
+                .stream().map(this::mapToResponse).collect(Collectors.toList());
     }
 
     @Transactional
     public void markAsRead(Long userId, Long bookingId) {
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
+
+        boolean isClient = booking.getClient().getId().equals(userId);
+        boolean isProvider = booking.getProvider().getUser().getId().equals(userId);
+        if (!isClient && !isProvider) {
+            throw new ForbiddenException("You are not part of this booking");
+        }
+
         messageRepository.markAllAsReadForBooking(bookingId, userId);
     }
 
     private MessageResponse mapToResponse(Message message) {
         return MessageResponse.builder()
-            .id(message.getId())
-            .bookingId(message.getBooking().getId())
-            .senderId(message.getSender().getId())
-            .senderName(message.getSender().getFullName())
-            .content(message.getContent())
-            .isRead(message.getIsRead())
-            .sentAt(message.getSentAt())
-            .build();
+                .id(message.getId())
+                .bookingId(message.getBooking().getId())
+                .senderId(message.getSender().getId())
+                .senderName(message.getSender().getFullName())
+                .content(message.getContent())
+                .isRead(message.getIsRead())
+                .sentAt(message.getSentAt())
+                .build();
     }
 }

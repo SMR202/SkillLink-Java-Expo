@@ -30,7 +30,7 @@ public class BookingController {
         Long userId = getUserIdFromHeader(authHeader);
         BookingResponse response = bookingService.createBooking(userId, request);
         return ResponseEntity.status(HttpStatus.CREATED)
-            .body(ApiResponse.success("Booking request submitted!", response));
+                .body(ApiResponse.success("Booking request submitted!", response));
     }
 
     @GetMapping("/my")
@@ -58,7 +58,8 @@ public class BookingController {
             @RequestParam(defaultValue = "10") int size) {
         Long userId = getUserIdFromHeader(authHeader);
         BookingStatus bookingStatus = status != null ? BookingStatus.valueOf(status.toUpperCase()) : null;
-        Page<BookingResponse> bookings = bookingService.getProviderBookings(userId, bookingStatus, PageRequest.of(page, size));
+        Page<BookingResponse> bookings = bookingService.getProviderBookings(userId, bookingStatus,
+                PageRequest.of(page, size));
         return ResponseEntity.ok(ApiResponse.success(bookings));
     }
 
@@ -69,7 +70,9 @@ public class BookingController {
             @Valid @RequestBody BookingActionRequest request) {
         Long userId = getUserIdFromHeader(authHeader);
         BookingResponse response = bookingService.actionBooking(userId, id, request);
-        return ResponseEntity.ok(ApiResponse.success("Booking " + request.getAction() + "ed.", response));
+        String action = request.getAction();
+        String result = "accept".equals(action) ? "accepted" : "declined";
+        return ResponseEntity.ok(ApiResponse.success("Booking " + result + ".", response));
     }
 
     @PutMapping("/{id}/complete")

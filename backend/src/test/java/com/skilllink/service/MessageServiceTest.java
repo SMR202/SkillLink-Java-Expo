@@ -21,20 +21,27 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class MessageServiceTest {
 
-    @InjectMocks private MessageService messageService;
-    @Mock private MessageRepository messageRepository;
-    @Mock private BookingRepository bookingRepository;
-    @Mock private UserRepository userRepository;
+    @InjectMocks
+    private MessageService messageService;
+    @Mock
+    private MessageRepository messageRepository;
+    @Mock
+    private BookingRepository bookingRepository;
+    @Mock
+    private UserRepository userRepository;
 
     private User client;
     private User providerUser;
+    private User otherUser;
     private ProviderProfile provider;
     private Booking booking;
 
     @BeforeEach
     void setUp() {
         client = User.builder().id(1L).fullName("Test Client").email("client@test.com").role(Role.CLIENT).build();
-        providerUser = User.builder().id(2L).fullName("Test Provider").email("provider@test.com").role(Role.PROVIDER).build();
+        providerUser = User.builder().id(2L).fullName("Test Provider").email("provider@test.com").role(Role.PROVIDER)
+                .build();
+        otherUser = User.builder().id(3L).fullName("Other User").email("other@test.com").role(Role.CLIENT).build();
         provider = ProviderProfile.builder().id(10L).user(providerUser).build();
         booking = Booking.builder().id(100L).client(client).provider(provider).status(BookingStatus.ACCEPTED).build();
     }
@@ -49,8 +56,7 @@ class MessageServiceTest {
         req.setBookingId(100L);
         req.setContent("Hello, when can you come?");
 
-        assertThrows(ForbiddenException.class, () ->
-            messageService.sendMessage(1L, req));
+        assertThrows(ForbiddenException.class, () -> messageService.sendMessage(1L, req));
     }
 
     @Test
@@ -74,5 +80,25 @@ class MessageServiceTest {
         assertEquals("Hello, when can you come?", res.getContent());
         assertEquals(1L, res.getSenderId());
         verify(messageRepository, times(1)).save(any(Message.class));
+    }
+
+    @Test
+    @DisplayName("Should mark messages as read when user is booking participant")
+    void shouldMarkRead_whenParticipant() {
+        when(bookingRepository.findById(100L)).thenReturn(Optional.of(booking));
+
+        messageService.markAsRead(1L, 100L);
+
+        verify(messageRepository, times(1)).markAllAsReadForBooking(100L, 1L);
+    }
+
+    @Test
+    @DisplayName("Should throw when non-participant tries to mark messages as read")
+    void shouldThrow_whenMarkReadByNonParticipant() {
+        when(bookingRepository.findById(100L)).thenReturn(Optional.of(booking));
+
+        assertThrows(ForbiddenException.class, () -> messageService.markAsRead(otherUser.getId(), 100L));
+
+        verify(messageRepository, never()).markAllAsReadForBooking(anyLong(), anyLong());
     }
 }

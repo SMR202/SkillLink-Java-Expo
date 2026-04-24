@@ -1,9 +1,11 @@
 package com.skilllink.controller;
 
+import com.skilllink.dto.request.ChangePasswordRequest;
 import com.skilllink.dto.request.LoginRequest;
 import com.skilllink.dto.request.SignupRequest;
 import com.skilllink.dto.response.ApiResponse;
 import com.skilllink.dto.response.AuthResponse;
+import com.skilllink.security.JwtTokenProvider;
 import com.skilllink.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,12 +21,13 @@ import java.util.Map;
 public class AuthController {
 
     private final AuthService authService;
+    private final JwtTokenProvider tokenProvider;
 
     @PostMapping("/signup")
     public ResponseEntity<ApiResponse<AuthResponse>> signup(@Valid @RequestBody SignupRequest request) {
         AuthResponse response = authService.signup(request);
         return ResponseEntity.status(HttpStatus.CREATED)
-            .body(ApiResponse.success("Account created successfully!", response));
+                .body(ApiResponse.success("Account created successfully!", response));
     }
 
     @PostMapping("/login")
@@ -50,5 +53,19 @@ public class AuthController {
     public ResponseEntity<ApiResponse<AuthResponse>> refreshToken(@RequestBody Map<String, String> body) {
         AuthResponse response = authService.refreshToken(body.get("refreshToken"));
         return ResponseEntity.ok(ApiResponse.success(response));
+    }
+
+    @PutMapping("/change-password")
+    public ResponseEntity<ApiResponse<Void>> changePassword(
+            @RequestHeader("Authorization") String authHeader,
+            @Valid @RequestBody ChangePasswordRequest request) {
+        Long userId = getUserIdFromHeader(authHeader);
+        authService.changePassword(userId, request.getCurrentPassword(), request.getNewPassword());
+        return ResponseEntity.ok(ApiResponse.success("Password updated successfully.", null));
+    }
+
+    private Long getUserIdFromHeader(String authHeader) {
+        String token = authHeader.replace("Bearer ", "");
+        return tokenProvider.getUserIdFromToken(token);
     }
 }

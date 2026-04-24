@@ -36,27 +36,27 @@ public class AuthService {
         Role role = Role.valueOf(request.getRole());
 
         User user = User.builder()
-            .fullName(request.getFullName())
-            .email(request.getEmail())
-            .passwordHash(passwordEncoder.encode(request.getPassword()))
-            .role(role)
-            .emailVerified(false)
-            .isActive(true)
-            .build();
+                .fullName(request.getFullName())
+                .email(request.getEmail())
+                .passwordHash(passwordEncoder.encode(request.getPassword()))
+                .role(role)
+                .emailVerified(false)
+                .isActive(true)
+                .build();
 
         user = userRepository.save(user);
 
         // Create role-specific profile
         if (role == Role.PROVIDER) {
             ProviderProfile profile = ProviderProfile.builder()
-                .user(user)
-                .profileComplete(false)
-                .build();
+                    .user(user)
+                    .profileComplete(false)
+                    .build();
             providerProfileRepository.save(profile);
         } else if (role == Role.CLIENT) {
             ClientProfile profile = ClientProfile.builder()
-                .user(user)
-                .build();
+                    .user(user)
+                    .build();
             clientProfileRepository.save(profile);
         }
 
@@ -68,7 +68,7 @@ public class AuthService {
 
     public AuthResponse login(LoginRequest request) {
         User user = userRepository.findByEmail(request.getEmail())
-            .orElseThrow(() -> new UnauthorizedException("Invalid email or password."));
+                .orElseThrow(() -> new UnauthorizedException("Invalid email or password."));
 
         if (!user.getIsActive()) {
             throw new UnauthorizedException("Your account has been deactivated. Contact support.");
@@ -86,7 +86,7 @@ public class AuthService {
 
     public String forgotPassword(String email) {
         User user = userRepository.findByEmail(email)
-            .orElseThrow(() -> new BadRequestException("No account found with this email."));
+                .orElseThrow(() -> new BadRequestException("No account found with this email."));
 
         String token = UUID.randomUUID().toString();
         user.setPasswordResetToken(token);
@@ -101,15 +101,35 @@ public class AuthService {
     @Transactional
     public void resetPassword(String token, String newPassword) {
         User user = userRepository.findByPasswordResetToken(token)
-            .orElseThrow(() -> new BadRequestException("Invalid or expired reset token."));
+                .orElseThrow(() -> new BadRequestException("Invalid or expired reset token."));
 
         if (user.getResetTokenExpiry().isBefore(LocalDateTime.now())) {
             throw new BadRequestException("Reset token has expired. Please request a new one.");
         }
 
+        validatePasswordStrength(newPassword);
+
         user.setPasswordHash(passwordEncoder.encode(newPassword));
         user.setPasswordResetToken(null);
         user.setResetTokenExpiry(null);
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public void changePassword(Long userId, String currentPassword, String newPassword) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UnauthorizedException("User not found."));
+
+        if (!passwordEncoder.matches(currentPassword, user.getPasswordHash())) {
+            throw new BadRequestException("Current password is incorrect.");
+        }
+
+        if (passwordEncoder.matches(newPassword, user.getPasswordHash())) {
+            throw new BadRequestException("New password must be different from current password.");
+        }
+
+        validatePasswordStrength(newPassword);
+        user.setPasswordHash(passwordEncoder.encode(newPassword));
         userRepository.save(user);
     }
 
@@ -120,11 +140,23 @@ public class AuthService {
 
         Long userId = tokenProvider.getUserIdFromToken(refreshToken);
         User user = userRepository.findById(userId)
-            .orElseThrow(() -> new UnauthorizedException("User not found."));
+                .orElseThrow(() -> new UnauthorizedException("User not found."));
 
         String newAccessToken = tokenProvider.generateAccessToken(user.getId(), user.getEmail(), user.getRole().name());
         String newRefreshToken = tokenProvider.generateRefreshToken(user.getId());
 
         return AuthResponse.of(newAccessToken, newRefreshToken, UserResponse.from(user));
+    }
+
+    private void validatePasswordStrength(String password) {
+        if (password == null || password.length() < 8) {
+            throw new BadRequestException("Password must be at least 8 characters.");
+        }
+
+        boolean hasDigit = password.chars().anyMatch(Character::isDigit);
+        boolean hasSpecial = password.chars().anyMatch(ch -> "!@#$%^&*".indexOf(ch) >= 0);
+        if (!hasDigit || !hasSpecial) {
+            throw new BadRequestException("Password must contain at least 1 number and 1 special character.");
+        }
     }
 }

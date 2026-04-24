@@ -39,7 +39,8 @@ export interface ProviderProfile {
 
 export interface ClientProfile {
   id: number;
-  userId: number;
+  userId?: number;
+  user?: User;
   phoneNumber: string | null;
   avatarUrl: string | null;
   addresses: Address[];
@@ -64,7 +65,7 @@ export interface Booking {
   preferredDate: string;
   preferredTime: string;
   jobDescription: string;
-  status: 'PENDING' | 'ACCEPTED' | 'DECLINED' | 'COMPLETED' | 'CANCELLED';
+  status: 'PENDING' | 'ACCEPTED' | 'DECLINED' | 'PAID' | 'COMPLETED' | 'CANCELLED';
   declineReason: string | null;
   createdAt: string;
 }

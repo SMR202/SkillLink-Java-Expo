@@ -1,0 +1,17 @@
+version: '3.9'
+services:
+  skilllink-db:
+    image: postgres:16
+    container_name: skilllink-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: skilllink
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - '5432:5432'
+    volumes:
+      - skilllink_pg_data:/var/lib/postgresql/data
+
+volumes:
+  skilllink_pg_data:
