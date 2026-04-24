@@ -12,4 +12,9 @@ export const paymentApi = {
     apiClient.get<ApiResponse<PaginatedResponse<Payment>>>('/payments/history', {
       params: { page, size },
     }),
+
+  getProviderHistory: (page = 0, size = 10) =>
+    apiClient.get<ApiResponse<PaginatedResponse<Payment>>>('/payments/history/provider', {
+      params: { page, size },
+    }),
 };

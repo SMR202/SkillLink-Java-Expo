@@ -71,6 +71,12 @@ public class ReviewService {
             .map(this::mapToResponse);
     }
 
+    public Page<ReviewResponse> getReviewsForProviderUser(Long userId, Pageable pageable) {
+        ProviderProfile provider = providerProfileRepository.findByUserId(userId)
+            .orElseThrow(() -> new ResourceNotFoundException("Provider profile not found"));
+        return getProviderReviews(provider.getId(), pageable);
+    }
+
     @Transactional
     public ReviewResponse respondToReview(Long userId, Long reviewId, String response) {
         Review review = reviewRepository.findById(reviewId)

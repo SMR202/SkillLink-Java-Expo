@@ -40,6 +40,16 @@ public class ReviewController {
         return ResponseEntity.ok(ApiResponse.success(reviews));
     }
 
+    @GetMapping("/me")
+    public ResponseEntity<ApiResponse<Page<ReviewResponse>>> getMyProviderReviews(
+            @RequestHeader("Authorization") String authHeader,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Long userId = getUserId(authHeader);
+        Page<ReviewResponse> reviews = reviewService.getReviewsForProviderUser(userId, PageRequest.of(page, size));
+        return ResponseEntity.ok(ApiResponse.success(reviews));
+    }
+
     @PutMapping("/{id}/respond")
     public ResponseEntity<ApiResponse<ReviewResponse>> respondToReview(
             @RequestHeader("Authorization") String authHeader,

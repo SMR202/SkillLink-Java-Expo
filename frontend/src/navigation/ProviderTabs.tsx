@@ -2,20 +2,19 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { View, Text, StyleSheet } from 'react-native';
 import ProviderDashboardScreen from '../screens/provider/DashboardScreen';
+import ProviderJobBoardScreen from '../screens/provider/ProviderJobBoardScreen';
 import BookingMgmtScreen from '../screens/provider/BookingMgmtScreen';
+import EarningsScreen from '../screens/provider/EarningsScreen';
 import ProfileEditScreen from '../screens/provider/ProfileEditScreen';
-import { colors, typography } from '../theme';
+import { colors } from '../theme';
 
 const Tab = createBottomTabNavigator();
 
-type TabIconProps = { name: string; focused: boolean };
-function TabIcon({ name, focused }: TabIconProps) {
-  const icons: Record<string, string> = { Dashboard: '📊', 'My Bookings': '📋', 'Edit Profile': '✏️' };
+function TabIcon({ name, focused }: { name: string; focused: boolean }) {
+  const icons: Record<string, string> = { Dashboard: 'D', Jobs: 'J', Bookings: 'B', Earnings: 'E', Profile: 'P' };
   return (
     <View style={styles.tabIcon}>
-      <Text style={[styles.tabEmoji, focused && styles.tabEmojiActive]}>
-        {icons[name] || '●'}
-      </Text>
+      <Text style={[styles.tabEmoji, focused && styles.tabEmojiActive]}>{icons[name] || '*'}</Text>
     </View>
   );
 }
@@ -33,8 +32,10 @@ export default function ProviderTabs() {
       })}
     >
       <Tab.Screen name="Dashboard" component={ProviderDashboardScreen} />
-      <Tab.Screen name="My Bookings" component={BookingMgmtScreen} />
-      <Tab.Screen name="Edit Profile" component={ProfileEditScreen} />
+      <Tab.Screen name="Jobs" component={ProviderJobBoardScreen} />
+      <Tab.Screen name="Bookings" component={BookingMgmtScreen} />
+      <Tab.Screen name="Earnings" component={EarningsScreen} />
+      <Tab.Screen name="Profile" component={ProfileEditScreen} />
     </Tab.Navigator>
   );
 }
@@ -48,19 +49,8 @@ const styles = StyleSheet.create({
     paddingBottom: 8,
     paddingTop: 8,
   },
-  tabLabel: {
-    fontSize: 11,
-    fontWeight: '500',
-    marginTop: 2,
-  },
-  tabIcon: {
-    alignItems: 'center',
-  },
-  tabEmoji: {
-    fontSize: 20,
-    opacity: 0.4,
-  },
-  tabEmojiActive: {
-    opacity: 1,
-  },
+  tabLabel: { fontSize: 11, fontWeight: '500', marginTop: 2 },
+  tabIcon: { alignItems: 'center' },
+  tabEmoji: { fontSize: 15, fontWeight: '700', opacity: 0.4, color: colors.textMuted },
+  tabEmojiActive: { opacity: 1, color: colors.primary },
 });

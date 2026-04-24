@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import SecureStore from '../utils/storage';
 import { User } from '../types';
+import { authApi } from '../api/auth';
 
 interface AuthState {
   user: User | null;
@@ -34,19 +35,12 @@ export const useAuthStore = create<AuthState>((set) => ({
         set({ isLoading: false });
         return;
       }
-      // Decode JWT to get user info (simple base64 parse)
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      const user: User = {
-        id: parseInt(payload.sub),
-        email: payload.email,
-        role: payload.role,
-        fullName: '', // Will be fetched on profile screen
-        emailVerified: true,
-        createdAt: '',
-      };
+      const user = await authApi.me();
       set({ user, isAuthenticated: true, isLoading: false });
     } catch {
-      set({ isLoading: false });
+      await SecureStore.deleteItemAsync('accessToken');
+      await SecureStore.deleteItemAsync('refreshToken');
+      set({ user: null, isAuthenticated: false, isLoading: false });
     }
   },
 }));

@@ -18,6 +18,8 @@ import ChangePasswordScreen from "../screens/shared/ChangePasswordScreen";
 import HelpSupportScreen from "../screens/shared/HelpSupportScreen";
 import EarningsScreen from "../screens/provider/EarningsScreen";
 import ReviewsScreen from "../screens/provider/ReviewsScreen";
+import PostJobScreen from "../screens/client/PostJobScreen";
+import SubmitProposalScreen from "../screens/provider/SubmitProposalScreen";
 import { useAuthStore } from "../store/authStore";
 import { colors } from "../theme";
 
@@ -108,6 +110,11 @@ export default function AppNavigator() {
                             component={ReviewsScreen}
                             options={{ animation: "slide_from_right" }}
                         />
+                        <Stack.Screen
+                            name="SubmitProposal"
+                            component={SubmitProposalScreen}
+                            options={{ animation: "slide_from_right" }}
+                        />
                     </>
                 ) : (
                     <>
@@ -165,6 +172,11 @@ export default function AppNavigator() {
                             name="HelpSupport"
                             component={HelpSupportScreen}
                             options={{ animation: "slide_from_right" }}
+                        />
+                        <Stack.Screen
+                            name="PostJob"
+                            component={PostJobScreen}
+                            options={{ animation: "slide_from_bottom", presentation: "modal" }}
                         />
                     </>
                 )}

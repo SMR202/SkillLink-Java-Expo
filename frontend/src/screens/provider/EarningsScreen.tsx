@@ -35,10 +35,10 @@ export default function EarningsScreen() {
         try {
             const [earnRes, histRes] = await Promise.all([
                 paymentApi.getEarnings(),
-                paymentApi.getHistory(0, 20),
+                paymentApi.getProviderHistory(0, 20),
             ]);
-            setSummary(earnRes.data);
-            setHistory(histRes.data?.content || []);
+            setSummary(earnRes.data?.data || null);
+            setHistory(histRes.data?.data?.content || []);
         } catch (e: any) {
             Alert.alert(
                 "Error",

@@ -165,3 +165,35 @@ export interface Analytics {
   totalReviews: number;
   averagePlatformRating: number;
 }
+
+export interface JobPost {
+  id: number;
+  clientId: number;
+  clientName: string;
+  categoryId: number;
+  categoryName: string;
+  title: string;
+  description: string;
+  budget: number;
+  location: string | null;
+  deadline: string | null;
+  status: 'OPEN' | 'FILLED' | 'CLOSED';
+  proposalCount: number;
+  createdAt: string;
+}
+
+export interface Proposal {
+  id: number;
+  jobPostId: number;
+  jobTitle: string;
+  providerId: number;
+  providerName: string;
+  providerAvatarUrl: string | null;
+  providerRating: number;
+  coverMessage: string;
+  proposedPrice: number;
+  estimatedDeliveryTime: string;
+  status: 'PENDING' | 'ACCEPTED' | 'DECLINED';
+  bookingId: number | null;
+  createdAt: string;
+}

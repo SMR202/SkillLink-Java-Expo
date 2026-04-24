@@ -50,6 +50,16 @@ public class PaymentController {
         return ResponseEntity.ok(ApiResponse.success(payments));
     }
 
+    @GetMapping("/history/provider")
+    public ResponseEntity<ApiResponse<Page<PaymentResponse>>> getProviderHistory(
+            @RequestHeader("Authorization") String authHeader,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Long userId = getUserId(authHeader);
+        Page<PaymentResponse> payments = paymentService.getProviderHistory(userId, PageRequest.of(page, size));
+        return ResponseEntity.ok(ApiResponse.success(payments));
+    }
+
     private Long getUserId(String authHeader) {
         return tokenProvider.getUserIdFromToken(authHeader.replace("Bearer ", ""));
     }

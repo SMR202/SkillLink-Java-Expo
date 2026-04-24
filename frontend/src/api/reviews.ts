@@ -10,6 +10,11 @@ export const reviewApi = {
       params: { page, size },
     }),
 
+  getMine: (page = 0, size = 10) =>
+    apiClient.get<ApiResponse<PaginatedResponse<Review>>>('/reviews/me', {
+      params: { page, size },
+    }),
+
   respond: (reviewId: number, response: string) =>
     apiClient.put<ApiResponse<Review>>(`/reviews/${reviewId}/respond`, { response }),
 };

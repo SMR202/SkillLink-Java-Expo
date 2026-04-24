@@ -44,4 +44,9 @@ export const authApi = {
     await SecureStore.deleteItemAsync('accessToken');
     await SecureStore.deleteItemAsync('refreshToken');
   },
+
+  me: async () => {
+    const res = await apiClient.get<ApiResponse<import('../types').User>>('/users/me');
+    return res.data.data;
+  },
 };

@@ -12,30 +12,21 @@ import { useNavigation } from "@react-navigation/native";
 import { colors, typography, spacing, borderRadius } from "../../theme";
 import { reviewApi } from "../../api/reviews";
 import { Review } from "../../types";
-import { useAuthStore } from "../../store/authStore";
 
 export default function ReviewsScreen() {
     const navigation = useNavigation<any>();
     const [reviews, setReviews] = useState<Review[]>([]);
     const [loading, setLoading] = useState(true);
 
-    // Assuming we can get current provider reviews from authStore, but reviewApi
-    // either needs providerId or there is an endpoint like GET /api/reviews/me
-    // Let's assume reviewApi has getForMe or we get our ID. Actually, reviewApi.getForProvider requires ID.
-    // Let's fetch from the backend. The API might not have getForMe, so let's read auth store instance to get ID.
-
-    const { user } = useAuthStore();
-
     useEffect(() => {
         loadData();
     }, []);
 
     const loadData = async () => {
-        if (!user?.id) return;
         setLoading(true);
         try {
-            const r = await reviewApi.getForProvider(user.id);
-            setReviews(r.data?.content || []);
+            const r = await reviewApi.getMine();
+            setReviews(r.data?.data?.content || []);
         } catch (e: any) {
             Alert.alert(
                 "Error",

@@ -10,6 +10,9 @@ import GradientButton from '../../components/GradientButton';
 
 type Step = 'info' | 'role';
 
+const isStrongPassword = (value: string) =>
+  value.length >= 8 && /\d/.test(value) && /[!@#$%^&*]/.test(value);
+
 export default function SignupScreen({ navigation }: any) {
   const [step, setStep] = useState<Step>('info');
   const [fullName, setFullName] = useState('');
@@ -22,7 +25,7 @@ export default function SignupScreen({ navigation }: any) {
 
   const handleNext = () => {
     if (!fullName || !email || !password) { Alert.alert('Error', 'Please fill in all fields.'); return; }
-    if (password.length < 8) { Alert.alert('Error', 'Password must be at least 8 characters.'); return; }
+    if (!isStrongPassword(password)) { Alert.alert('Error', 'Password must be at least 8 characters and include 1 number and 1 special character.'); return; }
     if (password !== confirmPassword) { Alert.alert('Error', 'Passwords do not match.'); return; }
     setStep('role');
   };
@@ -66,7 +69,7 @@ export default function SignupScreen({ navigation }: any) {
                 value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none" />
 
               <Text style={s.label}>Password</Text>
-              <TextInput style={s.input} placeholder="Min 8 characters" placeholderTextColor={colors.textMuted}
+              <TextInput style={s.input} placeholder="Min 8 chars, 1 number, 1 special" placeholderTextColor={colors.textMuted}
                 value={password} onChangeText={setPassword} secureTextEntry />
 
               <Text style={s.label}>Confirm Password</Text>
