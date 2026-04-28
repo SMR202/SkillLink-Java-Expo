@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SkillLink - Client Home</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error-container": "#ffdad6",
+                        "on-primary-fixed": "#0f0069",
+                        "on-secondary-fixed-variant": "#404758",
+                        "tertiary-fixed": "#ffdbcc",
+                        "surface": "#fcf8ff",
+                        "tertiary": "#7e3000",
+                        "inverse-primary": "#c3c0ff",
+                        "outline": "#777587",
+                        "primary-fixed": "#e2dfff",
+                        "on-surface": "#1b1b24",
+                        "secondary-container": "#d9dff5",
+                        "on-primary": "#ffffff",
+                        "primary": "#3525cd",
+                        "secondary": "#575e70",
+                        "surface-container-highest": "#e4e1ee",
+                        "outline-variant": "#c7c4d8",
+                        "secondary-fixed-dim": "#c0c6db",
+                        "on-primary-container": "#dad7ff",
+                        "tertiary-fixed-dim": "#ffb695",
+                        "surface-variant": "#e4e1ee",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "surface-container-low": "#f5f2ff",
+                        "on-tertiary-fixed": "#351000",
+                        "surface-bright": "#fcf8ff",
+                        "on-tertiary": "#ffffff",
+                        "surface-tint": "#4d44e3",
+                        "background": "#fcf8ff",
+                        "surface-dim": "#dcd8e5",
+                        "inverse-on-surface": "#f3effc",
+                        "on-error": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "on-surface-variant": "#464555",
+                        "primary-container": "#4f46e5",
+                        "error": "#ba1a1a",
+                        "on-secondary-fixed": "#141b2b",
+                        "on-tertiary-fixed-variant": "#7b2f00",
+                        "tertiary-container": "#a44100",
+                        "on-secondary": "#ffffff",
+                        "secondary-fixed": "#dce2f7",
+                        "surface-container-high": "#eae6f4",
+                        "on-secondary-container": "#5c6274",
+                        "on-tertiary-container": "#ffd2be",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container": "#f0ecf9",
+                        "inverse-surface": "#302f39",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "on-background": "#1b1b24"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xl": "80px",
+                        "xs": "4px",
+                        "base": "8px",
+                        "lg": "48px",
+                        "grid_columns": "12",
+                        "sm": "12px",
+                        "gutter": "24px",
+                        "md": "24px",
+                        "margin": "auto"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Manrope"],
+                        "body-lg": ["Manrope"],
+                        "caption": ["Manrope"],
+                        "h2": ["Manrope"],
+                        "h1": ["Manrope"],
+                        "h3": ["Manrope"],
+                        "label-bold": ["Manrope"]
+                    },
+                    "fontSize": {
+                        "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "caption": ["12px", { "lineHeight": "1.4", "fontWeight": "500" }],
+                        "h2": ["36px", { "lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "h1": ["48px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "h3": ["24px", { "lineHeight": "1.4", "letterSpacing": "0", "fontWeight": "700" }],
+                        "label-bold": ["14px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Manrope', sans-serif; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background antialiased min-h-screen flex flex-col relative">
+<!-- TopAppBar JSON Executed -->
+<header class="fixed top-0 w-full z-50 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 shadow-sm transition-transform duration-200 active:scale-95">
+<div class="flex justify-between items-center px-6 py-4 w-full">
+<div class="flex items-center gap-base">
+<img alt="User profile photo" class="w-8 h-8 rounded-full object-cover border border-outline-variant" data-alt="close up headshot of a smiling young woman with dark hair in a professional setting, soft natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZpw2XIKKikyuP6T5FYgPLEhpv55iqAC8Odu13kqagrdlKrAfyIulslcAaH06qXVTOGieHY_Bpb-aBw8pAcKMTmCNgp4dRUljial32pVX-S2oC3C1YRJw8F3iADS6EOJJ6Mqda_6VXKAO8Va5QoOMDBwn-Wpp3_SrJvl1LEJtMnrVxkxEHOnzPGDf3pVOsjc0lDxxtMVzm_2YDwqUUw4VTTkW9N_invwB-OerWwdPxwTqRj0Sd7C-QfUYLyRK0a1J5oPmuNygC"/>
+<span class="text-xl font-black text-indigo-600 dark:text-indigo-400 font-manrope font-semibold text-lg">SkillLink</span>
+</div>
+<button class="text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow pt-[88px] pb-[100px] px-md w-full max-w-[1280px] mx-auto flex flex-col gap-lg">
+<!-- Welcome Header -->
+<section class="flex flex-col gap-xs pt-base">
+<h1 class="font-h2 text-h2 text-on-surface">Hello, Sarah 👋</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Find the perfect professional for your next project.</p>
+</section>
+<!-- Tab Pills -->
+<section class="flex gap-sm">
+<button class="bg-primary text-on-primary font-label-bold text-label-bold px-md py-sm rounded-full shadow-[0_10px_30px_rgba(0,0,0,0.06)]">
+                Browse Providers
+            </button>
+<button class="bg-surface-container text-on-surface font-label-bold text-label-bold px-md py-sm rounded-full border border-surface-variant hover:bg-surface-container-high transition-colors">
+                Job Board
+            </button>
+</section>
+<!-- Search Bar -->
+<section>
+<div class="flex items-center bg-surface-container-highest rounded-xl px-4 py-3 border border-outline-variant focus-within:border-primary focus-within:ring-2 focus-within:ring-primary-container/20 transition-all">
+<span class="material-symbols-outlined text-on-surface-variant">search</span>
+<input class="bg-transparent border-none outline-none w-full ml-3 font-body-md text-body-md text-on-surface placeholder:text-outline p-0 focus:ring-0" placeholder="Search for skills, names, or categories..." type="text"/>
+<button class="ml-2 text-on-surface-variant hover:text-primary transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined">tune</span>
+</button>
+</div>
+</section>
+<!-- Category Chips -->
+<section class="w-full overflow-hidden">
+<div class="flex overflow-x-auto gap-sm pb-2 hide-scrollbar whitespace-nowrap">
+<button class="px-4 py-2 rounded-full border border-outline-variant bg-surface-container-lowest font-caption text-caption text-on-surface hover:bg-surface-container transition-colors">All Categories</button>
+<button class="px-4 py-2 rounded-full border border-outline-variant bg-surface-container-lowest font-caption text-caption text-on-surface hover:bg-surface-container transition-colors">UI/UX Design</button>
+<button class="px-4 py-2 rounded-full border border-outline-variant bg-surface-container-lowest font-caption text-caption text-on-surface hover:bg-surface-container transition-colors">Web Development</button>
+<button class="px-4 py-2 rounded-full border border-outline-variant bg-surface-container-lowest font-caption text-caption text-on-surface hover:bg-surface-container transition-colors">Copywriting</button>
+<button class="px-4 py-2 rounded-full border border-outline-variant bg-surface-container-lowest font-caption text-caption text-on-surface hover:bg-surface-container transition-colors">Illustration</button>
+<button class="px-4 py-2 rounded-full border border-outline-variant bg-surface-container-lowest font-caption text-caption text-on-surface hover:bg-surface-container transition-colors">SEO Strategy</button>
+</div>
+</section>
+<!-- Provider Cards List -->
+<section class="flex flex-col gap-md">
+<!-- Card 1 -->
+<div class="bg-surface-container-lowest rounded-xl p-md shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-surface-variant flex flex-col md:flex-row gap-md items-start md:items-center hover:shadow-[0_10px_30px_rgba(0,0,0,0.06)] transition-shadow">
+<img alt="Provider Avatar" class="w-16 h-16 rounded-lg object-cover" data-alt="professional headshot of a smiling man with a short beard wearing a casual blue shirt against a light gray background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2CySjnLyFw10pDY6bGnf_nsETsHNYO-qNhi9jwWSov_kUftyT6qrvlkq_JaZQHKkLnJ8rpTfAnn4cvt2zx3k4nygjrQ-DWEe3fxGWKcMCkww3P6tj9sokiN_QYabz0fitA_r4i2ufpewdYQUWCtf6czvDmoKCgBmAJeBlmWV52IVSU13UtEjOgVqXQ4yWGdj4N9jz3_AcnvF2PkcelEHbH62R9X-zDFk7KHipPAFzuHTQqeaHsbgRYFE8WNFml5YJ9aVC5_P9"/>
+<div class="flex-grow flex flex-col gap-xs">
+<div class="flex items-center gap-2">
+<h3 class="font-h3 text-h3 text-on-surface">Alex Rivera</h3>
+<span class="material-symbols-outlined text-primary text-[18px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<p class="font-caption text-caption text-secondary">Senior UI/UX Designer</p>
+<div class="flex items-center gap-1 text-tertiary-container mt-1">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-bold text-label-bold">4.9</span>
+<span class="font-caption text-caption text-outline ml-1">(124 reviews)</span>
+</div>
+</div>
+<div class="flex flex-col items-end gap-sm w-full md:w-auto">
+<p class="font-h3 text-h3 text-on-surface">$85<span class="font-caption text-caption text-outline">/hr</span></p>
+<button class="w-full md:w-auto bg-primary text-on-primary font-label-bold text-label-bold px-4 py-2 rounded-lg hover:bg-primary-container transition-colors">
+                        Book Now
+                    </button>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface-container-lowest rounded-xl p-md shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-surface-variant flex flex-col md:flex-row gap-md items-start md:items-center hover:shadow-[0_10px_30px_rgba(0,0,0,0.06)] transition-shadow">
+<img alt="Provider Avatar" class="w-16 h-16 rounded-lg object-cover" data-alt="professional portrait of a woman with glasses and dark hair wearing a blazer, standing in a bright modern office" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBdnTKnELfE-x0z8VKUOWPDaGPvdVt7yq9yc4YrZ6Fknq2OcoJXol4-qWgzrAmPbxhfy_2VtGrUkvp9-xR1D2UopK-oBJOUreYIBSrscxrhoCdQQyLIqjFoD2tNCaMyWlpBeRDl974QCGFE0VCOcqqDTSuVjZWawmq6sYgk9Q68jlR-aRu1ilbtFGFjdv4NsbezizfFzkWM5H6kJgWUIfF5iWhZHLaQNikktEN9MRcV4axwXgyhblqAPQxYD_NB4K_vv877vq4O"/>
+<div class="flex-grow flex flex-col gap-xs">
+<div class="flex items-center gap-2">
+<h3 class="font-h3 text-h3 text-on-surface">Maya Patel</h3>
+<span class="material-symbols-outlined text-primary text-[18px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<p class="font-caption text-caption text-secondary">Full-Stack Developer</p>
+<div class="flex items-center gap-1 text-tertiary-container mt-1">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-bold text-label-bold">5.0</span>
+<span class="font-caption text-caption text-outline ml-1">(89 reviews)</span>
+</div>
+</div>
+<div class="flex flex-col items-end gap-sm w-full md:w-auto">
+<p class="font-h3 text-h3 text-on-surface">$120<span class="font-caption text-caption text-outline">/hr</span></p>
+<button class="w-full md:w-auto bg-primary text-on-primary font-label-bold text-label-bold px-4 py-2 rounded-lg hover:bg-primary-container transition-colors">
+                        Book Now
+                    </button>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="bg-surface-container-lowest rounded-xl p-md shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-surface-variant flex flex-col md:flex-row gap-md items-start md:items-center hover:shadow-[0_10px_30px_rgba(0,0,0,0.06)] transition-shadow">
+<img alt="Provider Avatar" class="w-16 h-16 rounded-lg object-cover" data-alt="close up portrait of a young man with curly hair and a subtle smile, wearing a casual t-shirt in outdoor natural light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDtuzEp7WUPVh2eA9Za-eq1H-ffbkIc4fNhvVnShF11ICuLPHRzsFyQIpHSP7zUMsKO29AJdRKr3Jk1LjKpt-iMyzdmxt8gO-CByX1jc77XjNx8Ww4UmVy1vtA61Ps3l9VjU3jULYZvZIa5Hx-MpGIh7mKvpNeu5M90ev-mMw9YRzjhQnOQifPhz4ZVne1WlvNqRB2fbHVdJHj1iKYdwTnsi-kN74x3e_bsGlAd6SiI0iPhQZhTxeH7jCW53WLacy5ZIfTw8Jl1"/>
+<div class="flex-grow flex flex-col gap-xs">
+<div class="flex items-center gap-2">
+<h3 class="font-h3 text-h3 text-on-surface">Jordan Lee</h3>
+</div>
+<p class="font-caption text-caption text-secondary">Technical Copywriter</p>
+<div class="flex items-center gap-1 text-tertiary-container mt-1">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-bold text-label-bold">4.8</span>
+<span class="font-caption text-caption text-outline ml-1">(45 reviews)</span>
+</div>
+</div>
+<div class="flex flex-col items-end gap-sm w-full md:w-auto">
+<p class="font-h3 text-h3 text-on-surface">$65<span class="font-caption text-caption text-outline">/hr</span></p>
+<button class="w-full md:w-auto bg-transparent border border-primary text-primary font-label-bold text-label-bold px-4 py-2 rounded-lg hover:bg-primary/5 transition-colors">
+                        Book Now
+                    </button>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar JSON Executed -->
+<nav class="md:hidden fixed bottom-0 w-full z-50 rounded-t-2xl bg-white/95 dark:bg-gray-900/95 border-t border-gray-100 dark:border-gray-800 shadow-[0_-4px_20px_rgba(0,0,0,0.03)] transition-all duration-300 ease-in-out fixed bottom-0 w-full flex justify-around items-center px-4 pb-6 pt-3 backdrop-blur-md">
+<!-- Home (Active) -->
+<a class="flex flex-col items-center justify-center text-indigo-600 dark:text-indigo-400 font-bold bg-indigo-50/50 dark:bg-indigo-900/20 rounded-xl px-3 py-1 hover:text-indigo-500 transition-colors" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-manrope text-[10px] font-medium">Home</span>
+</a>
+<!-- Jobs -->
+<a class="flex flex-col items-center justify-center text-gray-400 dark:text-gray-500 px-3 py-1 hover:text-indigo-500 transition-colors" href="#">
+<span class="material-symbols-outlined mb-1">work</span>
+<span class="font-manrope text-[10px] font-medium">Jobs</span>
+</a>
+<!-- Bookings -->
+<a class="flex flex-col items-center justify-center text-gray-400 dark:text-gray-500 px-3 py-1 hover:text-indigo-500 transition-colors" href="#">
+<span class="material-symbols-outlined mb-1">event_available</span>
+<span class="font-manrope text-[10px] font-medium">Bookings</span>
+</a>
+<!-- Chat -->
+<a class="flex flex-col items-center justify-center text-gray-400 dark:text-gray-500 px-3 py-1 hover:text-indigo-500 transition-colors" href="#">
+<span class="material-symbols-outlined mb-1">chat</span>
+<span class="font-manrope text-[10px] font-medium">Chat</span>
+</a>
+<!-- Profile -->
+<a class="flex flex-col items-center justify-center text-gray-400 dark:text-gray-500 px-3 py-1 hover:text-indigo-500 transition-colors" href="#">
+<span class="material-symbols-outlined mb-1">person</span>
+<span class="font-manrope text-[10px] font-medium">Profile</span>
+</a>
+</nav>
+</body></html>

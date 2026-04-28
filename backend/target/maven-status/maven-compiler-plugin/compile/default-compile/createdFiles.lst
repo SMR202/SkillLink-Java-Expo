@@ -48,6 +48,7 @@ com\skilllink\dto\request\ClientContactUpdateRequest.class
 com\skilllink\entity\User$UserBuilder.class
 com\skilllink\controller\ProposalController.class
 com\skilllink\repository\SkillCategoryRepository.class
+com\skilllink\dto\request\ChangePasswordRequest.class
 com\skilllink\controller\ProviderController.class
 com\skilllink\dto\request\AddressRequest.class
 com\skilllink\dto\response\AnalyticsResponse.class

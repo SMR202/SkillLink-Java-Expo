@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Analytics Dashboard - SkillLink</title>
+<!-- Google Fonts: Manrope -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-tertiary-fixed": "#351000",
+                      "primary-fixed-dim": "#c3c0ff",
+                      "on-error": "#ffffff",
+                      "surface-container-highest": "#e4e1ee",
+                      "surface-bright": "#fcf8ff",
+                      "on-background": "#1b1b24",
+                      "inverse-primary": "#c3c0ff",
+                      "tertiary-fixed-dim": "#ffb695",
+                      "secondary-fixed-dim": "#c0c6db",
+                      "outline-variant": "#c7c4d8",
+                      "error-container": "#ffdad6",
+                      "inverse-surface": "#302f39",
+                      "error": "#ba1a1a",
+                      "on-secondary-container": "#5c6274",
+                      "primary": "#3525cd",
+                      "primary-fixed": "#e2dfff",
+                      "surface-container-high": "#eae6f4",
+                      "primary-container": "#4f46e5",
+                      "on-error-container": "#93000a",
+                      "on-tertiary": "#ffffff",
+                      "surface-container-lowest": "#ffffff",
+                      "on-secondary": "#ffffff",
+                      "on-surface-variant": "#464555",
+                      "on-primary-fixed-variant": "#3323cc",
+                      "tertiary-container": "#a44100",
+                      "secondary-container": "#d9dff5",
+                      "on-surface": "#1b1b24",
+                      "inverse-on-surface": "#f3effc",
+                      "surface-container": "#f0ecf9",
+                      "surface-tint": "#4d44e3",
+                      "outline": "#777587",
+                      "on-tertiary-fixed-variant": "#7b2f00",
+                      "surface-dim": "#dcd8e5",
+                      "on-tertiary-container": "#ffd2be",
+                      "secondary-fixed": "#dce2f7",
+                      "on-primary-container": "#dad7ff",
+                      "tertiary-fixed": "#ffdbcc",
+                      "surface-variant": "#e4e1ee",
+                      "surface-container-low": "#f5f2ff",
+                      "background": "#fcf8ff",
+                      "on-secondary-fixed-variant": "#404758",
+                      "surface": "#fcf8ff",
+                      "secondary": "#575e70",
+                      "on-primary": "#ffffff",
+                      "tertiary": "#7e3000",
+                      "on-secondary-fixed": "#141b2b",
+                      "on-primary-fixed": "#0f0069"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "gutter": "24px",
+                      "margin": "auto",
+                      "base": "8px",
+                      "sm": "12px",
+                      "md": "24px",
+                      "xs": "4px",
+                      "lg": "48px",
+                      "grid_columns": "12",
+                      "xl": "80px"
+              },
+              "fontFamily": {
+                      "body-md": [
+                              "Manrope"
+                      ],
+                      "h1": [
+                              "Manrope"
+                      ],
+                      "caption": [
+                              "Manrope"
+                      ],
+                      "h3": [
+                              "Manrope"
+                      ],
+                      "h2": [
+                              "Manrope"
+                      ],
+                      "body-lg": [
+                              "Manrope"
+                      ],
+                      "label-bold": [
+                              "Manrope"
+                      ]
+              },
+              "fontSize": {
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "1.5",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "h1": [
+                              "48px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "800"
+                              }
+                      ],
+                      "caption": [
+                              "12px",
+                              {
+                                      "lineHeight": "1.4",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "h3": [
+                              "24px",
+                              {
+                                      "lineHeight": "1.4",
+                                      "letterSpacing": "0",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "h2": [
+                              "36px",
+                              {
+                                      "lineHeight": "1.3",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-bold": [
+                              "14px",
+                              {
+                                      "lineHeight": "1",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "600"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+        /* Ambient Shadows as per Style Guidance */
+        .shadow-level-1 { box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.03); }
+        .shadow-level-2 { box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.06); }
+        
+        /* Subtle stroke for separation */
+        .border-subtle { border-color: #F3F4F6; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md text-body-md antialiased pb-24 md:pb-0">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-gray-100 dark:border-slate-800 shadow-[0_4px_20px_rgba(0,0,0,0.03)] flex items-center justify-between px-6 py-4">
+<div class="flex items-center gap-4">
+<button class="md:hidden text-indigo-600 dark:text-indigo-400 hover:opacity-80 transition-opacity active:scale-95 duration-200">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<span class="text-xl font-extrabold text-indigo-600 dark:text-indigo-400 tracking-tighter">SkillLink</span>
+</div>
+<!-- Desktop Navigation Integration (Translating BottomNav items for Web) -->
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-slate-500 hover:opacity-80 transition-opacity font-manrope font-semibold tracking-tight" href="#">Home</a>
+<a class="text-slate-500 hover:opacity-80 transition-opacity font-manrope font-semibold tracking-tight" href="#">Bookings</a>
+<a class="text-slate-500 hover:opacity-80 transition-opacity font-manrope font-semibold tracking-tight" href="#">Earnings</a>
+<a class="text-indigo-600 font-bold hover:opacity-80 transition-opacity font-manrope font-semibold tracking-tight" href="#">Analytics</a>
+<a class="text-slate-500 hover:opacity-80 transition-opacity font-manrope font-semibold tracking-tight" href="#">Admin</a>
+</nav>
+<div class="flex items-center">
+<img alt="User profile avatar" class="w-10 h-10 rounded-full border-2 border-surface-container-highest object-cover shadow-sm" data-alt="Professional headshot of an executive with a warm smile against a clean neutral background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBxp6Xj6vEJVPdLAtybFFfCjyRk8swSTnjghaR_V-w6GhrUQ2_3ouXYCtcyxlHtoiAANyq4xMYHiw_M9_nYNx9EcyAw_-YdGZgGbtymxeBcNsegzwXTzHv7UFgOSHdSBQxiztHaFiYLapRj-HT0e9SsiyXGh0FVeFOY6Ozr_jIVqmthEhbuYZUCAkAuxnAsiBPWx5GQ2r8LCoVvLYhoguw9z-dqJVBPBmRAFa8V-sRdXH9IpcFZQxMenp7EzaYD97B6_diCtro9"/>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="mt-24 md:mt-32 max-w-[1280px] mx-auto px-6 grid grid-cols-12 gap-gutter">
+<!-- Page Header -->
+<div class="col-span-12 flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+<div>
+<h1 class="font-h2 text-h2 text-on-surface">Platform Analytics</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Real-time insights and marketplace performance.</p>
+</div>
+<!-- Contextual Action (Date Picker mock) -->
+<button class="flex items-center gap-2 px-4 py-2 bg-surface-container-lowest border border-outline-variant rounded-lg shadow-level-1 hover:shadow-level-2 transition-shadow text-on-surface font-label-bold text-label-bold">
+<span class="material-symbols-outlined text-[18px]">calendar_today</span>
+                Last 30 Days
+                <span class="material-symbols-outlined text-[18px]">expand_more</span>
+</button>
+</div>
+<!-- Stat Cards Row -->
+<div class="col-span-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-md mb-lg">
+<!-- Card 1 -->
+<div class="bg-surface-container-lowest p-md rounded-xl shadow-level-1 flex flex-col gap-sm">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span class="font-label-bold text-label-bold">Total Revenue</span>
+<span class="material-symbols-outlined text-primary-container bg-primary-fixed p-1.5 rounded-md">payments</span>
+</div>
+<div class="font-h2 text-h2 text-on-surface">$1.2M</div>
+<div class="flex items-center gap-xs font-caption text-caption">
+<span class="text-[#10B981] flex items-center bg-[#10B981]/10 px-1.5 py-0.5 rounded-full"><span class="material-symbols-outlined text-[14px]">trending_up</span> 14.5%</span>
+<span class="text-on-surface-variant">vs last month</span>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface-container-lowest p-md rounded-xl shadow-level-1 flex flex-col gap-sm">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span class="font-label-bold text-label-bold">Active Bookings</span>
+<span class="material-symbols-outlined text-primary-container bg-primary-fixed p-1.5 rounded-md">calendar_today</span>
+</div>
+<div class="font-h2 text-h2 text-on-surface">4,821</div>
+<div class="flex items-center gap-xs font-caption text-caption">
+<span class="text-[#10B981] flex items-center bg-[#10B981]/10 px-1.5 py-0.5 rounded-full"><span class="material-symbols-outlined text-[14px]">trending_up</span> 8.2%</span>
+<span class="text-on-surface-variant">vs last month</span>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="bg-surface-container-lowest p-md rounded-xl shadow-level-1 flex flex-col gap-sm">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span class="font-label-bold text-label-bold">New Users</span>
+<span class="material-symbols-outlined text-primary-container bg-primary-fixed p-1.5 rounded-md">person_add</span>
+</div>
+<div class="font-h2 text-h2 text-on-surface">12.4k</div>
+<div class="flex items-center gap-xs font-caption text-caption">
+<span class="text-[#10B981] flex items-center bg-[#10B981]/10 px-1.5 py-0.5 rounded-full"><span class="material-symbols-outlined text-[14px]">trending_up</span> 22.1%</span>
+<span class="text-on-surface-variant">vs last month</span>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="bg-surface-container-lowest p-md rounded-xl shadow-level-1 flex flex-col gap-sm">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span class="font-label-bold text-label-bold">Avg. Ticket Size</span>
+<span class="material-symbols-outlined text-primary-container bg-primary-fixed p-1.5 rounded-md">shopping_cart</span>
+</div>
+<div class="font-h2 text-h2 text-on-surface">$248.50</div>
+<div class="flex items-center gap-xs font-caption text-caption">
+<span class="text-error flex items-center bg-error-container px-1.5 py-0.5 rounded-full"><span class="material-symbols-outlined text-[14px]">trending_down</span> 1.2%</span>
+<span class="text-on-surface-variant">vs last month</span>
+</div>
+</div>
+</div>
+<!-- Charts Section (Bento Grid Style) -->
+<!-- Revenue Over Time (Full Width) -->
+<div class="col-span-12 bg-surface-container-lowest rounded-xl shadow-level-1 p-md mb-md border border-subtle">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-h3 text-h3 text-on-surface">Revenue Over Time</h3>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">more_horiz</button>
+</div>
+<div class="h-64 w-full relative">
+<!-- Abstract Line Chart Visualization -->
+<svg class="w-full h-full preserve-3d" preserveaspectratio="none" viewbox="0 0 1000 200">
+<!-- Grid Lines -->
+<path d="M 0 50 L 1000 50" fill="none" stroke="#e4e1ee" stroke-dasharray="4 4" stroke-width="1"></path>
+<path d="M 0 100 L 1000 100" fill="none" stroke="#e4e1ee" stroke-dasharray="4 4" stroke-width="1"></path>
+<path d="M 0 150 L 1000 150" fill="none" stroke="#e4e1ee" stroke-dasharray="4 4" stroke-width="1"></path>
+<!-- Area Gradient -->
+<defs>
+<lineargradient id="revenueGradient" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#4f46e5" stop-opacity="0.15"></stop>
+<stop offset="100%" stop-color="#4f46e5" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<!-- Line & Fill -->
+<path d="M 0 180 Q 150 150, 300 120 T 600 80 T 850 40 T 1000 20 L 1000 200 L 0 200 Z" fill="url(#revenueGradient)"></path>
+<path d="M 0 180 Q 150 150, 300 120 T 600 80 T 850 40 T 1000 20" fill="none" stroke="#4f46e5" stroke-linecap="round" stroke-width="3"></path>
+<!-- Data Points -->
+<circle cx="300" cy="120" fill="#ffffff" r="4" stroke="#4f46e5" stroke-width="2"></circle>
+<circle cx="600" cy="80" fill="#ffffff" r="4" stroke="#4f46e5" stroke-width="2"></circle>
+<circle cx="850" cy="40" fill="#ffffff" r="4" stroke="#4f46e5" stroke-width="2"></circle>
+</svg>
+<!-- X-Axis Labels -->
+<div class="absolute bottom-0 w-full flex justify-between text-on-surface-variant font-caption text-caption transform translate-y-6">
+<span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span><span>Jul</span>
+</div>
+</div>
+</div>
+<!-- Monthly Bookings Bar Chart -->
+<div class="col-span-12 lg:col-span-6 bg-surface-container-lowest rounded-xl shadow-level-1 p-md mb-md border border-subtle">
+<div class="flex justify-between items-center mb-8">
+<h3 class="font-h3 text-h3 text-on-surface">Monthly Bookings</h3>
+</div>
+<div class="h-48 w-full flex items-end justify-between gap-2 px-2">
+<!-- Abstract Bar Chart Visualization -->
+<div class="w-full bg-primary-container/20 rounded-t-sm h-[40%] hover:bg-primary-container transition-colors relative group"><div class="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 bg-inverse-surface text-inverse-on-surface font-caption text-caption px-2 py-1 rounded transition-opacity">1.2k</div></div>
+<div class="w-full bg-primary-container/20 rounded-t-sm h-[55%] hover:bg-primary-container transition-colors relative group"><div class="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 bg-inverse-surface text-inverse-on-surface font-caption text-caption px-2 py-1 rounded transition-opacity">1.8k</div></div>
+<div class="w-full bg-primary-container/20 rounded-t-sm h-[45%] hover:bg-primary-container transition-colors relative group"><div class="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 bg-inverse-surface text-inverse-on-surface font-caption text-caption px-2 py-1 rounded transition-opacity">1.4k</div></div>
+<div class="w-full bg-primary-container/20 rounded-t-sm h-[70%] hover:bg-primary-container transition-colors relative group"><div class="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 bg-inverse-surface text-inverse-on-surface font-caption text-caption px-2 py-1 rounded transition-opacity">2.4k</div></div>
+<div class="w-full bg-primary-container/20 rounded-t-sm h-[85%] hover:bg-primary-container transition-colors relative group"><div class="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 bg-inverse-surface text-inverse-on-surface font-caption text-caption px-2 py-1 rounded transition-opacity">3.1k</div></div>
+<div class="w-full bg-primary-container rounded-t-sm h-[100%] shadow-[0_0_10px_rgba(79,70,229,0.3)] relative group"><div class="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 bg-inverse-surface text-inverse-on-surface font-caption text-caption px-2 py-1 rounded transition-opacity">4.8k</div></div>
+</div>
+<div class="w-full border-t border-surface-container-highest mt-2 pt-2 flex justify-between text-on-surface-variant font-caption text-caption">
+<span>W1</span><span>W2</span><span>W3</span><span>W4</span><span>W5</span><span>W6</span>
+</div>
+</div>
+<!-- User Growth Line Chart -->
+<div class="col-span-12 lg:col-span-6 bg-surface-container-lowest rounded-xl shadow-level-1 p-md mb-md border border-subtle flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-center mb-2">
+<h3 class="font-h3 text-h3 text-on-surface">User Growth</h3>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6">Net new registrations over time.</p>
+</div>
+<div class="h-40 w-full relative mt-auto">
+<!-- Secondary Line Chart Visualization -->
+<svg class="w-full h-full preserve-3d" preserveaspectratio="none" viewbox="0 0 500 150">
+<defs>
+<lineargradient id="growthGradient" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#10B981" stop-opacity="0.2"></stop>
+<stop offset="100%" stop-color="#10B981" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<path d="M 0 130 Q 100 110, 200 120 T 350 70 T 500 30 L 500 150 L 0 150 Z" fill="url(#growthGradient)"></path>
+<path d="M 0 130 Q 100 110, 200 120 T 350 70 T 500 30" fill="none" stroke="#10B981" stroke-linecap="round" stroke-width="3"></path>
+<!-- Highlight Point -->
+<circle cx="500" cy="30" fill="#ffffff" r="5" stroke="#10B981" stroke-width="2"></circle>
+</svg>
+<div class="absolute top-4 right-4 bg-surface/80 backdrop-blur-sm border border-outline-variant px-3 py-1.5 rounded-lg shadow-sm">
+<span class="font-h3 text-h3 text-on-surface block leading-none">82.4k</span>
+<span class="font-caption text-caption text-on-surface-variant">Total Users</span>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 w-full z-50 rounded-t-2xl bg-white dark:bg-slate-900 border-t border-gray-100 dark:border-slate-800 shadow-[0_-4px_20px_rgba(0,0,0,0.03)] flex justify-around items-center h-20 px-4 pb-safe">
+<a class="text-slate-400 dark:text-slate-500 flex flex-col items-center gap-1 hover:text-indigo-500 transition-colors active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined">grid_view</span>
+<span class="text-[10px] font-manrope font-medium uppercase tracking-wider">Home</span>
+</a>
+<a class="text-slate-400 dark:text-slate-500 flex flex-col items-center gap-1 hover:text-indigo-500 transition-colors active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined">calendar_today</span>
+<span class="text-[10px] font-manrope font-medium uppercase tracking-wider">Bookings</span>
+</a>
+<a class="text-slate-400 dark:text-slate-500 flex flex-col items-center gap-1 hover:text-indigo-500 transition-colors active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="text-[10px] font-manrope font-medium uppercase tracking-wider">Earnings</span>
+</a>
+<!-- Active Tab -->
+<a class="text-indigo-600 dark:text-indigo-400 flex flex-col items-center gap-1 hover:text-indigo-500 transition-colors active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">insights</span>
+<span class="text-[10px] font-manrope font-medium uppercase tracking-wider">Analytics</span>
+</a>
+<a class="text-slate-400 dark:text-slate-500 flex flex-col items-center gap-1 hover:text-indigo-500 transition-colors active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined">admin_panel_settings</span>
+<span class="text-[10px] font-manrope font-medium uppercase tracking-wider">Admin</span>
+</a>
+</nav>
+</body></html>

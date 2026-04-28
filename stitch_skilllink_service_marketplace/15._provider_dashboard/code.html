@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Provider Dashboard - SkillLink</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-background": "#1b1b24",
+                        "surface-bright": "#fcf8ff",
+                        "surface-container-highest": "#e4e1ee",
+                        "on-error": "#ffffff",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "on-tertiary-fixed": "#351000",
+                        "tertiary-fixed-dim": "#ffb695",
+                        "secondary-fixed-dim": "#c0c6db",
+                        "inverse-primary": "#c3c0ff",
+                        "on-secondary-container": "#5c6274",
+                        "error": "#ba1a1a",
+                        "inverse-surface": "#302f39",
+                        "outline-variant": "#c7c4d8",
+                        "error-container": "#ffdad6",
+                        "primary-container": "#4f46e5",
+                        "on-error-container": "#93000a",
+                        "surface-container-high": "#eae6f4",
+                        "primary-fixed": "#e2dfff",
+                        "primary": "#3525cd",
+                        "inverse-on-surface": "#f3effc",
+                        "tertiary-container": "#a44100",
+                        "secondary-container": "#d9dff5",
+                        "on-surface": "#1b1b24",
+                        "on-surface-variant": "#464555",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "on-secondary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "surface-variant": "#e4e1ee",
+                        "tertiary-fixed": "#ffdbcc",
+                        "secondary-fixed": "#dce2f7",
+                        "on-primary-container": "#dad7ff",
+                        "surface-dim": "#dcd8e5",
+                        "on-tertiary-container": "#ffd2be",
+                        "surface-tint": "#4d44e3",
+                        "outline": "#777587",
+                        "on-tertiary-fixed-variant": "#7b2f00",
+                        "surface-container": "#f0ecf9",
+                        "on-primary": "#ffffff",
+                        "secondary": "#575e70",
+                        "surface": "#fcf8ff",
+                        "on-secondary-fixed-variant": "#404758",
+                        "surface-container-low": "#f5f2ff",
+                        "background": "#fcf8ff",
+                        "on-primary-fixed": "#0f0069",
+                        "tertiary": "#7e3000",
+                        "on-secondary-fixed": "#141b2b"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin": "auto",
+                        "base": "8px",
+                        "gutter": "24px",
+                        "lg": "48px",
+                        "grid_columns": "12",
+                        "xl": "80px",
+                        "xs": "4px",
+                        "sm": "12px",
+                        "md": "24px"
+                    },
+                    "fontFamily": {
+                        "h3": ["Manrope"],
+                        "h2": ["Manrope"],
+                        "body-lg": ["Manrope"],
+                        "label-bold": ["Manrope"],
+                        "body-md": ["Manrope"],
+                        "h1": ["Manrope"],
+                        "caption": ["Manrope"]
+                    },
+                    "fontSize": {
+                        "h3": ["24px", { "lineHeight": "1.4", "letterSpacing": "0", "fontWeight": "700" }],
+                        "h2": ["36px", { "lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "label-bold": ["14px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "h1": ["48px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "caption": ["12px", { "lineHeight": "1.4", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Manrope', sans-serif; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen pb-24 md:pb-0">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md border-b border-slate-100 dark:border-slate-800 shadow-[0px_4px_20px_rgba(0,0,0,0.03)] hidden md:flex">
+<div class="flex justify-between items-center px-6 py-4 max-w-[1280px] mx-auto w-full">
+<div class="flex items-center gap-4">
+<button class="text-slate-900 dark:text-slate-100 hover:text-indigo-500 dark:hover:text-indigo-300 transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">grid_view</span>
+</button>
+<span class="text-xl font-extrabold tracking-tight text-indigo-600 dark:text-indigo-400 font-manrope">SkillLink</span>
+</div>
+<!-- Desktop Navigation -->
+<nav class="hidden md:flex gap-8">
+<a class="text-slate-500 dark:text-slate-400 font-manrope hover:text-indigo-500 dark:hover:text-indigo-300 transition-colors active:scale-95 duration-200 font-label-bold text-label-bold" href="#">Explore</a>
+<a class="text-slate-500 dark:text-slate-400 font-manrope hover:text-indigo-500 dark:hover:text-indigo-300 transition-colors active:scale-95 duration-200 font-label-bold text-label-bold" href="#">Bookings</a>
+<a class="text-slate-500 dark:text-slate-400 font-manrope hover:text-indigo-500 dark:hover:text-indigo-300 transition-colors active:scale-95 duration-200 font-label-bold text-label-bold" href="#">Post</a>
+<a class="text-indigo-600 dark:text-indigo-400 font-semibold font-manrope hover:text-indigo-500 dark:hover:text-indigo-300 transition-colors active:scale-95 duration-200 font-label-bold text-label-bold" href="#">Stats</a>
+</nav>
+<img alt="user_profile_avatar" class="w-10 h-10 rounded-full object-cover border border-slate-200" data-alt="professional headshot of a young man smiling softly against a light grey background, wearing a casual navy blue shirt, soft natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCPurt2LtrvbV-YIlMKgPZxb0vMXJ1MIveWxWAZyjUujir8xAm4namDH259Neb2DygICPIe6laE3j0BTRb6Ys-zqym_mjUPIbEUPOYnS8CI4vs9pJ7U3DyYeRKtkQ8AzNvK5EbpPCXm5owRiMbdnltnUAiuuxRR-gYcLmb4eXyrPXeO4LL9FHk-qHWPEXrz-uhzzbGuTCn8pS0YRjOt7brU_erKJyQn-x3BR9s0OGLy6ZLb-GSybvltR-PLbjfVMBbQjI7bpHni"/>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="max-w-[1280px] mx-auto px-6 pt-8 pb-12 md:pt-28 space-y-8">
+<!-- Welcome Header -->
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-4">
+<img alt="James Avatar" class="w-16 h-16 rounded-full object-cover shadow-sm md:hidden" data-alt="professional headshot of a young man smiling softly against a light grey background, wearing a casual navy blue shirt, soft natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-IhdtVsbae_SZQEKXpK0x8vG31qb2VxLViEg0fdPY1FkRb9WYlRPw8FONCSXLXeHyCA5hXJv6pBpVCbF_ZWNkHFFbcvDF8CsjLEOdoazklbHecIH6vnvILZagJJv3OWxPs1A1Q0mCLl2silK3nqrspDnm_nHlKpwm_aaYz-qXLjBLObTlJ5nWJgngRUAyTJAJDESN6HWdb7vdUOYCdDWI5WLLP9NMRzWQ2UjLRLMAqRkeMhXpnjQ53fV1Lf9URy3xryDqTnQo"/>
+<div>
+<h1 class="font-h2 text-h2 text-on-surface">Welcome back, James</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Here is what is happening today.</p>
+</div>
+</div>
+<button class="hidden md:flex items-center justify-center w-12 h-12 rounded-full bg-surface-container-low text-on-surface hover:bg-surface-container transition-colors shadow-[0px_4px_20px_rgba(0,0,0,0.03)]">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">notifications</span>
+</button>
+</div>
+<!-- Dashboard Grid -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<!-- Stats Row (Bento Style) -->
+<div class="md:col-span-8 grid grid-cols-3 gap-4">
+<!-- Pending -->
+<div class="bg-surface-container-lowest rounded-xl p-md shadow-[0px_4px_20px_rgba(0,0,0,0.03)] border border-outline-variant/30 flex flex-col justify-center items-center text-center relative overflow-hidden group hover:shadow-[0px_10px_30px_rgba(0,0,0,0.06)] transition-shadow">
+<div class="absolute -right-4 -top-4 w-16 h-16 bg-surface-container-low rounded-full opacity-50 group-hover:scale-150 transition-transform duration-500"></div>
+<span class="material-symbols-outlined text-outline mb-2" style="font-variation-settings: 'FILL' 0;">hourglass_empty</span>
+<h3 class="font-h2 text-h2 text-on-surface mb-1">12</h3>
+<p class="font-caption text-caption text-on-surface-variant uppercase tracking-widest">Pending</p>
+</div>
+<!-- Accepted -->
+<div class="bg-surface-container-lowest rounded-xl p-md shadow-[0px_4px_20px_rgba(0,0,0,0.03)] border border-outline-variant/30 flex flex-col justify-center items-center text-center relative overflow-hidden group hover:shadow-[0px_10px_30px_rgba(0,0,0,0.06)] transition-shadow">
+<div class="absolute -right-4 -top-4 w-16 h-16 bg-primary-container/10 rounded-full opacity-50 group-hover:scale-150 transition-transform duration-500"></div>
+<span class="material-symbols-outlined text-primary mb-2" style="font-variation-settings: 'FILL' 0;">check_circle</span>
+<h3 class="font-h2 text-h2 text-on-surface mb-1">5</h3>
+<p class="font-caption text-caption text-on-surface-variant uppercase tracking-widest">Accepted</p>
+</div>
+<!-- Completed -->
+<div class="bg-surface-container-lowest rounded-xl p-md shadow-[0px_4px_20px_rgba(0,0,0,0.03)] border border-outline-variant/30 flex flex-col justify-center items-center text-center relative overflow-hidden group hover:shadow-[0px_10px_30px_rgba(0,0,0,0.06)] transition-shadow">
+<div class="absolute -right-4 -top-4 w-16 h-16 bg-tertiary-container/10 rounded-full opacity-50 group-hover:scale-150 transition-transform duration-500"></div>
+<span class="material-symbols-outlined text-tertiary mb-2" style="font-variation-settings: 'FILL' 0;">done_all</span>
+<h3 class="font-h2 text-h2 text-on-surface mb-1">128</h3>
+<p class="font-caption text-caption text-on-surface-variant uppercase tracking-widest">Completed</p>
+</div>
+</div>
+<!-- Earnings Card -->
+<div class="md:col-span-4 bg-primary-container text-on-primary rounded-xl p-md shadow-[0px_10px_30px_rgba(0,0,0,0.06)] relative overflow-hidden flex flex-col justify-between h-full min-h-[160px]">
+<div class="absolute -right-12 -bottom-12 w-48 h-48 bg-white/10 rounded-full blur-2xl"></div>
+<div class="absolute -left-12 -top-12 w-32 h-32 bg-primary/20 rounded-full blur-xl"></div>
+<div class="relative z-10 flex justify-between items-start">
+<p class="font-label-bold text-label-bold text-on-primary/80 uppercase tracking-wider">This Month</p>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">trending_up</span>
+</div>
+<div class="relative z-10 mt-4">
+<h2 class="font-h1 text-h1">$2,450</h2>
+<p class="font-caption text-caption text-on-primary/80 mt-1">+15% from last month</p>
+</div>
+</div>
+<!-- Quick Actions -->
+<div class="md:col-span-12">
+<h3 class="font-h3 text-h3 text-on-surface mb-4">Quick Actions</h3>
+<div class="flex gap-4 overflow-x-auto pb-2 snap-x">
+<button class="snap-start flex flex-col items-center justify-center gap-2 min-w-[100px] p-4 bg-surface-container-lowest rounded-xl shadow-[0px_4px_20px_rgba(0,0,0,0.03)] border border-outline-variant/30 hover:border-primary/50 transition-colors group">
+<div class="w-12 h-12 rounded-full bg-primary-container/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">calendar_month</span>
+</div>
+<span class="font-label-bold text-label-bold text-on-surface">Bookings</span>
+</button>
+<button class="snap-start flex flex-col items-center justify-center gap-2 min-w-[100px] p-4 bg-surface-container-lowest rounded-xl shadow-[0px_4px_20px_rgba(0,0,0,0.03)] border border-outline-variant/30 hover:border-primary/50 transition-colors group">
+<div class="w-12 h-12 rounded-full bg-primary-container/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">person</span>
+</div>
+<span class="font-label-bold text-label-bold text-on-surface">Profile</span>
+</button>
+<button class="snap-start flex flex-col items-center justify-center gap-2 min-w-[100px] p-4 bg-surface-container-lowest rounded-xl shadow-[0px_4px_20px_rgba(0,0,0,0.03)] border border-outline-variant/30 hover:border-primary/50 transition-colors group">
+<div class="w-12 h-12 rounded-full bg-primary-container/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">star</span>
+</div>
+<span class="font-label-bold text-label-bold text-on-surface">Reviews</span>
+</button>
+</div>
+</div>
+<!-- Recent Activity -->
+<div class="md:col-span-12">
+<div class="flex justify-between items-center mb-4">
+<h3 class="font-h3 text-h3 text-on-surface">Recent Activity</h3>
+<button class="font-label-bold text-label-bold text-primary hover:text-primary-fixed-dim transition-colors">View All</button>
+</div>
+<div class="bg-surface-container-lowest rounded-xl shadow-[0px_4px_20px_rgba(0,0,0,0.03)] border border-outline-variant/30 overflow-hidden">
+<!-- Item 1 -->
+<div class="flex items-center gap-4 p-4 border-b border-outline-variant/20 hover:bg-surface-container-low transition-colors cursor-pointer">
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container shrink-0">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 0;">chat</span>
+</div>
+<div class="flex-grow">
+<p class="font-body-md text-body-md text-on-surface font-medium">New message from Sarah</p>
+<p class="font-caption text-caption text-on-surface-variant">"Hi James, checking on the plumbing..."</p>
+</div>
+<span class="font-caption text-caption text-outline whitespace-nowrap">2m ago</span>
+</div>
+<!-- Item 2 -->
+<div class="flex items-center gap-4 p-4 border-b border-outline-variant/20 hover:bg-surface-container-low transition-colors cursor-pointer">
+<div class="w-10 h-10 rounded-full bg-primary-container/10 flex items-center justify-center text-primary shrink-0">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 0;">event_available</span>
+</div>
+<div class="flex-grow">
+<p class="font-body-md text-body-md text-on-surface font-medium">Booking confirmed</p>
+<p class="font-caption text-caption text-on-surface-variant">Kitchen sink repair - Tomorrow 10am</p>
+</div>
+<span class="font-caption text-caption text-outline whitespace-nowrap">1h ago</span>
+</div>
+<!-- Item 3 -->
+<div class="flex items-center gap-4 p-4 hover:bg-surface-container-low transition-colors cursor-pointer">
+<div class="w-10 h-10 rounded-full bg-tertiary-container/10 flex items-center justify-center text-tertiary shrink-0">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<div class="flex-grow">
+<p class="font-body-md text-body-md text-on-surface font-medium">Review received</p>
+<p class="font-caption text-caption text-on-surface-variant">5 stars from Michael T.</p>
+</div>
+<span class="font-caption text-caption text-outline whitespace-nowrap">3h ago</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden bg-white dark:bg-slate-900 fixed bottom-0 w-full z-50 rounded-t-xl border-t border-slate-100 dark:border-slate-800 shadow-[0px_-4px_20px_rgba(0,0,0,0.03)] fixed bottom-0 left-0 w-full flex justify-around items-center px-4 py-3 pb-safe font-manrope text-[11px] font-medium transition-all cubic-bezier(0.4,0,0.2,1)">
+<!-- Explore -->
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800/50 p-2 rounded-lg" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 0;">search</span>
+<span>Explore</span>
+</a>
+<!-- Bookings -->
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800/50 p-2 rounded-lg" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 0;">calendar_today</span>
+<span>Bookings</span>
+</a>
+<!-- Post -->
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800/50 p-2 rounded-lg" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 0;">add_circle</span>
+<span>Post</span>
+</a>
+<!-- Stats (Active) -->
+<a class="flex flex-col items-center justify-center text-indigo-600 dark:text-indigo-400 font-bold hover:bg-slate-50 dark:hover:bg-slate-800/50 p-2 rounded-lg" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">analytics</span>
+<span>Stats</span>
+</a>
+<!-- Profile -->
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800/50 p-2 rounded-lg" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 0;">person</span>
+<span>Profile</span>
+</a>
+</nav>
+</body></html>

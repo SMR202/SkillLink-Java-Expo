@@ -2,12 +2,16 @@ import React, { useState } from "react";
 import { View, Text, Pressable, StyleSheet } from "react-native";
 import AdminDashboardScreen from "../screens/admin/AdminDashboardScreen";
 import UserManagementScreen from "../screens/admin/UserManagementScreen";
+import ReviewModerationScreen from "../screens/admin/ReviewModerationScreen";
+import AnalyticsScreen from "../screens/admin/AnalyticsScreen";
 import ProfileSettingsScreen from "../screens/shared/ProfileSettingsScreen";
 import { colors, typography } from "../theme";
 
 const tabs = [
     { key: "dashboard", label: "Dashboard", icon: "📊" },
     { key: "users", label: "Users", icon: "👥" },
+    { key: "reviews", label: "Reviews", icon: "⭐" },
+    { key: "analytics", label: "Analytics", icon: "📈" },
     { key: "profile", label: "Profile", icon: "👤" },
 ];
 
@@ -18,6 +22,10 @@ export default function AdminTabs() {
         switch (activeTab) {
             case "users":
                 return <UserManagementScreen />;
+            case "reviews":
+                return <ReviewModerationScreen />;
+            case "analytics":
+                return <AnalyticsScreen />;
             case "profile":
                 return <ProfileSettingsScreen onAdminNavigate={setActiveTab} />;
             default:
@@ -75,10 +83,10 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
     },
-    tabIcon: { fontSize: 20, opacity: 0.4 },
+    tabIcon: { fontSize: 18, opacity: 0.4 },
     tabIconActive: { opacity: 1 },
     tabLabel: {
-        fontSize: 11,
+        fontSize: 9,
         fontWeight: "500",
         color: colors.textMuted,
         marginTop: 2,

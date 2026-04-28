@@ -53,6 +53,23 @@ public class AdminController {
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
+    @GetMapping("/reviews")
+    public ResponseEntity<ApiResponse<?>> getAllReviews(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "50") int size) {
+        var reviews = adminService.getAllReviews(PageRequest.of(page, size));
+        return ResponseEntity.ok(ApiResponse.success(reviews));
+    }
+
+    @DeleteMapping("/reviews/{id}")
+    public ResponseEntity<ApiResponse<Void>> deleteReview(
+            @RequestHeader("Authorization") String authHeader,
+            @PathVariable Long id) {
+        Long adminId = getUserId(authHeader);
+        adminService.deleteReview(adminId, id);
+        return ResponseEntity.ok(ApiResponse.success("Review removed successfully", null));
+    }
+
     private Long getUserId(String authHeader) {
         return tokenProvider.getUserIdFromToken(authHeader.replace("Bearer ", ""));
     }

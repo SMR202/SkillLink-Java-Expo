@@ -12,13 +12,21 @@ import { colors } from '../theme';
 const Tab = createBottomTabNavigator();
 
 function TabIcon({ name, focused }: { name: string; focused: boolean }) {
-  const icons: Record<string, string> = { Home: 'H', Jobs: 'J', 'My Jobs': 'M', Bookings: 'B', Messages: 'C', Profile: 'P' };
+  const icons: Record<string, string> = {
+    Home: '🏠',
+    Jobs: '🔍',
+    'My Jobs': '📋',
+    Bookings: '📆',
+    Messages: '💬',
+    Profile: '👤',
+  };
   return (
     <View style={styles.tabIcon}>
-      <Text style={[styles.tabEmoji, focused && styles.tabEmojiActive]}>{icons[name] || '*'}</Text>
+      <Text style={[styles.tabEmoji, focused && styles.tabEmojiActive]}>{icons[name] || '⬡'}</Text>
     </View>
   );
 }
+
 
 export default function ClientTabs() {
   return (

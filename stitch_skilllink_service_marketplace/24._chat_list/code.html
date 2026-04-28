@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/>
+<title>Messages - SkillLink</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed": "#dce2f7",
+                        "surface-container-lowest": "#ffffff",
+                        "background": "#fcf8ff",
+                        "secondary-fixed-dim": "#c0c6db",
+                        "inverse-primary": "#c3c0ff",
+                        "surface": "#fcf8ff",
+                        "outline": "#777587",
+                        "surface-container-high": "#eae6f4",
+                        "on-secondary-fixed-variant": "#404758",
+                        "on-error-container": "#93000a",
+                        "on-background": "#1b1b24",
+                        "error": "#ba1a1a",
+                        "surface-container-low": "#f5f2ff",
+                        "on-tertiary": "#ffffff",
+                        "surface-tint": "#4d44e3",
+                        "surface-container": "#f0ecf9",
+                        "tertiary": "#7e3000",
+                        "outline-variant": "#c7c4d8",
+                        "on-surface-variant": "#464555",
+                        "on-error": "#ffffff",
+                        "surface-dim": "#dcd8e5",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "surface-bright": "#fcf8ff",
+                        "surface-variant": "#e4e1ee",
+                        "error-container": "#ffdad6",
+                        "surface-container-highest": "#e4e1ee",
+                        "on-tertiary-container": "#ffd2be",
+                        "on-secondary-fixed": "#141b2b",
+                        "inverse-on-surface": "#f3effc",
+                        "on-primary-fixed": "#0f0069",
+                        "on-primary-container": "#dad7ff",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "primary-container": "#4f46e5",
+                        "on-tertiary-fixed": "#351000",
+                        "on-secondary-container": "#5c6274",
+                        "inverse-surface": "#302f39",
+                        "secondary": "#575e70",
+                        "primary": "#3525cd",
+                        "secondary-container": "#d9dff5",
+                        "on-primary": "#ffffff",
+                        "on-surface": "#1b1b24",
+                        "tertiary-fixed": "#ffdbcc",
+                        "tertiary-fixed-dim": "#ffb695",
+                        "tertiary-container": "#a44100",
+                        "primary-fixed": "#e2dfff",
+                        "on-tertiary-fixed-variant": "#7b2f00",
+                        "on-secondary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "lg": "48px",
+                        "margin": "auto",
+                        "gutter": "24px",
+                        "xs": "4px",
+                        "grid_columns": "12",
+                        "xl": "80px",
+                        "sm": "12px",
+                        "md": "24px",
+                        "base": "8px"
+                    },
+                    "fontFamily": {
+                        "h1": ["Manrope"],
+                        "h3": ["Manrope"],
+                        "body-lg": ["Manrope"],
+                        "label-bold": ["Manrope"],
+                        "h2": ["Manrope"],
+                        "caption": ["Manrope"],
+                        "body-md": ["Manrope"]
+                    },
+                    "fontSize": {
+                        "h1": ["48px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "h3": ["24px", { "lineHeight": "1.4", "letterSpacing": "0", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "label-bold": ["14px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "h2": ["36px", { "lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "caption": ["12px", { "lineHeight": "1.4", "fontWeight": "500" }],
+                        "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
+        .pt-safe { padding-top: env(safe-area-inset-top); }
+        /* Hide scrollbar for clean aesthetic */
+        ::-webkit-scrollbar { display: none; }
+        * { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface antialiased min-h-screen flex flex-col font-body-md">
+<!-- TopAppBar (Web) -->
+<header class="hidden md:flex justify-between items-center px-6 h-16 w-full fixed top-0 z-50 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md shadow-[0_4px_20px_rgba(0,0,0,0.03)] border-b border-gray-100 dark:border-gray-800">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full overflow-hidden bg-surface-container-high shrink-0">
+<img alt="User profile photo" class="w-full h-full object-cover" data-alt="Portrait of a young professional woman with a warm smile, natural lighting, wearing a simple elegant blouse" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDM0aOLmh_ZpJIkDSQDiYU1SQUK8vjZpr5rxSBQEkzNjBIEDAjK4hIagTxFnUakKyLKM_N0PgAgjUTIcy0akXJ-gm_xmqzsqqdg_JYRSSH2wmJyGGs7O9rlme5FVpvpxst1Az20T__04HxpQVEadvUuu07Vg53zlnaHPtYWwa8NLtqDKcb14zs-_YZ7VXwW8jYYPqOE55KTLZgqCskmNP-v91nKmTWfBFYegD5GsFuI5ViLHVOLkxsjOkDGP_iHmhkyK0GmECUG"/>
+</div>
+<span class="text-xl font-extrabold tracking-tighter text-indigo-600 dark:text-indigo-400 font-h3 text-h3">SkillLink</span>
+</div>
+<nav class="flex gap-8">
+<a class="font-label-bold text-label-bold text-gray-500 dark:text-gray-400 hover:opacity-80 transition-opacity active:scale-95 duration-200" href="#">Explore</a>
+<a class="font-label-bold text-label-bold text-gray-500 dark:text-gray-400 hover:opacity-80 transition-opacity active:scale-95 duration-200" href="#">Bookings</a>
+<a class="font-label-bold text-label-bold text-indigo-600 dark:text-indigo-400 hover:opacity-80 transition-opacity active:scale-95 duration-200 flex flex-col items-center after:content-[''] after:w-full after:h-0.5 after:bg-indigo-600 after:mt-1 after:rounded-full" href="#">Messages</a>
+<a class="font-label-bold text-label-bold text-gray-500 dark:text-gray-400 hover:opacity-80 transition-opacity active:scale-95 duration-200" href="#">Account</a>
+</nav>
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-surface-container hover:bg-surface-container-high transition-colors text-indigo-600 dark:text-indigo-400 hover:opacity-80 active:scale-95 duration-200">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+</header>
+<!-- Mobile Header (Simplified for Main Canvas context if needed, but TopAppBar specifies fixed top-0 w-full z-50 for all) -->
+<!-- Applying the TopAppBar to mobile as well based on component instructions, but adjusting layout per typical responsive needs -->
+<header class="md:hidden flex justify-between items-center px-6 h-16 w-full fixed top-0 z-50 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md shadow-[0_4px_20px_rgba(0,0,0,0.03)] border-b border-gray-100 dark:border-gray-800 pt-safe">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full overflow-hidden bg-surface-container-high shrink-0">
+<img alt="User profile photo" class="w-full h-full object-cover" data-alt="Portrait of a young professional woman with a warm smile, natural lighting, wearing a simple elegant blouse" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCqUHwcNLqCNJwZGJ7NV-wG1z7NBJNlFtM55ulmHgbbmmT1C3xshVg9FN6ilU4b9dFSZ30fY6-jhYnsvp0w9GzvSYopYb5sgmfOf-m8sX5baRUO6CrEIfgC4NCKXprDUhc1-RodUf-oqL94_HBYheRs5a_cxbkxZbBFfbscm2YmyLBOBnmdU5_fmklGb3igh06AbbWz-O8vhfOxyQEqECbmF8CfjEBazARRO9dv3TctBHiB2GzwVDDu218OMcNpcWQjlEo74DXN"/>
+</div>
+<span class="text-xl font-extrabold tracking-tighter text-indigo-600 dark:text-indigo-400">SkillLink</span>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full text-indigo-600 dark:text-indigo-400 hover:opacity-80 transition-opacity active:scale-95 duration-200">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+</header>
+<!-- Main Canvas -->
+<main class="flex-1 w-full max-w-[1280px] mx-auto pt-20 md:pt-24 pb-28 md:pb-12 px-4 md:px-gutter lg:px-lg mt-4">
+<!-- Page Header -->
+<div class="mb-8 md:mb-12">
+<h1 class="font-h2 text-h2 text-on-surface mb-2">Messages</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Stay connected with your service providers and clients.</p>
+</div>
+<!-- Search / Filter Bar -->
+<div class="mb-8 relative max-w-md">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full h-12 pl-12 pr-4 rounded-xl bg-surface-container-lowest border border-outline-variant focus:border-primary-container focus:ring-2 focus:ring-primary-container/20 transition-all font-body-md text-body-md text-on-surface placeholder:text-outline shadow-[0_2px_10px_rgba(0,0,0,0.02)] outline-none" placeholder="Search conversations..." type="text"/>
+</div>
+<!-- Chat List Container -->
+<div class="flex flex-col gap-2 max-w-3xl">
+<!-- Unread Chat Item -->
+<a class="group relative flex items-center gap-4 p-4 rounded-xl bg-surface-container-lowest shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_10px_30px_rgba(0,0,0,0.06)] transition-all duration-200 border border-transparent hover:border-surface-container-highest cursor-pointer" href="#">
+<!-- Avatar with Online Indicator -->
+<div class="relative w-14 h-14 rounded-full shrink-0">
+<img alt="Avatar" class="w-full h-full object-cover rounded-full" data-alt="Portrait of a professional man in a tailored suit, looking confident, natural office lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB4L_foGP4XQLSazJclP_cQTA0X3jvzj_GBtFATXoE0sniSsLD3oalgZQpPgXFuIyGDDP2JE4to0C0a8ptFNdKnI-5rIUmXUcj1fbFumS97cRyV6exKe-k08miQqW5JtvEHfzmXlNDfEQY-kOGj9O0NJ9CQ5Fi5McSy_8CpFIVMeQAt2RXTgvSMmh0m6lCpxa5VWuGKCI_2bmZ1Wn0pUL5ArtQIpefkpfNsX2RmC_4Dkn4wS9YD7XuzmY1wfm_ez7UxlEpBAaeu"/>
+<div class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-[#10B981] rounded-full border-2 border-surface-container-lowest"></div>
+</div>
+<!-- Content -->
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-baseline mb-1">
+<h3 class="font-label-bold text-label-bold text-on-surface truncate pr-2">Michael Chen • Corporate Law</h3>
+<span class="font-caption text-caption text-primary font-semibold shrink-0">2m ago</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface font-medium truncate pr-8">The revised NDA is ready for your review. Let me know if you have any questions.</p>
+</div>
+<!-- Unread Badge -->
+<div class="absolute right-4 top-1/2 -translate-y-1/2 flex items-center justify-center min-w-[20px] h-[20px] px-1.5 rounded-full bg-primary-container text-on-primary font-caption text-[10px] font-bold">
+                    3
+                </div>
+</a>
+<!-- Unread Chat Item -->
+<a class="group relative flex items-center gap-4 p-4 rounded-xl bg-surface-container-lowest shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_10px_30px_rgba(0,0,0,0.06)] transition-all duration-200 border border-transparent hover:border-surface-container-highest cursor-pointer" href="#">
+<div class="relative w-14 h-14 rounded-full shrink-0">
+<img alt="Avatar" class="w-full h-full object-cover rounded-full" data-alt="Portrait of an experienced female architect holding blueprints, bright modern studio setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCzbYiJhiKrc4GzWyKFugnJbKsnQAPn_cY1EfBYfFCGTZgJizNDeXS4-i0xwm-yraT2Phlmaez3-9lpJp09e6IaGhOzj7maHGrdKR9NxW3lfoVBNmrDpeZ9J7DRz19gBurf40LaKJOFMDKV3yX6shBkrI5VsDH6HahOQP-0_342deMJAqPgmj9gk-hbqsyrnYW41L0fORk0foQAsucmnOHfE8JSSPZ3qtFFCp03362Tk-iZFurcR2MuEbY4TfhGjKd7iSZhjrOa"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-baseline mb-1">
+<h3 class="font-label-bold text-label-bold text-on-surface truncate pr-2">Sarah Jenkins • Architecture</h3>
+<span class="font-caption text-caption text-primary font-semibold shrink-0">1h ago</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface font-medium truncate pr-8">I've uploaded the new floor plans to the project folder.</p>
+</div>
+<div class="absolute right-4 top-1/2 -translate-y-1/2 flex items-center justify-center min-w-[20px] h-[20px] px-1.5 rounded-full bg-primary-container text-on-primary font-caption text-[10px] font-bold">
+                    1
+                </div>
+</a>
+<!-- Read Chat Item -->
+<a class="group flex items-center gap-4 p-4 rounded-xl hover:bg-surface-container-low transition-colors duration-200 border-b border-surface-container-high last:border-b-0 cursor-pointer" href="#">
+<div class="relative w-14 h-14 rounded-full shrink-0 opacity-80">
+<img alt="Avatar" class="w-full h-full object-cover rounded-full grayscale-[20%]" data-alt="Portrait of a middle-aged male financial advisor in business casual, warm indoor lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAOjsIpoaCO0y4IBUOacJNFle-9t447nOw_Gnj2Q8rJQz2aj6ablCK34svRb9jLZNw5IFqnUEjXyA691M7_Qgwx0nUrg-DnTuzYGt7xRzfr1zMpIdQYYyhu69zhsBZRN_5Gf9dqnpE-ZpJCKbFv1A27l_P0ncikQgh0pZVbQngGR_eW-d4Kp2ByCCMZ0CZxRITxQWNATruRv9ERIDB6QgGjfn43z2b815xsw9NPGgeWysW1lWn-Z0z2V2eRaCwI9YodY8wVMQZy"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-baseline mb-1">
+<h3 class="font-label-bold text-label-bold text-on-surface-variant truncate pr-2">David Rossi • Wealth Management</h3>
+<span class="font-caption text-caption text-outline shrink-0">Yesterday</span>
+</div>
+<p class="font-body-md text-body-md text-outline truncate pr-2">Thank you for the meeting today. I will send the portfolio analysis by Friday.</p>
+</div>
+</a>
+<!-- Read Chat Item -->
+<a class="group flex items-center gap-4 p-4 rounded-xl hover:bg-surface-container-low transition-colors duration-200 border-b border-surface-container-high last:border-b-0 cursor-pointer" href="#">
+<div class="relative w-14 h-14 rounded-full shrink-0 opacity-80 flex items-center justify-center bg-secondary-container text-on-secondary-container font-h3 text-h3">
+<span class="material-symbols-outlined" data-icon="support_agent">support_agent</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-baseline mb-1">
+<h3 class="font-label-bold text-label-bold text-on-surface-variant truncate pr-2">SkillLink Support</h3>
+<span class="font-caption text-caption text-outline shrink-0">Mon</span>
+</div>
+<p class="font-body-md text-body-md text-outline truncate pr-2">Your recent transaction has been successfully processed.</p>
+</div>
+</a>
+<!-- Read Chat Item -->
+<a class="group flex items-center gap-4 p-4 rounded-xl hover:bg-surface-container-low transition-colors duration-200 border-b border-surface-container-high last:border-b-0 cursor-pointer" href="#">
+<div class="relative w-14 h-14 rounded-full shrink-0 opacity-80">
+<img alt="Avatar" class="w-full h-full object-cover rounded-full grayscale-[20%]" data-alt="Portrait of a young female graphic designer with creative colorful hair, bright studio setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAHC3ltsKohqc3V3nwk9rv6arSGPvPE1TOhB9EP9ypzbUSDKiYEFQOPRd242TVRKyLGWnR2ZpgX8W9t8ByuLXwPNrIouB8INhNkYaUOhv1FQHEHwYU7HYY9ulgtn0PBlnU5hu2zG6MH0_NsfLKCaAUrjYRUUyEchspj1MDt-mUfRYrbxUW5vqWmFo1pPZnW-58KK0JHtoMv5XE2-ubSImzJSMvRMo78bhIigqWZ9BcH4NkmqNFbn9CRqQX2ZZaw4nsNsMelx7hJ"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-baseline mb-1">
+<h3 class="font-label-bold text-label-bold text-on-surface-variant truncate pr-2">Elena Rodriguez • Branding</h3>
+<span class="font-caption text-caption text-outline shrink-0">Oct 12</span>
+</div>
+<p class="font-body-md text-body-md text-outline truncate pr-2">Sounds good! Let's proceed with option B.</p>
+</div>
+</a>
+</div>
+</main>
+<!-- BottomNavBar (Mobile) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-safe h-20 bg-white/95 dark:bg-slate-900/95 backdrop-blur-lg shadow-[0_-4px_20px_rgba(0,0,0,0.03)] z-50">
+<a class="flex flex-col items-center text-gray-400 dark:text-gray-500 pt-2 hover:text-indigo-500 transition-colors active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="search">search</span>
+<span class="font-manrope text-[10px] font-bold uppercase tracking-widest">Explore</span>
+</a>
+<a class="flex flex-col items-center text-gray-400 dark:text-gray-500 pt-2 hover:text-indigo-500 transition-colors active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="calendar_today">calendar_today</span>
+<span class="font-manrope text-[10px] font-bold uppercase tracking-widest">Bookings</span>
+</a>
+<a class="flex flex-col items-center text-indigo-600 dark:text-indigo-400 border-t-2 border-indigo-600 pt-2 hover:text-indigo-500 transition-colors active:scale-90 duration-150 relative -top-[2px]" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="chat_bubble" data-weight="fill" style="font-variation-settings: 'FILL' 1;">chat_bubble</span>
+<span class="font-manrope text-[10px] font-bold uppercase tracking-widest">Messages</span>
+</a>
+<a class="flex flex-col items-center text-gray-400 dark:text-gray-500 pt-2 hover:text-indigo-500 transition-colors active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="person">person</span>
+<span class="font-manrope text-[10px] font-bold uppercase tracking-widest">Account</span>
+</a>
+</nav>
+</body></html>

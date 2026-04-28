@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>My Bookings - SkillLink</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-fixed": "#dce2f7",
+                    "surface-container-lowest": "#ffffff",
+                    "background": "#fcf8ff",
+                    "secondary-fixed-dim": "#c0c6db",
+                    "inverse-primary": "#c3c0ff",
+                    "surface": "#fcf8ff",
+                    "outline": "#777587",
+                    "surface-container-high": "#eae6f4",
+                    "on-secondary-fixed-variant": "#404758",
+                    "on-error-container": "#93000a",
+                    "on-background": "#1b1b24",
+                    "error": "#ba1a1a",
+                    "surface-container-low": "#f5f2ff",
+                    "on-tertiary": "#ffffff",
+                    "surface-tint": "#4d44e3",
+                    "surface-container": "#f0ecf9",
+                    "tertiary": "#7e3000",
+                    "outline-variant": "#c7c4d8",
+                    "on-surface-variant": "#464555",
+                    "on-error": "#ffffff",
+                    "surface-dim": "#dcd8e5",
+                    "on-primary-fixed-variant": "#3323cc",
+                    "surface-bright": "#fcf8ff",
+                    "surface-variant": "#e4e1ee",
+                    "error-container": "#ffdad6",
+                    "surface-container-highest": "#e4e1ee",
+                    "on-tertiary-container": "#ffd2be",
+                    "on-secondary-fixed": "#141b2b",
+                    "inverse-on-surface": "#f3effc",
+                    "on-primary-fixed": "#0f0069",
+                    "on-primary-container": "#dad7ff",
+                    "primary-fixed-dim": "#c3c0ff",
+                    "primary-container": "#4f46e5",
+                    "on-tertiary-fixed": "#351000",
+                    "on-secondary-container": "#5c6274",
+                    "inverse-surface": "#302f39",
+                    "secondary": "#575e70",
+                    "primary": "#3525cd",
+                    "secondary-container": "#d9dff5",
+                    "on-primary": "#ffffff",
+                    "on-surface": "#1b1b24",
+                    "tertiary-fixed": "#ffdbcc",
+                    "tertiary-fixed-dim": "#ffb695",
+                    "tertiary-container": "#a44100",
+                    "primary-fixed": "#e2dfff",
+                    "on-tertiary-fixed-variant": "#7b2f00",
+                    "on-secondary": "#ffffff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "lg": "48px",
+                    "margin": "auto",
+                    "gutter": "24px",
+                    "xs": "4px",
+                    "grid_columns": "12",
+                    "xl": "80px",
+                    "sm": "12px",
+                    "md": "24px",
+                    "base": "8px"
+            },
+            "fontFamily": {
+                    "h1": ["Manrope"],
+                    "h3": ["Manrope"],
+                    "body-lg": ["Manrope"],
+                    "label-bold": ["Manrope"],
+                    "h2": ["Manrope"],
+                    "caption": ["Manrope"],
+                    "body-md": ["Manrope"]
+            },
+            "fontSize": {
+                    "h1": ["48px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                    "h3": ["24px", { "lineHeight": "1.4", "letterSpacing": "0", "fontWeight": "700" }],
+                    "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                    "label-bold": ["14px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                    "h2": ["36px", { "lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                    "caption": ["12px", { "lineHeight": "1.4", "fontWeight": "500" }],
+                    "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body-md text-body-md antialiased min-h-screen pb-[100px]">
+<!-- TopAppBar Shared Component -->
+<header class="fixed top-0 w-full z-50 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-gray-100 dark:border-gray-800 shadow-[0_4px_20px_rgba(0,0,0,0.03)] flex justify-between items-center px-6 h-16">
+<div class="flex items-center gap-sm">
+<img alt="User profile photo" class="w-8 h-8 rounded-full object-cover" data-alt="close up portrait of a young professional man with a neutral background and soft studio lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDuk-xI1ioXz8LpK6cQxWH7DEAP1jeDoRBlU9zRdpLcGdVatvC3lMT58tN8PixqvLTD7tefqR1SaZUxu0-iDIwqyqqaZQhNnysmI_6pnM9M91ZGX7zzQQy4i8lhXvW2LI2ijCk9leYzYo3MAEJNUgpKaDP9cesBbOL7wpYDjtoLEn1QjUfc2UMzHBD5DGQ2V5u1NXMdMOkJTNcvn-DgU4MWciwPirwRA9IlKwN0Xn1FN4i2JZlfazc9eHDxSYWFwrz9iT9YYFRG"/>
+<span class="text-xl font-extrabold tracking-tighter text-indigo-600 dark:text-indigo-400 font-manrope">SkillLink</span>
+</div>
+<button class="text-gray-500 dark:text-gray-400 hover:opacity-80 transition-opacity active:scale-95 duration-200">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="pt-[104px] px-md max-w-[1280px] mx-margin">
+<div class="mb-lg">
+<h1 class="font-h2 text-h2 mb-sm text-on-surface">My Bookings</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Manage your upcoming and past service requests.</p>
+</div>
+<!-- Tab Bar -->
+<div class="flex gap-sm mb-lg overflow-x-auto no-scrollbar pb-xs">
+<button class="px-md py-sm bg-primary text-on-primary rounded-full font-label-bold text-label-bold whitespace-nowrap shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-transform active:scale-95">
+                Active
+            </button>
+<button class="px-md py-sm bg-surface-container text-on-surface rounded-full font-label-bold text-label-bold whitespace-nowrap hover:bg-surface-variant transition-colors active:scale-95">
+                Completed
+            </button>
+<button class="px-md py-sm bg-surface-container text-on-surface rounded-full font-label-bold text-label-bold whitespace-nowrap hover:bg-surface-variant transition-colors active:scale-95">
+                Cancelled
+            </button>
+</div>
+<!-- Booking Cards List -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-md">
+<!-- Card 1: Accepted (Active) -->
+<article class="bg-surface-container-lowest rounded-xl p-md shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_10px_30px_rgba(0,0,0,0.06)] transition-shadow duration-300 border border-outline-variant/30 flex flex-col justify-between h-full group">
+<div>
+<div class="flex justify-between items-start mb-md">
+<div class="flex items-center gap-sm">
+<img alt="Provider Avatar" class="w-12 h-12 rounded-full object-cover border border-outline-variant/20" data-alt="portrait of a confident female electrician in uniform looking directly at camera with natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAdW2mIbyW-h1_qHZm3SD6V8VvqwjXRn-3C_67HN6NJGVIPhbEm5FfNmV0p1_iiJemYL--5bkflXH8dWd43y-XtOtSs_7IQF11M6XlBkdoUBqVT_8OiU7F5qWPaouDzTB156j4Q2AzuzTcaY2pRNkStPoKtsuagaBZgCuU0XfWaosU81Hc03wVHnWGp_yLv6f0nh7seoQ6_WXXHnNqL0a4y9rAS66uKCs3K6_L6zCdsogZRGwvpJ33ALAOJGSALJ0k_-ckdjBCb"/>
+<div>
+<h3 class="font-body-lg text-body-lg font-bold text-on-surface">Elena Rodriguez</h3>
+<span class="font-caption text-caption text-on-surface-variant">Master Electrician</span>
+</div>
+</div>
+<span class="px-sm py-[2px] bg-primary-fixed text-on-primary-fixed rounded-full font-caption text-caption whitespace-nowrap border border-primary/20">
+                            Accepted
+                        </span>
+</div>
+<div class="mb-md">
+<h4 class="font-label-bold text-label-bold text-on-surface mb-xs">Panel Upgrade &amp; Inspection</h4>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2">Complete diagnostic of main breaker panel and installation of dedicated circuits for new kitchen appliances.</p>
+</div>
+</div>
+<div>
+<div class="flex items-center gap-xs mb-md text-on-surface-variant bg-surface-container-low p-xs rounded-lg">
+<span class="material-symbols-outlined text-[18px]">calendar_today</span>
+<span class="font-caption text-caption font-semibold">Thu, Nov 16 at 9:00 AM</span>
+</div>
+<div class="flex justify-end border-t border-outline-variant/30 pt-sm">
+<button class="px-md py-sm bg-transparent border border-primary text-primary rounded-lg font-label-bold text-label-bold hover:bg-primary hover:text-on-primary transition-colors active:scale-95">
+                            View Details
+                        </button>
+</div>
+</div>
+</article>
+<!-- Card 2: Completed -->
+<article class="bg-surface-container-lowest rounded-xl p-md shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_10px_30px_rgba(0,0,0,0.06)] transition-shadow duration-300 border border-outline-variant/30 flex flex-col justify-between h-full group opacity-90">
+<div>
+<div class="flex justify-between items-start mb-md">
+<div class="flex items-center gap-sm">
+<img alt="Provider Avatar" class="w-12 h-12 rounded-full object-cover border border-outline-variant/20 grayscale-[20%]" data-alt="headshot of a middle aged male landscaper smiling warmly outdoors on a sunny day" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCpuRLV_8L2YInsaVhxJgTQK0G6UIQeavX2192FWt9FUs6c4mx2Hcev3UcuaI81Jn_RJJDhxrMXTfmHNPTTFxOkP8ng_-kcptUepTuRZoS1beGCmOurD21F6JzYGKZqgfLW4GE6d_Kqrug9LPIS1Yzm1AbLDfkVjNyK99MiqeTFDBWdwGixYQByKzp7J5ZYPlJUZNbkxndSX_eUUx-q4NKA6jWhP3mtgFCHsDT7rL_nbFn0nOce_H-cn9H8_r2nUphJMbU3wT_j"/>
+<div>
+<h3 class="font-body-lg text-body-lg font-bold text-on-surface">Marcus Chen</h3>
+<span class="font-caption text-caption text-on-surface-variant">Landscape Architect</span>
+</div>
+</div>
+<span class="px-sm py-[2px] bg-surface-variant text-on-surface-variant rounded-full font-caption text-caption whitespace-nowrap">
+                            Completed
+                        </span>
+</div>
+<div class="mb-md">
+<h4 class="font-label-bold text-label-bold text-on-surface mb-xs">Backyard Hardscaping</h4>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2">Installation of stone patio and retaining wall along the garden border. Includes soil leveling.</p>
+</div>
+</div>
+<div>
+<div class="flex items-center gap-xs mb-md text-on-surface-variant bg-surface-container-low p-xs rounded-lg">
+<span class="material-symbols-outlined text-[18px]">calendar_today</span>
+<span class="font-caption text-caption">Oct 28, 2023 at 1:00 PM</span>
+</div>
+<div class="flex justify-end border-t border-outline-variant/30 pt-sm">
+<button class="px-md py-sm bg-transparent border border-outline text-on-surface-variant rounded-lg font-label-bold text-label-bold hover:bg-surface-variant transition-colors active:scale-95">
+                            View Receipt
+                        </button>
+</div>
+</div>
+</article>
+<!-- Card 3: Cancelled -->
+<article class="bg-surface-container-lowest rounded-xl p-md shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_10px_30px_rgba(0,0,0,0.06)] transition-shadow duration-300 border border-outline-variant/30 flex flex-col justify-between h-full group opacity-80">
+<div>
+<div class="flex justify-between items-start mb-md">
+<div class="flex items-center gap-sm">
+<img alt="Provider Avatar" class="w-12 h-12 rounded-full object-cover border border-outline-variant/20" data-alt="portrait of a professional female interior designer in a modern office setting with warm ambient light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDYyDKzJQDoLc39wfn3X29mJI2Qx-WhJwQgudWU_Kb7r7xEk5jjQ3UvD5OkFND8RNfLO24nXrC3zpDMnuJAvUgHPKbmboDzlmJMSz_bCNzOBxBM-bkoQB907EyI2szHJu80fmrcFTDRuxfR4PzX3B1ovHYxAdWvH1ajETj9hTpXuZbv9l2FsB2WJ8sbmomjYnf7Co1MGdy0CXt6oIHhGP72Jb_6ADLzYwtYOVffekW-IyAmh3Tg0OxaZy8nSv8-QEkTDm1hBsKo"/>
+<div>
+<h3 class="font-body-lg text-body-lg font-bold text-on-surface">Sarah Jenkins</h3>
+<span class="font-caption text-caption text-on-surface-variant">Interior Designer</span>
+</div>
+</div>
+<span class="px-sm py-[2px] bg-error-container text-on-error-container rounded-full font-caption text-caption whitespace-nowrap">
+                            Cancelled
+                        </span>
+</div>
+<div class="mb-md">
+<h4 class="font-label-bold text-label-bold text-on-surface mb-xs">Living Room Consultation</h4>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2">Initial space planning and color palette selection for the main floor living areas.</p>
+</div>
+</div>
+<div>
+<div class="flex items-center gap-xs mb-md text-on-surface-variant line-through opacity-70 bg-surface-container-low p-xs rounded-lg">
+<span class="material-symbols-outlined text-[18px]">calendar_today</span>
+<span class="font-caption text-caption">Oct 15, 2023 at 11:30 AM</span>
+</div>
+<div class="flex justify-end border-t border-outline-variant/30 pt-sm">
+<button class="px-md py-sm bg-transparent border border-outline text-on-surface-variant rounded-lg font-label-bold text-label-bold hover:bg-surface-variant transition-colors active:scale-95">
+                            Rebook
+                        </button>
+</div>
+</div>
+</article>
+</div>
+</main>
+<!-- BottomNavBar Shared Component -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-safe h-20 bg-white/95 dark:bg-slate-900/95 backdrop-blur-lg border-t border-gray-100 dark:border-gray-800 shadow-[0_-4px_20px_rgba(0,0,0,0.03)] z-50">
+<!-- Explore -->
+<button class="flex flex-col items-center text-gray-400 dark:text-gray-500 pt-2 hover:text-indigo-500 transition-colors active:scale-90 duration-150 w-full">
+<span class="material-symbols-outlined">search</span>
+<span class="font-manrope text-[10px] font-bold uppercase tracking-widest mt-1">Explore</span>
+</button>
+<!-- Bookings (Active) -->
+<button class="flex flex-col items-center text-indigo-600 dark:text-indigo-400 border-t-2 border-indigo-600 pt-2 hover:text-indigo-500 transition-colors active:scale-90 duration-150 w-full">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">calendar_today</span>
+<span class="font-manrope text-[10px] font-bold uppercase tracking-widest mt-1">Bookings</span>
+</button>
+<!-- Messages -->
+<button class="flex flex-col items-center text-gray-400 dark:text-gray-500 pt-2 hover:text-indigo-500 transition-colors active:scale-90 duration-150 w-full">
+<span class="material-symbols-outlined">chat_bubble</span>
+<span class="font-manrope text-[10px] font-bold uppercase tracking-widest mt-1">Messages</span>
+</button>
+<!-- Account -->
+<button class="flex flex-col items-center text-gray-400 dark:text-gray-500 pt-2 hover:text-indigo-500 transition-colors active:scale-90 duration-150 w-full">
+<span class="material-symbols-outlined">person</span>
+<span class="font-manrope text-[10px] font-bold uppercase tracking-widest mt-1">Account</span>
+</button>
+</nav>
+</body></html>

@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SkillLink - Moderation</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-fixed": "#ffdbcc",
+                        "secondary-fixed": "#dce2f7",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "on-error-container": "#93000a",
+                        "tertiary": "#7e3000",
+                        "tertiary-container": "#a44100",
+                        "surface-container-low": "#f5f2ff",
+                        "background": "#fcf8ff",
+                        "surface-bright": "#fcf8ff",
+                        "error-container": "#ffdad6",
+                        "on-surface": "#1b1b24",
+                        "on-secondary-fixed-variant": "#404758",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-container": "#d9dff5",
+                        "tertiary-fixed-dim": "#ffb695",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "outline": "#777587",
+                        "on-secondary-fixed": "#141b2b",
+                        "on-secondary-container": "#5c6274",
+                        "on-primary-fixed": "#0f0069",
+                        "on-tertiary-fixed-variant": "#7b2f00",
+                        "surface-dim": "#dcd8e5",
+                        "on-tertiary": "#ffffff",
+                        "surface-variant": "#e4e1ee",
+                        "on-primary": "#ffffff",
+                        "outline-variant": "#c7c4d8",
+                        "inverse-primary": "#c3c0ff",
+                        "primary-fixed": "#e2dfff",
+                        "on-background": "#1b1b24",
+                        "secondary-fixed-dim": "#c0c6db",
+                        "surface-tint": "#4d44e3",
+                        "secondary": "#575e70",
+                        "error": "#ba1a1a",
+                        "surface-container": "#f0ecf9",
+                        "primary-container": "#4f46e5",
+                        "on-tertiary-container": "#ffd2be",
+                        "surface-container-highest": "#e4e1ee",
+                        "on-error": "#ffffff",
+                        "inverse-surface": "#302f39",
+                        "on-tertiary-fixed": "#351000",
+                        "surface": "#fcf8ff",
+                        "surface-container-high": "#eae6f4",
+                        "on-surface-variant": "#464555",
+                        "on-secondary": "#ffffff",
+                        "primary": "#3525cd",
+                        "inverse-on-surface": "#f3effc",
+                        "on-primary-container": "#dad7ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xl": "80px",
+                        "lg": "48px",
+                        "md": "24px",
+                        "sm": "12px",
+                        "gutter": "24px",
+                        "xs": "4px",
+                        "margin": "auto",
+                        "base": "8px",
+                        "grid_columns": "12"
+                    },
+                    "fontFamily": {
+                        "caption": ["Manrope"],
+                        "h3": ["Manrope"],
+                        "body-md": ["Manrope"],
+                        "h2": ["Manrope"],
+                        "label-bold": ["Manrope"],
+                        "h1": ["Manrope"],
+                        "body-lg": ["Manrope"]
+                    },
+                    "fontSize": {
+                        "caption": ["12px", { "lineHeight": "1.4", "fontWeight": "500" }],
+                        "h3": ["24px", { "lineHeight": "1.4", "letterSpacing": "0", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "h2": ["36px", { "lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "label-bold": ["14px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "h1": ["48px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface flex h-screen overflow-hidden font-body-md">
+<!-- NavigationDrawer -->
+<aside class="hidden md:flex flex-col h-full p-6 space-y-2 bg-slate-50 dark:bg-slate-950 h-full w-72 border-r border-r border-gray-200 dark:border-slate-800 flex-shrink-0">
+<div class="mb-8">
+<h1 class="text-indigo-600 font-black font-h2 text-h2 mb-4">SkillLink</h1>
+<div class="flex items-center space-x-3 left_align">
+<img alt="Admin Administrator" class="w-12 h-12 rounded-full object-cover" data-alt="professional corporate headshot of a smiling mature man in a blue suit with blurred office background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDf7_GlaUeUrzIqDT9M9c8AvqwjNF2nIfcHkuaLGwuGtsU7ftwkdONOo3iyXBaBKyR7mdTkA2E4kfEsxbAT8wcbl6BLkoC6TORqC4OZ-fY42cxOG1G_p0fXDgk4zbNwaeWdV-b1X97MtM913IFnSGcWdPDUi5xQ8Rkx9k-xS2UkYGi8AcxjhHlEyG-sa0TnMgzpJK0DLpm22rCGHLo88tsnvKOztzQBAmaaJ9xlYP78gzm0WbwwCwEmZ0ClaTfAQprqoJWCPFp5"/>
+<div>
+<h2 class="font-h3 text-h3 text-base">SkillLink Admin</h2>
+<p class="font-caption text-caption text-gray-500">Global Controller • Verified Staff</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center space-x-3 px-4 py-3 rounded-lg font-['Manrope'] text-sm font-medium text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-900 transition-all duration-300" href="#">
+<span class="material-symbols-outlined">admin_panel_settings</span>
+<span>Admin Console</span>
+</a>
+<a class="flex items-center space-x-3 px-4 py-3 rounded-lg font-['Manrope'] text-sm font-medium text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-900 transition-all duration-300" href="#">
+<span class="material-symbols-outlined">group</span>
+<span>User Directory</span>
+</a>
+<a class="flex items-center space-x-3 px-4 py-3 rounded-lg font-['Manrope'] text-sm font-medium bg-indigo-600 text-white shadow-md transition-all duration-300" href="#">
+<span class="material-symbols-outlined">gavel</span>
+<span>Moderation</span>
+</a>
+<a class="flex items-center space-x-3 px-4 py-3 rounded-lg font-['Manrope'] text-sm font-medium text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-900 transition-all duration-300" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span>Financials</span>
+</a>
+<a class="flex items-center space-x-3 px-4 py-3 rounded-lg font-['Manrope'] text-sm font-medium text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-900 transition-all duration-300" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span>System Settings</span>
+</a>
+</nav>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 flex flex-col h-full overflow-hidden relative">
+<!-- TopAppBar (Mobile Only - Fallback for drawer) -->
+<header class="md:hidden flex justify-between items-center w-full px-6 py-4 max-w-[1280px] mx-auto bg-white/90 dark:bg-slate-950/90 backdrop-blur-md docked full-width top-0 z-50 border-b border-gray-100 dark:border-slate-800 shadow-[0_4px_20px_rgba(0,0,0,0.03)] flex-shrink-0">
+<div class="flex items-center space-x-3">
+<img alt="User profile photo" class="w-8 h-8 rounded-full object-cover" data-alt="professional corporate headshot of a smiling mature man in a blue suit with blurred office background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDiB2S9Fdb7QeIaq99aXGCx0IrtHaHaK3j4BApuwBdHHGcXCbzKI7EGPOnzOTPGFrkLn3kYNmsQnL0eeVOLguv0SOni9RjN0gsHAZF1e9swE3IIYA8aGuc3Zuti67W77LQ1Ep_rlKYYFnJydKjLtdFf-tlmfv8iEhGISe9q0A5msvk47VCTrFSOFvWuwjMQstZLTNvog-P8rWR_Dy1QmDN3rveZHdJx40zRpsDdC3xhiRNeScDFNaVbCCBrBC0n4NjU5yBsw6HH"/>
+<span class="text-2xl font-extrabold tracking-tighter text-indigo-600 dark:text-indigo-500">SkillLink</span>
+</div>
+<span class="material-symbols-outlined text-indigo-600 dark:text-indigo-400">notifications</span>
+</header>
+<!-- Scrollable Content Area -->
+<div class="flex-1 overflow-y-auto p-6 md:p-lg">
+<div class="max-w-[1280px] mx-auto">
+<!-- Page Header -->
+<div class="flex flex-col md:flex-row md:items-center justify-between mb-lg space-y-4 md:space-y-0">
+<div>
+<h1 class="font-h1 text-h1 text-on-surface">Review Moderation</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant mt-2">Pending user reviews requiring administrative approval or removal.</p>
+</div>
+<div class="flex items-center space-x-4">
+<div class="bg-surface-container-high rounded-full px-4 py-2 flex items-center space-x-2">
+<span class="material-symbols-outlined text-outline">filter_list</span>
+<span class="font-label-bold text-label-bold text-on-surface">Filter: Pending</span>
+</div>
+</div>
+</div>
+<!-- Bento Grid for Reviews -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-md">
+<!-- Review Card 1 -->
+<div class="bg-surface-container-lowest rounded-xl p-md shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-outline-variant flex flex-col justify-between h-full hover:shadow-[0_10px_30px_rgba(0,0,0,0.06)] transition-shadow duration-300">
+<div>
+<div class="flex justify-between items-start mb-4">
+<div class="flex items-center space-x-3">
+<div class="w-10 h-10 rounded-full bg-tertiary-fixed flex items-center justify-center text-on-tertiary-fixed-variant font-label-bold text-label-bold">JS</div>
+<div>
+<p class="font-label-bold text-label-bold text-on-surface">John Smith</p>
+<p class="font-caption text-caption text-on-surface-variant">Reviewing: <span class="font-semibold">Sarah Jenkins (Plumbing)</span></p>
+</div>
+</div>
+<div class="flex text-tertiary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</div>
+<div class="bg-surface-container p-4 rounded-lg mb-6 relative">
+<span class="material-symbols-outlined absolute top-2 right-2 text-outline-variant opacity-50">format_quote</span>
+<p class="font-body-md text-body-md text-on-surface-variant">"Sarah was incredibly professional and fixed our leak in under an hour. Highly recommend her services for any emergency plumbing needs. Price was fair too."</p>
+</div>
+</div>
+<div class="flex space-x-4 pt-4 border-t border-surface-variant">
+<button class="flex-1 flex items-center justify-center space-x-2 bg-secondary-container hover:bg-primary-container hover:text-on-primary text-on-secondary-container py-3 rounded-lg font-label-bold text-label-bold transition-colors">
+<span class="material-symbols-outlined text-[20px]">check_circle</span>
+<span>Approve</span>
+</button>
+<button class="flex-1 flex items-center justify-center space-x-2 border border-error text-error hover:bg-error hover:text-on-error py-3 rounded-lg font-label-bold text-label-bold transition-colors">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+<span>Remove</span>
+</button>
+</div>
+</div>
+<!-- Review Card 2 -->
+<div class="bg-surface-container-lowest rounded-xl p-md shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-outline-variant flex flex-col justify-between h-full hover:shadow-[0_10px_30px_rgba(0,0,0,0.06)] transition-shadow duration-300">
+<div>
+<div class="flex justify-between items-start mb-4">
+<div class="flex items-center space-x-3">
+<img alt="Reviewer" class="w-10 h-10 rounded-full object-cover" data-alt="headshot of a smiling young woman with dark hair in a bright outdoor setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDpo-jrtfaaasIDV-FdiKiRod-jeqkEbYcTzApJoUv7SWJ0t18HEyOHM_cMo5KLqwe3FoYsQ0DEkMGjPykLrnZnGX-jML6guE1rI1agadebfB9tbrREXzUZ3Gz7LrVTf5PMfg4NIT3ZZ63Nk3tZZ6zU8LljcOFk34cCZvG2PrOeqBEYJ_-oHJMjHOSv3rEBF1dNhh9PpedyLHrgrwD-aV1y4Scy2SNBl1cRdzIMnE7i2ZziFq7w4bACQCKJoJn2vOatCy9A0w7d"/>
+<div>
+<p class="font-label-bold text-label-bold text-on-surface">Emily Chen</p>
+<p class="font-caption text-caption text-on-surface-variant">Reviewing: <span class="font-semibold">TechFix IT (Support)</span></p>
+</div>
+</div>
+<div class="flex text-tertiary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined">star</span>
+<span class="material-symbols-outlined">star</span>
+<span class="material-symbols-outlined">star</span>
+</div>
+</div>
+<div class="bg-surface-container p-4 rounded-lg mb-6 relative">
+<span class="material-symbols-outlined absolute top-2 right-2 text-outline-variant opacity-50">format_quote</span>
+<p class="font-body-md text-body-md text-on-surface-variant">"They showed up 2 hours late and didn't even fix the issue with my router. Completely unresponsive when I tried to follow up. Do not hire."</p>
+</div>
+</div>
+<div class="flex space-x-4 pt-4 border-t border-surface-variant">
+<button class="flex-1 flex items-center justify-center space-x-2 bg-secondary-container hover:bg-primary-container hover:text-on-primary text-on-secondary-container py-3 rounded-lg font-label-bold text-label-bold transition-colors">
+<span class="material-symbols-outlined text-[20px]">check_circle</span>
+<span>Approve</span>
+</button>
+<button class="flex-1 flex items-center justify-center space-x-2 border border-error text-error hover:bg-error hover:text-on-error py-3 rounded-lg font-label-bold text-label-bold transition-colors">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+<span>Remove</span>
+</button>
+</div>
+</div>
+<!-- Review Card 3 -->
+<div class="bg-surface-container-lowest rounded-xl p-md shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-outline-variant flex flex-col justify-between h-full hover:shadow-[0_10px_30px_rgba(0,0,0,0.06)] transition-shadow duration-300">
+<div>
+<div class="flex justify-between items-start mb-4">
+<div class="flex items-center space-x-3">
+<div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center text-on-primary-fixed font-label-bold text-label-bold">MR</div>
+<div>
+<p class="font-label-bold text-label-bold text-on-surface">Marcus Rodriguez</p>
+<p class="font-caption text-caption text-on-surface-variant">Reviewing: <span class="font-semibold">Elena's Cleaning</span></p>
+</div>
+</div>
+<div class="flex text-tertiary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined">star</span>
+</div>
+</div>
+<div class="bg-surface-container p-4 rounded-lg mb-6 relative border-l-4 border-error">
+<span class="material-symbols-outlined absolute top-2 right-2 text-error opacity-50">warning</span>
+<p class="font-body-md text-body-md text-on-surface-variant">"Spam review link here: clickme123.biz to get free money now!!!"</p>
+</div>
+</div>
+<div class="flex space-x-4 pt-4 border-t border-surface-variant">
+<button class="flex-1 flex items-center justify-center space-x-2 bg-secondary-container hover:bg-primary-container hover:text-on-primary text-on-secondary-container py-3 rounded-lg font-label-bold text-label-bold transition-colors">
+<span class="material-symbols-outlined text-[20px]">check_circle</span>
+<span>Approve</span>
+</button>
+<button class="flex-1 flex items-center justify-center space-x-2 border border-error text-error hover:bg-error hover:text-on-error py-3 rounded-lg font-label-bold text-label-bold transition-colors bg-error/10">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+<span>Remove</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer Area within scrollable container -->
+<footer class="mt-xl max-w-[1280px] mx-auto px-8 flex flex-col md:flex-row justify-between items-center gap-4 py-12 border-t border-gray-100 dark:border-slate-900 full-width">
+<p class="font-['Manrope'] text-xs text-gray-400">© 2024 SkillLink Elite Marketplace. Secure &amp; Verified.</p>
+<div class="flex space-x-4">
+<a class="font-['Manrope'] text-xs text-gray-500 hover:underline transition-all" href="#">Terms of Service</a>
+<a class="font-['Manrope'] text-xs text-gray-500 hover:underline transition-all" href="#">Privacy Policy</a>
+<a class="font-['Manrope'] text-xs text-gray-500 hover:underline transition-all" href="#">Provider Agreement</a>
+<a class="font-['Manrope'] text-xs text-gray-500 hover:underline transition-all" href="#">Support</a>
+</div>
+</footer>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 w-full rounded-t-2xl border-t border-t border-gray-100 dark:border-slate-800 shadow-[0_-10px_30px_rgba(0,0,0,0.04)] fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-3 pb-safe bg-white dark:bg-slate-900">
+<a class="flex flex-col items-center justify-center text-gray-400 dark:text-gray-500 hover:bg-gray-50 dark:hover:bg-slate-800 p-2 rounded-xl" href="#">
+<span class="material-symbols-outlined">storefront</span>
+<span class="font-['Manrope'] text-[11px] font-bold uppercase tracking-wider mt-1">Marketplace</span>
+</a>
+<a class="flex flex-col items-center justify-center text-gray-400 dark:text-gray-500 hover:bg-gray-50 dark:hover:bg-slate-800 p-2 rounded-xl" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-['Manrope'] text-[11px] font-bold uppercase tracking-wider mt-1">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center text-gray-400 dark:text-gray-500 hover:bg-gray-50 dark:hover:bg-slate-800 p-2 rounded-xl" href="#">
+<span class="material-symbols-outlined">chat_bubble</span>
+<span class="font-['Manrope'] text-[11px] font-bold uppercase tracking-wider mt-1">Messages</span>
+</a>
+<a class="flex flex-col items-center justify-center text-indigo-600 dark:text-indigo-400 bg-indigo-50/50 dark:bg-indigo-900/20 rounded-xl px-3 py-1 scale-95 transition-transform p-2 rounded-xl" href="#">
+<span class="material-symbols-outlined">account_circle</span>
+<span class="font-['Manrope'] text-[11px] font-bold uppercase tracking-wider mt-1">Account</span>
+</a>
+</nav>
+</body></html>

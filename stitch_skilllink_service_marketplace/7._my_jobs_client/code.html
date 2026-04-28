@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>My Jobs - SkillLink</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "secondary-fixed": "#dce2f7",
+                      "surface-container-lowest": "#ffffff",
+                      "background": "#fcf8ff",
+                      "secondary-fixed-dim": "#c0c6db",
+                      "inverse-primary": "#c3c0ff",
+                      "surface": "#fcf8ff",
+                      "outline": "#777587",
+                      "surface-container-high": "#eae6f4",
+                      "on-secondary-fixed-variant": "#404758",
+                      "on-error-container": "#93000a",
+                      "on-background": "#1b1b24",
+                      "error": "#ba1a1a",
+                      "surface-container-low": "#f5f2ff",
+                      "on-tertiary": "#ffffff",
+                      "surface-tint": "#4d44e3",
+                      "surface-container": "#f0ecf9",
+                      "tertiary": "#7e3000",
+                      "outline-variant": "#c7c4d8",
+                      "on-surface-variant": "#464555",
+                      "on-error": "#ffffff",
+                      "surface-dim": "#dcd8e5",
+                      "on-primary-fixed-variant": "#3323cc",
+                      "surface-bright": "#fcf8ff",
+                      "surface-variant": "#e4e1ee",
+                      "error-container": "#ffdad6",
+                      "surface-container-highest": "#e4e1ee",
+                      "on-tertiary-container": "#ffd2be",
+                      "on-secondary-fixed": "#141b2b",
+                      "inverse-on-surface": "#f3effc",
+                      "on-primary-fixed": "#0f0069",
+                      "on-primary-container": "#dad7ff",
+                      "primary-fixed-dim": "#c3c0ff",
+                      "primary-container": "#4f46e5",
+                      "on-tertiary-fixed": "#351000",
+                      "on-secondary-container": "#5c6274",
+                      "inverse-surface": "#302f39",
+                      "secondary": "#575e70",
+                      "primary": "#3525cd",
+                      "secondary-container": "#d9dff5",
+                      "on-primary": "#ffffff",
+                      "on-surface": "#1b1b24",
+                      "tertiary-fixed": "#ffdbcc",
+                      "tertiary-fixed-dim": "#ffb695",
+                      "tertiary-container": "#a44100",
+                      "primary-fixed": "#e2dfff",
+                      "on-tertiary-fixed-variant": "#7b2f00",
+                      "on-secondary": "#ffffff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "lg": "48px",
+                      "margin": "auto",
+                      "gutter": "24px",
+                      "xs": "4px",
+                      "grid_columns": "12",
+                      "xl": "80px",
+                      "sm": "12px",
+                      "md": "24px",
+                      "base": "8px"
+              },
+              "fontFamily": {
+                      "h1": [
+                              "Manrope"
+                      ],
+                      "h3": [
+                              "Manrope"
+                      ],
+                      "body-lg": [
+                              "Manrope"
+                      ],
+                      "label-bold": [
+                              "Manrope"
+                      ],
+                      "h2": [
+                              "Manrope"
+                      ],
+                      "caption": [
+                              "Manrope"
+                      ],
+                      "body-md": [
+                              "Manrope"
+                      ]
+              },
+              "fontSize": {
+                      "h1": [
+                              "48px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "800"
+                              }
+                      ],
+                      "h3": [
+                              "24px",
+                              {
+                                      "lineHeight": "1.4",
+                                      "letterSpacing": "0",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-bold": [
+                              "14px",
+                              {
+                                      "lineHeight": "1",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "h2": [
+                              "36px",
+                              {
+                                      "lineHeight": "1.3",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "caption": [
+                              "12px",
+                              {
+                                      "lineHeight": "1.4",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "1.5",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md text-body-md antialiased pb-24 md:pb-12 pt-20">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-gray-100 dark:border-gray-800 shadow-[0_4px_20px_rgba(0,0,0,0.03)] flex justify-between items-center px-6 h-16">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-variant overflow-hidden">
+<img alt="User profile photo" class="w-full h-full object-cover" data-alt="professional headshot of a mature man in a suit looking confident against a neutral grey background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbQrJAtrw7QO2lA6bzmH4J5bE2mmG5a6zB-eeWmNn8rqr4jaSbSJ9wzU_1LhE9YfjAnV-ZWxjPgJOK2IuJZtwv3Vg4Rcj_87PVTncNcYOK3pUS4e436stUhNtapr8856E32jzhzu717DQFFVbK4DcDpS51g_vSimQQIvPRRmAd-FOfR1VJaj80ePv69S8c9zqyqyEyfwfsRDta3tkH_0f41O6XTmqkXSZ0yrKtVYjxMCutOlCsrGxkYSwLe2p1h63qOx33buCU"/>
+</div>
+</div>
+<h1 class="text-xl font-extrabold tracking-tighter text-indigo-600 dark:text-indigo-400 font-manrope font-semibold tracking-tight">SkillLink</h1>
+<button class="text-indigo-600 dark:text-indigo-400 hover:opacity-80 transition-opacity active:scale-95 duration-200">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="max-w-[1280px] mx-auto px-6 lg:px-12 py-8">
+<!-- Page Header -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 gap-4">
+<div>
+<h2 class="font-h2 text-h2 text-on-background mb-2 tracking-tight">My Jobs</h2>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-2xl">Manage your active service requests, review incoming proposals, and finalize bookings with elite professionals.</p>
+</div>
+<button class="bg-primary-container text-on-primary rounded-xl px-5 py-3 font-label-bold text-label-bold flex items-center gap-2 hover:bg-primary transition-colors shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_10px_30px_rgba(0,0,0,0.06)] active:scale-95 duration-200 shrink-0">
+<span class="material-symbols-outlined text-[20px]">add</span> Post New Job
+            </button>
+</div>
+<!-- Filters/Tabs (Decorative/Structural for UX) -->
+<div class="flex gap-2 mb-8 border-b border-outline-variant/30 pb-4 overflow-x-auto no-scrollbar">
+<button class="px-4 py-2 rounded-full bg-surface-variant text-on-surface font-label-bold text-label-bold whitespace-nowrap">All Jobs</button>
+<button class="px-4 py-2 rounded-full bg-primary-container/10 text-primary-container font-label-bold text-label-bold whitespace-nowrap border border-primary-container/20">Open (3)</button>
+<button class="px-4 py-2 rounded-full bg-transparent text-on-surface-variant hover:bg-surface-variant/50 transition-colors font-label-bold text-label-bold whitespace-nowrap">Filled</button>
+<button class="px-4 py-2 rounded-full bg-transparent text-on-surface-variant hover:bg-surface-variant/50 transition-colors font-label-bold text-label-bold whitespace-nowrap">Drafts</button>
+</div>
+<!-- Jobs Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+<!-- Open Job Card 1 -->
+<div class="bg-surface-container-lowest rounded-xl p-md shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_10px_30px_rgba(0,0,0,0.06)] transition-shadow border border-outline-variant/20 flex flex-col h-full group cursor-pointer relative overflow-hidden">
+<!-- Decorative top border accent -->
+<div class="absolute top-0 left-0 w-full h-1 bg-primary-container opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="flex justify-between items-start mb-4">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full bg-primary-container/10 text-primary-container font-caption text-caption border border-primary-container/20 font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container mr-1.5 animate-pulse"></span> Open
+                    </span>
+<button class="text-outline hover:text-on-surface transition-colors p-1">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+<h3 class="font-h3 text-h3 text-on-background mb-3 group-hover:text-primary-container transition-colors">Senior Legal Consultant for Corporate Restructuring</h3>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-3 mb-6 flex-grow">Seeking an experienced corporate lawyer to oversee the restructuring of our European subsidiaries. Must have deep knowledge of EU compliance and cross-border tax implications.</p>
+<div class="pt-4 border-t border-outline-variant/30 flex justify-between items-center mt-auto">
+<div class="flex items-center gap-2">
+<div class="flex -space-x-2 mr-2">
+<img alt="Applicant 1" class="w-6 h-6 rounded-full border border-surface-container-lowest" data-alt="headshot of young professional woman smiling warmly against blurred office background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBZg06JK1zksS_FvE1qkCU4eyfEePAMTOKLccbDxnJOToVhC3zJHextFBiL5pPPznAU6biC8jvhqDL9FB3SOj94kNZOnti5j1I3sfCz84N39_-5js2iJTdohXammulO32fj388FlrhzEmvtdpLeZyZCER0Qyc-Cyb_sal75XoaXBwvlskeuTXEn0axrnMO73zDMyY12d8x3_rgZrJFixIThuXlmAkiWpi75Nu9O9VA0oAmFIJYCAuyxhysXcq6vnrc2VV9bXXi3"/>
+<img alt="Applicant 2" class="w-6 h-6 rounded-full border border-surface-container-lowest" data-alt="headshot of confident man in suit looking directly at camera with neutral expression" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmdxgeDZCqPc9sp5V_f9X0ghCua0SFefhpiISB1LFa9T330bhX5hr6CohQWk8Waz7RftL-g4I_chU_8p_WyVK2rO3jDbPBTCF5z8lFRzCLL_ik7kBm2kl-0ie2HBd1zxKFv8qjEittKRhuD8gYmaj7uchNnQGLeLCixnGIgcz-Kj7zeHGobrhPgSKKpSKyE0FBjoprB6VYykLMtB832V_qxTDxuXvUNV_AuZtosSFb2UVcY8JIYmtCwoJePELQ9edxo4gtpAgP"/>
+</div>
+<span class="font-label-bold text-label-bold text-on-background">12 proposals</span>
+</div>
+<span class="text-primary-container font-label-bold text-label-bold flex items-center gap-1 group-hover:translate-x-1 transition-transform">Review <span class="material-symbols-outlined text-[16px]">arrow_forward</span></span>
+</div>
+</div>
+<!-- Open Job Card 2 -->
+<div class="bg-surface-container-lowest rounded-xl p-md shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_10px_30px_rgba(0,0,0,0.06)] transition-shadow border border-outline-variant/20 flex flex-col h-full group cursor-pointer relative overflow-hidden">
+<div class="absolute top-0 left-0 w-full h-1 bg-primary-container opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="flex justify-between items-start mb-4">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full bg-primary-container/10 text-primary-container font-caption text-caption border border-primary-container/20 font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container mr-1.5 animate-pulse"></span> Open
+                    </span>
+<button class="text-outline hover:text-on-surface transition-colors p-1">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+<h3 class="font-h3 text-h3 text-on-background mb-3 group-hover:text-primary-container transition-colors">Elite Wealth Manager for Portfolio Diversification</h3>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-3 mb-6 flex-grow">Looking for a certified financial planner to reallocate a high-net-worth portfolio towards sustainable energy and emerging tech markets. Proven track record required.</p>
+<div class="pt-4 border-t border-outline-variant/30 flex justify-between items-center mt-auto">
+<div class="flex items-center gap-2">
+<div class="flex -space-x-2 mr-2">
+<img alt="Applicant 1" class="w-6 h-6 rounded-full border border-surface-container-lowest" data-alt="headshot of professional woman with glasses looking intelligent and approachable" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCfwydsq9M47Jt5246HnapqYAe_5krKdKg2ezPSixr9todTXHFithcaBRbU0Ct4knUep2PtSsAJ6Zp0XQTkxbA82IFx4IQOLvKzY-_DyYVwkzeV29m59UEbv9MibFvbc3ZvrQxKCsfwHbZrrpuMprXu-MtCmPQ-aJupPBxx1et6CCNMRyBA-pdCGK5JbPgCRGZG6BKFtBnEC8QMIUKDzplQMFQOFJ9Hjonc6Y3oSkTYWfnFe-mcqePtahyaMtHuNEpwoaE22JQJ"/>
+<img alt="Applicant 2" class="w-6 h-6 rounded-full border border-surface-container-lowest" data-alt="headshot of corporate man with crossed arms looking serious and competent" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDSJD5Zfx-vI6YG-NCKYzTB-JdThUglR0nrWEqcCEzsJfVSI_Sw_zveV8M26ShzvfFhiixNxVKZkR6OyPQkbpQGvNYdSLeMxlyupml9GvDJBJfcYjZsUjvxBSfjoMONGwChFCxN3YFgEzozTIDMhuV92iNAo1meLyhI_RPCgMKXpptxsnySCRFzp8PDYFovL6r65LCTfLn9s4sStBYQTbWjuhzMHRB0zTkA3tpxnVCIUsyj3iizeR81jCy8PmFaHwXUqpU_HI3N"/>
+<div class="w-6 h-6 rounded-full border border-surface-container-lowest bg-surface-variant flex items-center justify-center text-[10px] font-bold text-on-surface-variant">+3</div>
+</div>
+<span class="font-label-bold text-label-bold text-on-background">5 proposals</span>
+</div>
+<span class="text-primary-container font-label-bold text-label-bold flex items-center gap-1 group-hover:translate-x-1 transition-transform">Review <span class="material-symbols-outlined text-[16px]">arrow_forward</span></span>
+</div>
+</div>
+<!-- Open Job Card 3 -->
+<div class="bg-surface-container-lowest rounded-xl p-md shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_10px_30px_rgba(0,0,0,0.06)] transition-shadow border border-outline-variant/20 flex flex-col h-full group cursor-pointer relative overflow-hidden">
+<div class="absolute top-0 left-0 w-full h-1 bg-primary-container opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="flex justify-between items-start mb-4">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full bg-primary-container/10 text-primary-container font-caption text-caption border border-primary-container/20 font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container mr-1.5 animate-pulse"></span> Open
+                    </span>
+<button class="text-outline hover:text-on-surface transition-colors p-1">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+<h3 class="font-h3 text-h3 text-on-background mb-3 group-hover:text-primary-container transition-colors">Executive Architecture Consultant for HQ Redesign</h3>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-3 mb-6 flex-grow">We are looking for a visionary architect to lead the conceptual phase of our new 50,000 sq ft headquarters focusing on biophilic design and hybrid workspaces.</p>
+<div class="pt-4 border-t border-outline-variant/30 flex justify-between items-center mt-auto">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-outline text-[20px]">inbox</span>
+<span class="font-label-bold text-label-bold text-on-surface-variant">0 proposals</span>
+</div>
+<span class="text-primary-container font-label-bold text-label-bold flex items-center gap-1 group-hover:translate-x-1 transition-transform">View Details</span>
+</div>
+</div>
+<!-- Filled Job Card (Muted) -->
+<div class="bg-surface-container-lowest/60 rounded-xl p-md shadow-none border border-outline-variant/20 flex flex-col h-full relative overflow-hidden grayscale-[0.2] opacity-80 hover:opacity-100 transition-opacity">
+<div class="flex justify-between items-start mb-4">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full bg-surface-variant text-on-surface-variant font-caption text-caption border border-outline-variant/30 font-medium">
+<span class="material-symbols-outlined text-[12px] mr-1">check_circle</span> Filled
+                    </span>
+<button class="text-outline hover:text-on-surface transition-colors p-1">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+<h3 class="font-h3 text-h3 text-on-background/80 mb-3 line-through decoration-outline-variant/50">Fractional CTO for Q3 Product Launch</h3>
+<p class="font-body-md text-body-md text-on-surface-variant/80 line-clamp-3 mb-6 flex-grow">Engagement completed. Guided the engineering team through the final stages of our enterprise platform launch.</p>
+<div class="pt-4 border-t border-outline-variant/20 flex justify-between items-center mt-auto">
+<div class="flex items-center gap-2">
+<img alt="Hired Professional" class="w-6 h-6 rounded-full" data-alt="headshot of confident senior business executive in modern office setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA3p_q4hBiazLQuezAn0Z87uqIrni1V6pN6LHHRLZZg1vpSeJYOXWRLcc9MDXxQjit8zdWk57DY4Jz9dcrwy-cgJba8R8AGLsJZHG0mdNgXkLXe0Eleu6gZWkzt6vxaJ4sl-VGpgcTSI8ELA5jMv_VG5OS8qOdbG0141_-N9NXV-Cj3AbnxFkFbLJpIIbL8pXm-kDo79GGtI4EhOT-CSnze_bzMEz6qDGavmZXS_pY4cle34xE3hCQ0eFXAGac7CaxbCASND30F"/>
+<span class="font-label-bold text-label-bold text-on-surface-variant">Hired: Alex M.</span>
+</div>
+<button class="text-outline font-label-bold text-label-bold hover:text-on-surface transition-colors">View Contract</button>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 border-t border-gray-100 dark:border-gray-800 shadow-[0_-4px_20px_rgba(0,0,0,0.03)] bg-white/95 dark:bg-slate-900/95 backdrop-blur-lg fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-safe h-20 md:hidden">
+<!-- Explore -->
+<a class="flex flex-col items-center text-gray-400 dark:text-gray-500 pt-2 hover:text-indigo-500 transition-colors active:scale-90 transition-transform duration-150 group w-full" href="#">
+<span class="material-symbols-outlined group-hover:text-indigo-500 transition-colors">search</span>
+<span class="font-manrope text-[10px] font-bold uppercase tracking-widest mt-1">Explore</span>
+</a>
+<!-- Bookings (Active - representing My Jobs/Transactions) -->
+<a class="flex flex-col items-center text-indigo-600 dark:text-indigo-400 border-t-2 border-indigo-600 pt-2 hover:text-indigo-500 transition-colors active:scale-90 transition-transform duration-150 w-full" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">calendar_today</span>
+<span class="font-manrope text-[10px] font-bold uppercase tracking-widest mt-1">Bookings</span>
+</a>
+<!-- Messages -->
+<a class="flex flex-col items-center text-gray-400 dark:text-gray-500 pt-2 hover:text-indigo-500 transition-colors active:scale-90 transition-transform duration-150 group w-full" href="#">
+<span class="material-symbols-outlined group-hover:text-indigo-500 transition-colors relative">
+                chat_bubble
+                <span class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-primary-container rounded-full border-2 border-white"></span>
+</span>
+<span class="font-manrope text-[10px] font-bold uppercase tracking-widest mt-1">Messages</span>
+</a>
+<!-- Account -->
+<a class="flex flex-col items-center text-gray-400 dark:text-gray-500 pt-2 hover:text-indigo-500 transition-colors active:scale-90 transition-transform duration-150 group w-full" href="#">
+<span class="material-symbols-outlined group-hover:text-indigo-500 transition-colors">person</span>
+<span class="font-manrope text-[10px] font-bold uppercase tracking-widest mt-1">Account</span>
+</a>
+</nav>
+</body></html>

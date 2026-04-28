@@ -13,4 +13,11 @@ export const adminApi = {
 
   getAnalytics: () =>
     apiClient.get<ApiResponse<Analytics>>('/admin/analytics'),
+
+  // Review moderation — uses /reviews endpoint (admin-level access)
+  getAllReviews: () =>
+    apiClient.get('/admin/reviews'),
+
+  removeReview: (reviewId: number) =>
+    apiClient.delete(`/admin/reviews/${reviewId}`),
 };

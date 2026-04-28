@@ -1,66 +1,113 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, Pressable, StyleSheet, Alert } from 'react-native';
-import { colors, typography, spacing, borderRadius, shadows } from '../../theme';
+import React, { useCallback, useState } from 'react';
+import {
+  View, StyleSheet, FlatList, RefreshControl, TextInput,
+} from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
+import { colors, spacing, borderRadius } from '../../theme';
 import { jobApi } from '../../api/jobs';
 import { JobPost } from '../../types';
+import ScreenHeader from '../../components/ScreenHeader';
+import JobCard from '../../components/JobCard';
+import EmptyState from '../../components/EmptyState';
+import LoadingSpinner from '../../components/LoadingSpinner';
 
 export default function ProviderJobBoardScreen({ navigation }: any) {
   const [jobs, setJobs] = useState<JobPost[]>([]);
+  const [filtered, setFiltered] = useState<JobPost[]>([]);
+  const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const load = async () => {
-    setLoading(true);
+  const load = async (isRefresh = false) => {
+    if (isRefresh) setRefreshing(true);
+    else setLoading(true);
+    setError(null);
     try {
       const res = await jobApi.getOpen();
-      setJobs(res.content || []);
+      const data = res.content || [];
+      setJobs(data);
+      setFiltered(data);
     } catch (e: any) {
-      Alert.alert('Error', e.response?.data?.message || 'Could not load jobs.');
+      setError(e?.response?.data?.message || 'Could not load jobs.');
     } finally {
       setLoading(false);
+      setRefreshing(false);
     }
   };
 
-  useEffect(() => { load(); }, []);
+  useFocusEffect(useCallback(() => { load(); }, []));
+
+  const handleSearch = (text: string) => {
+    setSearch(text);
+    if (!text.trim()) { setFiltered(jobs); return; }
+    const q = text.toLowerCase();
+    setFiltered(jobs.filter(j =>
+      j.title.toLowerCase().includes(q) ||
+      j.description?.toLowerCase().includes(q) ||
+      j.categoryName?.toLowerCase().includes(q)
+    ));
+  };
 
   return (
     <View style={s.container}>
-      <View style={s.header}>
-        <Text style={s.title}>Job Board</Text>
-        <Text style={s.subtitle}>Find open client requests</Text>
+      <ScreenHeader title="Job Board" subtitle="Find open client requests" />
+      <View style={s.searchBar}>
+        <TextInput
+          style={s.searchInput}
+          value={search}
+          onChangeText={handleSearch}
+          placeholder="Search jobs..."
+          placeholderTextColor={colors.textMuted}
+        />
       </View>
-      <FlatList
-        data={jobs}
-        refreshing={loading}
-        onRefresh={load}
-        keyExtractor={(item) => item.id.toString()}
-        contentContainerStyle={s.list}
-        renderItem={({ item }) => (
-          <View style={s.card}>
-            <Text style={s.cardTitle}>{item.title}</Text>
-            <Text style={s.meta}>{item.categoryName} · PKR {Number(item.budget).toLocaleString()}</Text>
-            <Text style={s.desc} numberOfLines={3}>{item.description}</Text>
-            <Pressable style={s.button} onPress={() => navigation.navigate('SubmitProposal', { job: item })}>
-              <Text style={s.buttonText}>Apply</Text>
-            </Pressable>
-          </View>
-        )}
-        ListEmptyComponent={<Text style={s.empty}>{loading ? 'Loading jobs...' : 'No open jobs right now.'}</Text>}
-      />
+
+      {loading ? (
+        <LoadingSpinner message="Loading jobs..." />
+      ) : (
+        <FlatList
+          data={filtered}
+          keyExtractor={(item) => item.id.toString()}
+          contentContainerStyle={s.list}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => load(true)} />}
+          renderItem={({ item }) => (
+            <JobCard
+              job={item}
+              onPress={() => navigation.navigate('JobDetail', { job: item })}
+              actionLabel="Apply"
+              onAction={() => navigation.navigate('SubmitProposal', { job: item })}
+            />
+          )}
+          ListEmptyComponent={
+            error
+              ? <EmptyState icon="⚠️" title="Couldn't load jobs" subtitle={error} />
+              : search
+                ? <EmptyState icon="🔍" title="No matching jobs" subtitle={`No jobs found for "${search}"`} />
+                : <EmptyState icon="📋" title="No open jobs" subtitle="No client requests available right now. Pull to refresh." />
+          }
+        />
+      )}
     </View>
   );
 }
 
 const s = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.bgSecondary },
-  header: { backgroundColor: colors.bgPrimary, paddingTop: 54, paddingHorizontal: spacing.xxl, paddingBottom: spacing.lg, borderBottomWidth: 1, borderBottomColor: colors.border },
-  title: { ...typography.h2, color: colors.textPrimary },
-  subtitle: { ...typography.small, color: colors.textMuted, marginTop: 2 },
+  searchBar: {
+    backgroundColor: colors.bgPrimary,
+    paddingHorizontal: spacing.xxl,
+    paddingBottom: spacing.md,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  searchInput: {
+    backgroundColor: colors.bgInput,
+    borderRadius: borderRadius.md,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: 10,
+    color: colors.textPrimary,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
   list: { padding: spacing.xxl, paddingBottom: 100 },
-  card: { backgroundColor: colors.bgCard, borderRadius: borderRadius.lg, padding: spacing.lg, marginBottom: spacing.md, borderWidth: 1, borderColor: colors.border, ...shadows.sm },
-  cardTitle: { ...typography.bodyMedium, color: colors.textPrimary, fontWeight: '700' },
-  meta: { ...typography.caption, color: colors.textMuted, marginTop: spacing.xs },
-  desc: { ...typography.small, color: colors.textSecondary, marginTop: spacing.sm },
-  button: { marginTop: spacing.md, backgroundColor: colors.primary, borderRadius: borderRadius.md, paddingVertical: spacing.md, alignItems: 'center' },
-  buttonText: { ...typography.buttonSmall, color: '#fff' },
-  empty: { ...typography.body, color: colors.textMuted, textAlign: 'center', marginTop: spacing.huge },
 });

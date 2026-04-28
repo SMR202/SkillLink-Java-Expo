@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Profile &amp; Settings - SkillLink</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-tertiary-fixed": "#351000",
+                      "primary-fixed-dim": "#c3c0ff",
+                      "on-error": "#ffffff",
+                      "surface-container-highest": "#e4e1ee",
+                      "surface-bright": "#fcf8ff",
+                      "on-background": "#1b1b24",
+                      "inverse-primary": "#c3c0ff",
+                      "tertiary-fixed-dim": "#ffb695",
+                      "secondary-fixed-dim": "#c0c6db",
+                      "outline-variant": "#c7c4d8",
+                      "error-container": "#ffdad6",
+                      "inverse-surface": "#302f39",
+                      "error": "#ba1a1a",
+                      "on-secondary-container": "#5c6274",
+                      "primary": "#3525cd",
+                      "primary-fixed": "#e2dfff",
+                      "surface-container-high": "#eae6f4",
+                      "primary-container": "#4f46e5",
+                      "on-error-container": "#93000a",
+                      "on-tertiary": "#ffffff",
+                      "surface-container-lowest": "#ffffff",
+                      "on-secondary": "#ffffff",
+                      "on-surface-variant": "#464555",
+                      "on-primary-fixed-variant": "#3323cc",
+                      "tertiary-container": "#a44100",
+                      "secondary-container": "#d9dff5",
+                      "on-surface": "#1b1b24",
+                      "inverse-on-surface": "#f3effc",
+                      "surface-container": "#f0ecf9",
+                      "surface-tint": "#4d44e3",
+                      "outline": "#777587",
+                      "on-tertiary-fixed-variant": "#7b2f00",
+                      "surface-dim": "#dcd8e5",
+                      "on-tertiary-container": "#ffd2be",
+                      "secondary-fixed": "#dce2f7",
+                      "on-primary-container": "#dad7ff",
+                      "tertiary-fixed": "#ffdbcc",
+                      "surface-variant": "#e4e1ee",
+                      "surface-container-low": "#f5f2ff",
+                      "background": "#fcf8ff",
+                      "on-secondary-fixed-variant": "#404758",
+                      "surface": "#fcf8ff",
+                      "secondary": "#575e70",
+                      "on-primary": "#ffffff",
+                      "tertiary": "#7e3000",
+                      "on-secondary-fixed": "#141b2b",
+                      "on-primary-fixed": "#0f0069"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "gutter": "24px",
+                      "margin": "auto",
+                      "base": "8px",
+                      "sm": "12px",
+                      "md": "24px",
+                      "xs": "4px",
+                      "lg": "48px",
+                      "grid_columns": "12",
+                      "xl": "80px"
+              },
+              "fontFamily": {
+                      "body-md": ["Manrope"],
+                      "h1": ["Manrope"],
+                      "caption": ["Manrope"],
+                      "h3": ["Manrope"],
+                      "h2": ["Manrope"],
+                      "body-lg": ["Manrope"],
+                      "label-bold": ["Manrope"]
+              },
+              "fontSize": {
+                      "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                      "h1": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                      "caption": ["12px", {"lineHeight": "1.4", "fontWeight": "500"}],
+                      "h3": ["24px", {"lineHeight": "1.4", "letterSpacing": "0", "fontWeight": "700"}],
+                      "h2": ["36px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                      "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                      "label-bold": ["14px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        .tap-highlight-transparent { -webkit-tap-highlight-color: transparent; }
+        /* Toggle Switch Pure CSS Fallback for visual representation */
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: theme('colors.primary');
+        }
+        .toggle-checkbox:checked + .toggle-label .toggle-dot {
+            transform: translateX(100%);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md antialiased min-h-screen">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md text-indigo-600 dark:text-indigo-400 font-manrope font-semibold tracking-tight border-b border-gray-100 dark:border-slate-800 shadow-[0_4px_20px_rgba(0,0,0,0.03)] flex items-center justify-between px-6 py-4 w-full">
+<div class="flex items-center gap-4">
+<button class="hover:opacity-80 transition-opacity active:scale-95 transition-transform duration-200 flex items-center">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<span class="text-xl font-extrabold text-indigo-600 dark:text-indigo-400 tracking-tighter">SkillLink</span>
+</div>
+<button class="hover:opacity-80 transition-opacity active:scale-95 transition-transform duration-200">
+<img alt="User profile avatar" class="w-8 h-8 rounded-full object-cover shadow-sm" data-alt="professional headshot of a young man smiling warmly against a neutral background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDuXp8AOpfxAZLJjkXimLqbKKu0aMURd0o7dVw0GLOWY403JEaVNDu_ee_OnB50QeABHd0TU06LKq_i2YLYaTxbZhNKGuPsULi8QXsjEN9BNAgOkeZgMCfsD3dds5Tqiy7QO4Ps8OuKiX7PnlLT3Bm2TlN-HFnQcZxEYW1n5APyGYRyqfat3IO6VAeI9TBALQvUFOIrO-gSbj69SrU8c2MIuv7K1UazaKqnBk9KwqVuhz-o4fZ0Kxzj6IDErIA0RE7ZvhD5yQiG"/>
+</button>
+</header>
+<!-- NavigationDrawer (Desktop) -->
+<aside class="hidden md:flex flex-col p-6 gap-2 h-full w-80 shadow-xl divide-y divide-gray-100 dark:divide-slate-800 bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 font-manrope text-sm fixed top-[72px] bottom-0 left-0 z-40">
+<div class="flex items-center gap-4 py-4">
+<img alt="Provider profile image" class="w-12 h-12 rounded-full object-cover shadow-md" data-alt="professional headshot of a young man smiling warmly against a neutral background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBV6lNBHGOiQhD9ceqXv4pmR89nehfLqarN3_xgMqz-peSgyrFFQhR4MJG6K9crweVMjGVrrLDu2t6zDZpgT2Umicto6Y_WcRwtB9fwdw7viIHkx6t-NddX0b831BxI2OwhTUWMJXq8Yx702EboQn_kFPs78mABohRbAxtxBw-MSbcj8YlcKTKZKv08kIlwCdRdHnZ_XogOTO2ZvB3qK8KQGXn_M1WVwvnKSEPI7rM43k0mvDPRkOT_eBi0r6KVVwSkZvEuZSBx"/>
+<div class="flex flex-col">
+<span class="font-bold text-indigo-600">SkillLink Pro</span>
+<span class="text-slate-500 text-xs">Premium Marketplace Partner</span>
+<span class="text-emerald-600 text-[10px] font-bold tracking-wide uppercase mt-1">Verified Provider</span>
+</div>
+</div>
+<nav class="flex flex-col gap-2 pt-4">
+<!-- Active Tab: Profile -->
+<a class="bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 font-semibold rounded-lg hover:translate-x-1 transition-transform duration-200 tap-highlight-transparent flex items-center gap-3 p-3" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+                Profile
+            </a>
+<a class="text-slate-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 rounded-lg hover:translate-x-1 transition-transform duration-200 tap-highlight-transparent flex items-center gap-3 p-3" href="#">
+<span class="material-symbols-outlined">verified</span>
+                Verification
+            </a>
+<a class="text-slate-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 rounded-lg hover:translate-x-1 transition-transform duration-200 tap-highlight-transparent flex items-center gap-3 p-3" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+                Payout Methods
+            </a>
+<a class="text-slate-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 rounded-lg hover:translate-x-1 transition-transform duration-200 tap-highlight-transparent flex items-center gap-3 p-3" href="#">
+<span class="material-symbols-outlined">group</span>
+                Team Access
+            </a>
+<a class="text-slate-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 rounded-lg hover:translate-x-1 transition-transform duration-200 tap-highlight-transparent flex items-center gap-3 p-3" href="#">
+<span class="material-symbols-outlined">settings</span>
+                Settings
+            </a>
+<a class="text-slate-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 rounded-lg hover:translate-x-1 transition-transform duration-200 tap-highlight-transparent flex items-center gap-3 p-3" href="#">
+<span class="material-symbols-outlined">help</span>
+                Help Center
+            </a>
+</nav>
+</aside>
+<!-- BottomNavBar (Mobile) -->
+<nav class="md:hidden fixed bottom-0 w-full z-50 rounded-t-2xl bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 text-[10px] font-manrope font-medium uppercase tracking-wider border-t border-gray-100 dark:border-slate-800 shadow-[0_-4px_20px_rgba(0,0,0,0.03)] flex justify-around items-center h-20 px-4 pb-safe">
+<a class="text-slate-400 dark:text-slate-500 flex flex-col items-center gap-1 hover:text-indigo-500 transition-colors active:scale-90 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined">grid_view</span>
+<span>Home</span>
+</a>
+<a class="text-slate-400 dark:text-slate-500 flex flex-col items-center gap-1 hover:text-indigo-500 transition-colors active:scale-90 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined">calendar_today</span>
+<span>Bookings</span>
+</a>
+<a class="text-slate-400 dark:text-slate-500 flex flex-col items-center gap-1 hover:text-indigo-500 transition-colors active:scale-90 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span>Earnings</span>
+</a>
+<a class="text-slate-400 dark:text-slate-500 flex flex-col items-center gap-1 hover:text-indigo-500 transition-colors active:scale-90 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined">insights</span>
+<span>Analytics</span>
+</a>
+<!-- Active Tab Mapping Intent: Admin/Profile -->
+<a class="text-indigo-600 dark:text-indigo-400 flex flex-col items-center gap-1 hover:text-indigo-500 transition-colors active:scale-90 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">admin_panel_settings</span>
+<span>Admin</span>
+</a>
+</nav>
+<!-- Main Content Canvas -->
+<main class="md:ml-80 pt-[88px] pb-32 md:pb-lg px-md lg:px-lg max-w-[1280px] mx-auto min-h-screen flex flex-col gap-lg">
+<!-- Page Title -->
+<div class="flex flex-col gap-xs">
+<h1 class="font-h2 text-on-surface">Profile &amp; Settings</h1>
+<p class="font-body-md text-on-surface-variant">Manage your account details and preferences.</p>
+</div>
+<!-- Identity Header Card -->
+<section class="bg-surface-container-lowest rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] p-lg flex flex-col md:flex-row items-center gap-lg relative overflow-hidden">
+<!-- Decorative background blob -->
+<div class="absolute -right-20 -top-20 w-64 h-64 bg-primary-fixed opacity-30 rounded-full blur-3xl pointer-events-none"></div>
+<!-- Avatar with Edit -->
+<div class="relative group cursor-pointer">
+<img alt="Your Profile Avatar" class="w-32 h-32 rounded-full object-cover border-4 border-surface shadow-md" data-alt="professional headshot of a young man smiling warmly against a neutral background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC456MIcyUMRjhFAv-9TNUyyiej2d4MfQ4oXNybMMa0e4M9YLVKsM9ltA7sS7G4WP6ayvztOd8MM-dQFiqF0SHk2tRB7-R3qAUr3PojCF0RCjvYSCy8M2vSNJW43peM8B-MjyBH1eFAFVQ1tufL05Cb96Z3QWRZUmGrkLZ5EQldZFm_Sj6-L06YTyy5z2Qga-WXEDZM4VSTXdAIAmZU4oLU5AuDCEThGknMVWTpVA5wxx8JmTDVIxMI3ihplrqkGe7g7qic_Pih"/>
+<button class="absolute bottom-1 right-1 bg-primary text-on-primary w-10 h-10 rounded-full flex items-center justify-center shadow-lg hover:bg-on-primary-fixed-variant transition-colors group-hover:scale-110 duration-200">
+<span class="material-symbols-outlined text-sm">edit</span>
+</button>
+</div>
+<div class="flex flex-col items-center md:items-start text-center md:text-left z-10">
+<h2 class="font-h3 text-on-surface mb-1">Alex Morgan</h2>
+<p class="font-body-lg text-secondary mb-4">alex.morgan@example.com</p>
+<div class="inline-flex items-center gap-xs px-sm py-xs bg-surface-container-high rounded-full font-caption text-on-surface-variant">
+<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                    Available for Bookings
+                </div>
+</div>
+</section>
+<!-- Bento Grid Settings Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-md items-start">
+<!-- Left Column: Primary Settings -->
+<div class="lg:col-span-7 flex flex-col gap-md">
+<!-- Edit Profile Card -->
+<section class="bg-surface-container-lowest rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] p-md flex flex-col gap-md">
+<div class="flex items-center gap-sm border-b border-surface-container-high pb-sm">
+<span class="material-symbols-outlined text-primary">person_edit</span>
+<h3 class="font-h3 text-on-surface text-[20px]">Personal Information</h3>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-md pt-sm">
+<div class="flex flex-col gap-xs">
+<label class="font-label-bold text-on-surface-variant">First Name</label>
+<input class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-sm py-sm font-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-shadow" type="text" value="Alex"/>
+</div>
+<div class="flex flex-col gap-xs">
+<label class="font-label-bold text-on-surface-variant">Last Name</label>
+<input class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-sm py-sm font-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-shadow" type="text" value="Morgan"/>
+</div>
+<div class="flex flex-col gap-xs md:col-span-2">
+<label class="font-label-bold text-on-surface-variant">Professional Title</label>
+<input class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-sm py-sm font-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-shadow" type="text" value="Senior UX Consultant"/>
+</div>
+</div>
+<div class="flex justify-end pt-sm">
+<button class="bg-primary text-on-primary font-label-bold px-md py-sm rounded-lg hover:bg-on-primary-fixed-variant transition-colors shadow-sm">Save Changes</button>
+</div>
+</section>
+<!-- Change Password Card -->
+<section class="bg-surface-container-lowest rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] p-md flex flex-col gap-md">
+<div class="flex items-center gap-sm border-b border-surface-container-high pb-sm">
+<span class="material-symbols-outlined text-primary">lock</span>
+<h3 class="font-h3 text-on-surface text-[20px]">Security</h3>
+</div>
+<div class="flex flex-col gap-md pt-sm">
+<div class="flex flex-col gap-xs">
+<label class="font-label-bold text-on-surface-variant">Current Password</label>
+<input class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-sm py-sm font-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-shadow" placeholder="••••••••" type="password"/>
+</div>
+<div class="flex flex-col gap-xs">
+<label class="font-label-bold text-on-surface-variant">New Password</label>
+<input class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-sm py-sm font-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-shadow" placeholder="Enter new password" type="password"/>
+</div>
+</div>
+<div class="flex justify-end pt-sm">
+<button class="border border-primary text-primary font-label-bold px-md py-sm rounded-lg hover:bg-surface-container-low transition-colors">Update Password</button>
+</div>
+</section>
+</div>
+<!-- Right Column: Preferences & Support -->
+<div class="lg:col-span-5 flex flex-col gap-md">
+<!-- Notifications Card -->
+<section class="bg-surface-container-lowest rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] p-md flex flex-col gap-sm">
+<div class="flex items-center gap-sm border-b border-surface-container-high pb-sm mb-sm">
+<span class="material-symbols-outlined text-primary">notifications</span>
+<h3 class="font-h3 text-on-surface text-[20px]">Notifications</h3>
+</div>
+<!-- Toggle List -->
+<div class="flex flex-col divide-y divide-surface-container-high">
+<div class="py-sm flex items-center justify-between">
+<div class="flex flex-col pr-sm">
+<span class="font-body-md text-on-surface font-medium">Email Updates</span>
+<span class="font-caption text-secondary">Weekly performance reports and tips</span>
+</div>
+<!-- Styled Toggle representation -->
+<div class="w-11 h-6 bg-primary rounded-full relative cursor-pointer shadow-inner flex-shrink-0">
+<div class="w-4 h-4 bg-on-primary rounded-full absolute right-1 top-1 shadow-sm transition-transform"></div>
+</div>
+</div>
+<div class="py-sm flex items-center justify-between">
+<div class="flex flex-col pr-sm">
+<span class="font-body-md text-on-surface font-medium">Push Notifications</span>
+<span class="font-caption text-secondary">Instant alerts for new messages</span>
+</div>
+<div class="w-11 h-6 bg-surface-container-highest rounded-full relative cursor-pointer shadow-inner flex-shrink-0">
+<div class="w-4 h-4 bg-surface-container-lowest rounded-full absolute left-1 top-1 shadow-sm border border-outline-variant transition-transform"></div>
+</div>
+</div>
+<div class="py-sm flex items-center justify-between">
+<div class="flex flex-col pr-sm">
+<span class="font-body-md text-on-surface font-medium">Marketing Communications</span>
+<span class="font-caption text-secondary">Special offers and partner promotions</span>
+</div>
+<div class="w-11 h-6 bg-surface-container-highest rounded-full relative cursor-pointer shadow-inner flex-shrink-0">
+<div class="w-4 h-4 bg-surface-container-lowest rounded-full absolute left-1 top-1 shadow-sm border border-outline-variant transition-transform"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Help & Support -->
+<section class="bg-surface-container-lowest rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] p-md flex flex-col gap-sm">
+<div class="flex items-center gap-sm border-b border-surface-container-high pb-sm mb-sm">
+<span class="material-symbols-outlined text-primary">support_agent</span>
+<h3 class="font-h3 text-on-surface text-[20px]">Help &amp; Support</h3>
+</div>
+<div class="flex flex-col gap-xs">
+<a class="flex items-center justify-between p-sm hover:bg-surface-container-low rounded-lg transition-colors group" href="#">
+<span class="font-body-md text-on-surface group-hover:text-primary transition-colors">Help Center Documentation</span>
+<span class="material-symbols-outlined text-secondary group-hover:text-primary transition-colors">arrow_forward_ios</span>
+</a>
+<a class="flex items-center justify-between p-sm hover:bg-surface-container-low rounded-lg transition-colors group" href="#">
+<span class="font-body-md text-on-surface group-hover:text-primary transition-colors">Contact Support Team</span>
+<span class="material-symbols-outlined text-secondary group-hover:text-primary transition-colors">arrow_forward_ios</span>
+</a>
+</div>
+</section>
+<!-- Danger Zone / Log Out -->
+<div class="mt-md">
+<button class="w-full flex items-center justify-center gap-sm p-sm rounded-lg border border-error-container bg-surface hover:bg-error-container/20 transition-colors group">
+<span class="material-symbols-outlined text-error">logout</span>
+<span class="font-label-bold text-error group-hover:text-on-error-container transition-colors">Log Out</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+</body></html>

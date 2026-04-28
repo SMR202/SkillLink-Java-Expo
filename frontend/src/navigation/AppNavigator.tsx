@@ -20,7 +20,9 @@ import HelpSupportScreen from "../screens/shared/HelpSupportScreen";
 import EarningsScreen from "../screens/provider/EarningsScreen";
 import ReviewsScreen from "../screens/provider/ReviewsScreen";
 import PostJobScreen from "../screens/client/PostJobScreen";
+import JobProposalsScreen from "../screens/client/JobProposalsScreen";
 import SubmitProposalScreen from "../screens/provider/SubmitProposalScreen";
+import JobDetailScreen from "../screens/provider/JobDetailScreen";
 import { useAuthStore } from "../store/authStore";
 import { colors } from "../theme";
 
@@ -121,6 +123,11 @@ export default function AppNavigator() {
                             component={SubmitProposalScreen}
                             options={{ animation: "slide_from_right" }}
                         />
+                        <Stack.Screen
+                            name="JobDetail"
+                            component={JobDetailScreen}
+                            options={{ animation: "slide_from_right" }}
+                        />
                     </>
                 ) : (
                     <>
@@ -188,6 +195,11 @@ export default function AppNavigator() {
                             name="PostJob"
                             component={PostJobScreen}
                             options={{ animation: "slide_from_bottom", presentation: "modal" }}
+                        />
+                        <Stack.Screen
+                            name="JobProposals"
+                            component={JobProposalsScreen}
+                            options={{ animation: "slide_from_right" }}
                         />
                     </>
                 )}

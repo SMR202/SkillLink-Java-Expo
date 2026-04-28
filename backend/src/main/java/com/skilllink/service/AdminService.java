@@ -2,6 +2,7 @@ package com.skilllink.service;
 
 import com.skilllink.dto.response.AdminUserResponse;
 import com.skilllink.dto.response.AnalyticsResponse;
+import com.skilllink.dto.response.ReviewResponse;
 import com.skilllink.entity.*;
 import com.skilllink.exception.ResourceNotFoundException;
 import com.skilllink.repository.*;
@@ -126,6 +127,33 @@ public class AdminService {
             .isActive(user.getIsActive())
             .emailVerified(user.getEmailVerified())
             .createdAt(user.getCreatedAt())
+            .build();
+    }
+
+    public Page<ReviewResponse> getAllReviews(Pageable pageable) {
+        return reviewRepository.findAll(pageable).map(this::mapToReviewResponse);
+    }
+
+    @Transactional
+    public void deleteReview(Long adminId, Long reviewId) {
+        Review review = reviewRepository.findById(reviewId)
+            .orElseThrow(() -> new ResourceNotFoundException("Review not found"));
+        reviewRepository.delete(review);
+    }
+
+    private ReviewResponse mapToReviewResponse(Review r) {
+        return ReviewResponse.builder()
+            .id(r.getId())
+            .bookingId(r.getBooking().getId())
+            .clientId(r.getClient().getId())
+            .clientName(r.getClient().getFullName())
+            .providerId(r.getProvider().getUser().getId())
+            .providerName(r.getProvider().getUser().getFullName())
+            .rating(r.getRating())
+            .comment(r.getComment())
+            .providerResponse(r.getProviderResponse())
+            .createdAt(r.getCreatedAt())
+            .respondedAt(r.getRespondedAt())
             .build();
     }
 }
