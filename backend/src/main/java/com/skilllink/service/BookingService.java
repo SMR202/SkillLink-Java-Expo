@@ -163,6 +163,19 @@ public class BookingService {
                 .map(BookingResponse::from);
     }
 
+    public BookingResponse getBooking(Long userId, Long bookingId) {
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new ResourceNotFoundException("Booking not found."));
+
+        boolean isClient = booking.getClient().getId().equals(userId);
+        boolean isProvider = booking.getProvider().getUser().getId().equals(userId);
+        if (!isClient && !isProvider) {
+            throw new ForbiddenException("You are not part of this booking.");
+        }
+
+        return BookingResponse.from(booking);
+    }
+
     public Page<BookingResponse> getProviderBookings(Long providerId, BookingStatus status, Pageable pageable) {
         ProviderProfile provider = providerProfileRepository.findByUserId(providerId)
                 .orElseThrow(() -> new ResourceNotFoundException("Provider profile not found."));

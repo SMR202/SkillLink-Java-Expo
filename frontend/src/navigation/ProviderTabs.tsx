@@ -5,13 +5,14 @@ import ProviderDashboardScreen from '../screens/provider/DashboardScreen';
 import ProviderJobBoardScreen from '../screens/provider/ProviderJobBoardScreen';
 import BookingMgmtScreen from '../screens/provider/BookingMgmtScreen';
 import EarningsScreen from '../screens/provider/EarningsScreen';
+import ChatListScreen from '../screens/shared/ChatListScreen';
 import ProfileEditScreen from '../screens/provider/ProfileEditScreen';
 import { colors } from '../theme';
 
 const Tab = createBottomTabNavigator();
 
 function TabIcon({ name, focused }: { name: string; focused: boolean }) {
-  const icons: Record<string, string> = { Dashboard: 'D', Jobs: 'J', Bookings: 'B', Earnings: 'E', Profile: 'P' };
+  const icons: Record<string, string> = { Dashboard: 'D', Jobs: 'J', Bookings: 'B', Messages: 'C', Earnings: 'E', Profile: 'P' };
   return (
     <View style={styles.tabIcon}>
       <Text style={[styles.tabEmoji, focused && styles.tabEmojiActive]}>{icons[name] || '*'}</Text>
@@ -34,6 +35,7 @@ export default function ProviderTabs() {
       <Tab.Screen name="Dashboard" component={ProviderDashboardScreen} />
       <Tab.Screen name="Jobs" component={ProviderJobBoardScreen} />
       <Tab.Screen name="Bookings" component={BookingMgmtScreen} />
+      <Tab.Screen name="Messages" component={ChatListScreen} />
       <Tab.Screen name="Earnings" component={EarningsScreen} />
       <Tab.Screen name="Profile" component={ProfileEditScreen} />
     </Tab.Navigator>

@@ -33,6 +33,7 @@ com\skilllink\exception\GlobalExceptionHandler.class
 com\skilllink\dto\response\BookingResponse.class
 com\skilllink\dto\response\SkillCategoryResponse$SkillCategoryResponseBuilder.class
 com\skilllink\dto\response\AnalyticsResponse$AnalyticsResponseBuilder.class
+com\skilllink\dto\response\ConversationResponse.class
 com\skilllink\entity\Notification$NotificationBuilder.class
 com\skilllink\dto\request\BookingActionRequest.class
 com\skilllink\dto\request\BookingRequest.class
@@ -81,6 +82,7 @@ com\skilllink\dto\response\AdminUserResponse.class
 com\skilllink\dto\response\AuthResponse$AuthResponseBuilder.class
 com\skilllink\controller\JobPostController.class
 com\skilllink\config\DataSeeder.class
+com\skilllink\dto\response\ConversationResponse$ConversationResponseBuilder.class
 com\skilllink\dto\request\ProviderProfileUpdateRequest.class
 com\skilllink\dto\response\ProposalResponse.class
 com\skilllink\entity\Role.class

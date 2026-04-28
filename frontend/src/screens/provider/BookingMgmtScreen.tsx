@@ -69,6 +69,9 @@ export default function BookingMgmtScreen() {
             </TouchableOpacity>
           </View>
         )}
+        <Pressable style={{ paddingHorizontal: spacing.md, paddingVertical: 8, borderRadius: borderRadius.md, backgroundColor: colors.bgInput, alignSelf: 'flex-start', marginTop: spacing.sm }} onPress={() => navigation.navigate('BookingDetail', { bookingId: item.id, booking: item })}>
+          <Text style={{ ...typography.caption, fontWeight: '600', color: colors.textPrimary }}>Details</Text>
+        </Pressable>
         {(item.status === 'PENDING' || item.status === 'ACCEPTED') && (
           <Pressable style={{ paddingHorizontal: spacing.md, paddingVertical: 8, borderRadius: borderRadius.md, backgroundColor: colors.bgInput, alignSelf: 'flex-start', marginTop: spacing.sm }} onPress={() => navigation.navigate('Chat', { bookingId: item.id, otherUserName: item.clientName })}>
             <Text style={{ ...typography.caption, fontWeight: '600', color: colors.textPrimary }}>💬 Chat with Client</Text>

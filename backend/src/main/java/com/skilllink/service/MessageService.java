@@ -1,6 +1,7 @@
 package com.skilllink.service;
 
 import com.skilllink.dto.request.MessageRequest;
+import com.skilllink.dto.response.ConversationResponse;
 import com.skilllink.dto.response.MessageResponse;
 import com.skilllink.entity.*;
 import com.skilllink.exception.*;
@@ -65,6 +66,13 @@ public class MessageService {
                 .stream().map(this::mapToResponse).collect(Collectors.toList());
     }
 
+    public List<ConversationResponse> getConversations(Long userId) {
+        return bookingRepository.findConversationsForUser(userId)
+                .stream()
+                .map(booking -> mapToConversation(booking, userId))
+                .collect(Collectors.toList());
+    }
+
     @Transactional
     public void markAsRead(Long userId, Long bookingId) {
         Booking booking = bookingRepository.findById(bookingId)
@@ -88,6 +96,26 @@ public class MessageService {
                 .content(message.getContent())
                 .isRead(message.getIsRead())
                 .sentAt(message.getSentAt())
+                .build();
+    }
+
+    private ConversationResponse mapToConversation(Booking booking, Long userId) {
+        boolean isClient = booking.getClient().getId().equals(userId);
+        User otherUser = isClient ? booking.getProvider().getUser() : booking.getClient();
+        Message lastMessage = messageRepository.findTopByBookingIdOrderBySentAtDesc(booking.getId());
+
+        return ConversationResponse.builder()
+                .bookingId(booking.getId())
+                .otherUserId(otherUser.getId())
+                .otherUserName(otherUser.getFullName())
+                .otherUserAvatarUrl(isClient ? booking.getProvider().getAvatarUrl() : null)
+                .bookingStatus(booking.getStatus().name())
+                .jobDescription(booking.getJobDescription())
+                .preferredDate(booking.getPreferredDate().toString())
+                .preferredTime(booking.getPreferredTime().toString())
+                .lastMessage(lastMessage != null ? lastMessage.getContent() : null)
+                .lastMessageAt(lastMessage != null ? lastMessage.getSentAt().toString() : booking.getCreatedAt().toString())
+                .unreadCount(messageRepository.countUnreadByBookingIdAndNotSender(booking.getId(), userId))
                 .build();
     }
 }

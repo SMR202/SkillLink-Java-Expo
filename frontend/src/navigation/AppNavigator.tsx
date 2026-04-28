@@ -11,6 +11,7 @@ import BookingFormScreen from "../screens/client/BookingFormScreen";
 import ReviewFormScreen from "../screens/client/ReviewFormScreen";
 import CheckoutScreen from "../screens/client/CheckoutScreen";
 import ChatScreen from "../screens/shared/ChatScreen";
+import BookingDetailScreen from "../screens/shared/BookingDetailScreen";
 import ProfileSettingsScreen from "../screens/shared/ProfileSettingsScreen";
 import ClientContactScreen from "../screens/client/ClientContactScreen";
 import NotificationsHubScreen from "../screens/shared/NotificationsHubScreen";
@@ -101,6 +102,11 @@ export default function AppNavigator() {
                             options={{ animation: "slide_from_right" }}
                         />
                         <Stack.Screen
+                            name="BookingDetail"
+                            component={BookingDetailScreen}
+                            options={{ animation: "slide_from_right" }}
+                        />
+                        <Stack.Screen
                             name="Earnings"
                             component={EarningsScreen}
                             options={{ animation: "slide_from_right" }}
@@ -151,6 +157,11 @@ export default function AppNavigator() {
                         <Stack.Screen
                             name="Chat"
                             component={ChatScreen}
+                            options={{ animation: "slide_from_right" }}
+                        />
+                        <Stack.Screen
+                            name="BookingDetail"
+                            component={BookingDetailScreen}
                             options={{ animation: "slide_from_right" }}
                         />
                         <Stack.Screen

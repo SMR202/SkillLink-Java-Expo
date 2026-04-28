@@ -12,6 +12,8 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
 
     List<Message> findByBookingIdOrderBySentAtAsc(Long bookingId);
 
+    Message findTopByBookingIdOrderBySentAtDesc(Long bookingId);
+
     @Query("SELECT COUNT(m) FROM Message m WHERE m.booking.id = :bookingId AND m.sender.id <> :userId AND m.isRead = false")
     Long countUnreadByBookingIdAndNotSender(@Param("bookingId") Long bookingId, @Param("userId") Long userId);
 

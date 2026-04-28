@@ -1,17 +1,31 @@
 import React, { useState } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity, StyleSheet,
-  KeyboardAvoidingView, Platform, ScrollView, Alert,
+  KeyboardAvoidingView, Platform, ScrollView, Modal,
 } from 'react-native';
 import { colors, typography, spacing, borderRadius } from '../../theme';
 import { authApi } from '../../api/auth';
 import { useAuthStore } from '../../store/authStore';
 import GradientButton from '../../components/GradientButton';
+import { User } from '../../types';
 
 type Step = 'info' | 'role';
 
 const isStrongPassword = (value: string) =>
   value.length >= 8 && /\d/.test(value) && /[!@#$%^&*]/.test(value);
+
+const isValidEmail = (value: string) =>
+  /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
+
+const passwordFormatMessage =
+  'Password must be at least 8 characters and include 1 number and 1 special character.';
+const emailFormatMessage = 'Please enter a valid email address, like name@example.com.';
+
+type PopupState = {
+  title: string;
+  message: string;
+  onClose?: () => void;
+};
 
 export default function SignupScreen({ navigation }: any) {
   const [step, setStep] = useState<Step>('info');
@@ -21,23 +35,46 @@ export default function SignupScreen({ navigation }: any) {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [role, setRole] = useState<'CLIENT' | 'PROVIDER' | null>(null);
   const [loading, setLoading] = useState(false);
+  const [popup, setPopup] = useState<PopupState | null>(null);
   const setUser = useAuthStore((s) => s.setUser);
 
+  const showPopup = (title: string, message: string, onClose?: () => void) => {
+    setPopup({ title, message, onClose });
+  };
+
+  const closePopup = () => {
+    const onClose = popup?.onClose;
+    setPopup(null);
+    onClose?.();
+  };
+
+  const showPasswordFormatAlert = () => showPopup('Invalid Password', passwordFormatMessage);
+  const showEmailFormatAlert = () => showPopup('Invalid Email', emailFormatMessage);
+
   const handleNext = () => {
-    if (!fullName || !email || !password) { Alert.alert('Error', 'Please fill in all fields.'); return; }
-    if (!isStrongPassword(password)) { Alert.alert('Error', 'Password must be at least 8 characters and include 1 number and 1 special character.'); return; }
-    if (password !== confirmPassword) { Alert.alert('Error', 'Passwords do not match.'); return; }
+    if (!fullName || !email || !password || !confirmPassword) { showPopup('Missing Information', 'Please fill in all fields.'); return; }
+    if (!isValidEmail(email)) { showEmailFormatAlert(); return; }
+    if (!isStrongPassword(password)) { showPasswordFormatAlert(); return; }
+    if (password !== confirmPassword) { showPopup('Password Mismatch', 'Passwords do not match.'); return; }
     setStep('role');
   };
 
   const handleSignup = async () => {
-    if (!role) { Alert.alert('Error', 'Please select a role.'); return; }
+    if (!role) { showPopup('Select a Role', 'Please choose whether you need a service or offer services.'); return; }
+    if (!fullName || !email || !password || !confirmPassword) { showPopup('Missing Information', 'Please fill in all fields.'); setStep('info'); return; }
+    if (!isValidEmail(email)) { showEmailFormatAlert(); setStep('info'); return; }
+    if (!isStrongPassword(password)) { showPasswordFormatAlert(); setStep('info'); return; }
+    if (password !== confirmPassword) { showPopup('Password Mismatch', 'Passwords do not match.'); setStep('info'); return; }
     setLoading(true);
     try {
       const result = await authApi.signup({ fullName, email, password, role });
-      setUser(result.user);
+      showPopup('Account Created', 'Your account has been created successfully.', () => setUser(result.user as User));
     } catch (err: any) {
-      Alert.alert('Error', err.response?.data?.message || 'Signup failed.');
+      const validationErrors = err.response?.data?.data;
+      const firstValidationError = validationErrors && typeof validationErrors === 'object'
+        ? Object.values(validationErrors)[0]
+        : null;
+      showPopup('Signup Failed', String(firstValidationError || err.response?.data?.message || 'Signup failed.'));
     } finally { setLoading(false); }
   };
 
@@ -66,11 +103,17 @@ export default function SignupScreen({ navigation }: any) {
 
               <Text style={s.label}>Email</Text>
               <TextInput style={s.input} placeholder="you@email.com" placeholderTextColor={colors.textMuted}
-                value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none" />
+                value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none"
+                onEndEditing={() => {
+                  if (email && !isValidEmail(email)) showEmailFormatAlert();
+                }} />
 
               <Text style={s.label}>Password</Text>
               <TextInput style={s.input} placeholder="Min 8 chars, 1 number, 1 special" placeholderTextColor={colors.textMuted}
-                value={password} onChangeText={setPassword} secureTextEntry />
+                value={password} onChangeText={setPassword} secureTextEntry
+                onEndEditing={() => {
+                  if (password && !isStrongPassword(password)) showPasswordFormatAlert();
+                }} />
 
               <Text style={s.label}>Confirm Password</Text>
               <TextInput style={s.input} placeholder="Re-enter password" placeholderTextColor={colors.textMuted}
@@ -110,7 +153,7 @@ export default function SignupScreen({ navigation }: any) {
                   <Text style={s.backText}>← Back</Text>
                 </TouchableOpacity>
                 <View style={{ flex: 1 }}>
-                  <GradientButton onPress={handleSignup} title="Create Account" loading={loading} disabled={!role} />
+                  <GradientButton onPress={handleSignup} title="Create Account" loading={loading} />
                 </View>
               </View>
             </View>
@@ -121,6 +164,22 @@ export default function SignupScreen({ navigation }: any) {
           </TouchableOpacity>
         </ScrollView>
       </KeyboardAvoidingView>
+
+      <Modal visible={popup !== null} transparent animationType="fade">
+        <View style={s.modalOverlay}>
+          <View style={s.modalCard}>
+            <Text style={s.modalTitle}>{popup?.title}</Text>
+            <Text style={s.modalText}>{popup?.message}</Text>
+            <TouchableOpacity
+              style={s.modalButton}
+              onPress={closePopup}
+              activeOpacity={0.8}
+            >
+              <Text style={s.modalButtonText}>OK</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -152,4 +211,29 @@ const s = StyleSheet.create({
   loginLink: { alignItems: 'center', marginTop: spacing.xxl },
   loginText: { ...typography.body, color: colors.textSecondary },
   loginBold: { color: colors.textPrimary, fontWeight: '600' },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: colors.overlay,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: spacing.xxl,
+  },
+  modalCard: {
+    width: '100%',
+    maxWidth: 420,
+    backgroundColor: colors.bgCard,
+    borderRadius: borderRadius.lg,
+    padding: spacing.xxl,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  modalTitle: { ...typography.h3, color: colors.textPrimary, marginBottom: spacing.sm },
+  modalText: { ...typography.body, color: colors.textSecondary, marginBottom: spacing.xl },
+  modalButton: {
+    backgroundColor: colors.primary,
+    borderRadius: borderRadius.md,
+    paddingVertical: 14,
+    alignItems: 'center',
+  },
+  modalButtonText: { ...typography.button, color: colors.textInverse },
 });

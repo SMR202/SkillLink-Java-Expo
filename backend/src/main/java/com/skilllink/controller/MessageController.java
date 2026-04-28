@@ -2,6 +2,7 @@ package com.skilllink.controller;
 
 import com.skilllink.dto.request.MessageRequest;
 import com.skilllink.dto.response.ApiResponse;
+import com.skilllink.dto.response.ConversationResponse;
 import com.skilllink.dto.response.MessageResponse;
 import com.skilllink.security.JwtTokenProvider;
 import com.skilllink.service.MessageService;
@@ -38,6 +39,14 @@ public class MessageController {
         Long userId = getUserId(authHeader);
         List<MessageResponse> messages = messageService.getMessages(userId, bookingId);
         return ResponseEntity.ok(ApiResponse.success(messages));
+    }
+
+    @GetMapping("/conversations")
+    public ResponseEntity<ApiResponse<List<ConversationResponse>>> getConversations(
+            @RequestHeader("Authorization") String authHeader) {
+        Long userId = getUserId(authHeader);
+        List<ConversationResponse> conversations = messageService.getConversations(userId);
+        return ResponseEntity.ok(ApiResponse.success(conversations));
     }
 
     @PutMapping("/{bookingId}/read")

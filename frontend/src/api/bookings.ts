@@ -19,6 +19,11 @@ export const bookingApi = {
     return res.data.data;
   },
 
+  getById: async (bookingId: number): Promise<Booking> => {
+    const res = await apiClient.get<ApiResponse<Booking>>(`/bookings/${bookingId}`);
+    return res.data.data;
+  },
+
   getProviderBookings: async (
     status?: string,
     page = 0,

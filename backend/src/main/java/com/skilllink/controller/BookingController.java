@@ -63,6 +63,15 @@ public class BookingController {
         return ResponseEntity.ok(ApiResponse.success(bookings));
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<BookingResponse>> getBooking(
+            @RequestHeader("Authorization") String authHeader,
+            @PathVariable Long id) {
+        Long userId = getUserIdFromHeader(authHeader);
+        BookingResponse response = bookingService.getBooking(userId, id);
+        return ResponseEntity.ok(ApiResponse.success(response));
+    }
+
     @PutMapping("/{id}/action")
     public ResponseEntity<ApiResponse<BookingResponse>> actionBooking(
             @RequestHeader("Authorization") String authHeader,

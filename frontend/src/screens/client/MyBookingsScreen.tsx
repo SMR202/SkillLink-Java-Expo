@@ -106,6 +106,17 @@ export default function MyBookingsScreen() {
 
                 {/* Action buttons */}
                 <View style={s.actions}>
+                    <Pressable
+                        style={s.actionBtn}
+                        onPress={() =>
+                            navigation.navigate("BookingDetail", {
+                                bookingId: item.id,
+                                booking: item,
+                            })
+                        }
+                    >
+                        <Text style={s.actionText}>Details</Text>
+                    </Pressable>
                     {(item.status === "PENDING" ||
                         item.status === "ACCEPTED") && (
                         <Pressable

@@ -5,13 +5,14 @@ import HomeScreen from '../screens/client/HomeScreen';
 import JobBoardScreen from '../screens/client/JobBoardScreen';
 import MyPostedJobsScreen from '../screens/client/MyPostedJobsScreen';
 import MyBookingsScreen from '../screens/client/MyBookingsScreen';
+import ChatListScreen from '../screens/shared/ChatListScreen';
 import ProfileSettingsScreen from '../screens/shared/ProfileSettingsScreen';
 import { colors } from '../theme';
 
 const Tab = createBottomTabNavigator();
 
 function TabIcon({ name, focused }: { name: string; focused: boolean }) {
-  const icons: Record<string, string> = { Home: 'H', Jobs: 'J', 'My Jobs': 'M', Bookings: 'B', Profile: 'P' };
+  const icons: Record<string, string> = { Home: 'H', Jobs: 'J', 'My Jobs': 'M', Bookings: 'B', Messages: 'C', Profile: 'P' };
   return (
     <View style={styles.tabIcon}>
       <Text style={[styles.tabEmoji, focused && styles.tabEmojiActive]}>{icons[name] || '*'}</Text>
@@ -35,6 +36,7 @@ export default function ClientTabs() {
       <Tab.Screen name="Jobs" component={JobBoardScreen} />
       <Tab.Screen name="My Jobs" component={MyPostedJobsScreen} />
       <Tab.Screen name="Bookings" component={MyBookingsScreen} />
+      <Tab.Screen name="Messages" component={ChatListScreen} />
       <Tab.Screen name="Profile" component={ProfileSettingsScreen} />
     </Tab.Navigator>
   );

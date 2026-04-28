@@ -121,6 +121,20 @@ export interface ChatMessage {
   sentAt: string;
 }
 
+export interface Conversation {
+  bookingId: number;
+  otherUserId: number;
+  otherUserName: string;
+  otherUserAvatarUrl: string | null;
+  bookingStatus: Booking['status'];
+  jobDescription: string;
+  preferredDate: string;
+  preferredTime: string;
+  lastMessage: string | null;
+  lastMessageAt: string;
+  unreadCount: number;
+}
+
 export interface Payment {
   id: number;
   bookingId: number;

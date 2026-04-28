@@ -1,5 +1,5 @@
 import apiClient from './client';
-import { ChatMessage, ApiResponse } from '../types';
+import { ChatMessage, Conversation, ApiResponse } from '../types';
 
 export const messageApi = {
   send: (bookingId: number, content: string) =>
@@ -10,4 +10,7 @@ export const messageApi = {
 
   markRead: (bookingId: number) =>
     apiClient.put<ApiResponse<void>>(`/messages/${bookingId}/read`),
+
+  getConversations: () =>
+    apiClient.get<ApiResponse<Conversation[]>>('/messages/conversations'),
 };
