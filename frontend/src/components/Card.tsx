@@ -1,6 +1,6 @@
 import React from 'react';
-import { TouchableOpacity, View, StyleSheet, ViewStyle } from 'react-native';
-import { colors, borderRadius, shadows, spacing } from '../theme';
+import { StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native';
+import { borderRadius, colors, shadows, spacing } from '../theme';
 
 interface CardProps {
   children: React.ReactNode;
@@ -9,12 +9,12 @@ interface CardProps {
   padding?: number;
 }
 
-export default function Card({ children, onPress, style, padding = spacing.lg }: CardProps) {
+export default function Card({ children, onPress, style, padding = spacing.space24 }: CardProps) {
   const containerStyle = [s.card, { padding }, style];
 
   if (onPress) {
     return (
-      <TouchableOpacity style={containerStyle} activeOpacity={0.7} onPress={onPress}>
+      <TouchableOpacity style={containerStyle} activeOpacity={0.92} onPress={onPress}>
         {children}
       </TouchableOpacity>
     );
@@ -25,11 +25,11 @@ export default function Card({ children, onPress, style, padding = spacing.lg }:
 
 const s = StyleSheet.create({
   card: {
-    backgroundColor: colors.bgCard,
-    borderRadius: borderRadius.lg,
-    borderWidth: 1,
-    borderColor: colors.border,
-    marginBottom: spacing.md,
+    backgroundColor: colors.surfaceContainerLowest,
+    borderRadius: borderRadius.card,
+    borderWidth: spacing.xxs,
+    borderColor: colors.surfaceVariant,
+    marginBottom: spacing.space16,
     ...shadows.sm,
   },
 });

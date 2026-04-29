@@ -1,6 +1,7 @@
 import React from 'react';
-import { Pressable, Text, StyleSheet, ViewStyle, TextStyle } from 'react-native';
-import { colors, typography, borderRadius } from '../theme';
+import { Pressable, StyleSheet, Text, TextStyle, ViewStyle } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import { borderRadius, colors, shadows, spacing, typography } from '../theme';
 
 interface GradientButtonProps {
   onPress: () => void;
@@ -22,53 +23,68 @@ export default function GradientButton({
   variant = 'primary',
 }: GradientButtonProps) {
   const isDisabled = disabled || loading;
-  const btnStyle = variant === 'outline' ? styles.outline : variant === 'accent' ? styles.accent : styles.primary;
-  const txtStyle = variant === 'outline' ? styles.outlineText : styles.primaryText;
+  const content = loading ? 'Loading...' : title;
+
+  if (variant === 'outline') {
+    return (
+      <Pressable
+        onPress={onPress}
+        disabled={isDisabled}
+        style={({ pressed }) => [s.outlineButton, style, pressed && s.pressed, isDisabled && s.disabled]}
+      >
+        <Text style={[s.outlineText, textStyle]}>{content}</Text>
+      </Pressable>
+    );
+  }
+
+  const gradientColors = variant === 'accent' ? colors.gradientSuccess : colors.gradientPrimary;
 
   return (
     <Pressable
       onPress={onPress}
       disabled={isDisabled}
-      style={({ pressed }) => [
-        btnStyle,
-        style,
-        { opacity: pressed ? 0.85 : isDisabled ? 0.4 : 1 },
-      ]}
+      style={({ pressed }) => [style, pressed && s.pressed, isDisabled && s.disabled]}
     >
-      <Text style={[txtStyle, textStyle]}>
-        {loading ? 'Loading...' : title}
-      </Text>
+      <LinearGradient colors={gradientColors} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={s.gradientButton}>
+        <Text style={[s.primaryText, textStyle]}>{content}</Text>
+      </LinearGradient>
     </Pressable>
   );
 }
 
-const styles = StyleSheet.create({
-  primary: {
-    backgroundColor: colors.primary,
-    paddingVertical: 16,
-    borderRadius: borderRadius.md,
+const s = StyleSheet.create({
+  gradientButton: {
+    minHeight: spacing.buttonHeight,
+    borderRadius: borderRadius.control,
     alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: spacing.space24,
+    paddingVertical: spacing.space16,
+    ...shadows.lg,
   },
-  accent: {
-    backgroundColor: colors.accent,
-    paddingVertical: 16,
-    borderRadius: borderRadius.md,
+  outlineButton: {
+    minHeight: spacing.buttonHeight,
+    borderRadius: borderRadius.control,
     alignItems: 'center',
-  },
-  outline: {
-    backgroundColor: 'transparent',
-    paddingVertical: 16,
-    borderRadius: borderRadius.md,
-    alignItems: 'center',
-    borderWidth: 1.5,
-    borderColor: colors.border,
+    justifyContent: 'center',
+    paddingHorizontal: spacing.space24,
+    paddingVertical: spacing.space16,
+    borderWidth: spacing.xxs,
+    borderColor: colors.primary,
+    backgroundColor: colors.surfaceContainerLowest,
   },
   primaryText: {
     ...typography.button,
-    color: '#FFFFFF',
+    color: colors.onPrimary,
   },
   outlineText: {
     ...typography.button,
-    color: colors.textPrimary,
+    color: colors.primary,
+  },
+  pressed: {
+    opacity: 0.92,
+  },
+  disabled: {
+    opacity: 0.5,
   },
 });

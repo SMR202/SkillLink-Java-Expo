@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 import { colors, typography } from '../theme';
 
 interface AvatarProps {
@@ -9,38 +9,45 @@ interface AvatarProps {
   bgColor?: string;
 }
 
-const COLORS = ['#6366F1', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899', '#0EA5E9'];
+const avatarPalette = [
+  colors.primaryContainer,
+  colors.secondary,
+  colors.tertiary,
+  colors.primary,
+  colors.onSecondaryContainer,
+];
 
-function colorFor(name?: string): string {
-  if (!name) return colors.primary;
-  const idx = name.charCodeAt(0) % COLORS.length;
-  return COLORS[idx];
+function colorFor(name?: string) {
+  if (!name) return colors.primaryContainer;
+  const index = name.charCodeAt(0) % avatarPalette.length;
+  return avatarPalette[index];
 }
 
 export default function Avatar({ name, uri, size = 44, bgColor }: AvatarProps) {
   const initial = name ? name.trim().charAt(0).toUpperCase() : '?';
-  const bg = bgColor || colorFor(name);
-  const fontSize = size * 0.4;
+  const backgroundColor = bgColor || colorFor(name);
   const radius = size / 2;
+  const fontSize = size * 0.38;
 
   if (uri) {
-    return (
-      <Image
-        source={{ uri }}
-        style={{ width: size, height: size, borderRadius: radius }}
-        resizeMode="cover"
-      />
-    );
+    return <Image source={{ uri }} style={{ width: size, height: size, borderRadius: radius }} resizeMode="cover" />;
   }
 
   return (
-    <View style={[s.circle, { width: size, height: size, borderRadius: radius, backgroundColor: bg }]}>
+    <View style={[s.circle, { width: size, height: size, borderRadius: radius, backgroundColor }]}>
       <Text style={[s.initial, { fontSize }]}>{initial}</Text>
     </View>
   );
 }
 
 const s = StyleSheet.create({
-  circle: { justifyContent: 'center', alignItems: 'center' },
-  initial: { color: '#FFFFFF', fontWeight: '700' },
+  circle: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  initial: {
+    ...typography.smallMedium,
+    color: colors.onPrimary,
+    fontWeight: '700',
+  },
 });

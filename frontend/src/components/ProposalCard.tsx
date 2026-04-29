@@ -1,9 +1,10 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { colors, typography, spacing, borderRadius } from '../theme';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { borderRadius, colors, shadows, spacing, typography } from '../theme';
 import { Proposal } from '../types';
 import Avatar from './Avatar';
 import Badge from './Badge';
+import PrimaryButton from './PrimaryButton';
 
 interface ProposalCardProps {
   proposal: Proposal;
@@ -15,7 +16,7 @@ export default function ProposalCard({ proposal, onAccept, accepting }: Proposal
   return (
     <View style={s.card}>
       <View style={s.header}>
-        <Avatar name={proposal.providerName} uri={proposal.providerAvatarUrl} size={44} />
+        <Avatar name={proposal.providerName} uri={proposal.providerAvatarUrl} size={spacing.space48} />
         <View style={s.info}>
           <Text style={s.name}>{proposal.providerName}</Text>
           <View style={s.ratingRow}>
@@ -25,56 +26,89 @@ export default function ProposalCard({ proposal, onAccept, accepting }: Proposal
         </View>
         <Badge status={proposal.status} />
       </View>
-      <View style={s.priceRow}>
-        <View style={s.priceBox}>
-          <Text style={s.priceLabel}>Proposed Price</Text>
-          <Text style={s.price}>PKR {Number(proposal.proposedPrice).toLocaleString()}</Text>
+
+      <View style={s.metrics}>
+        <View style={s.metricCard}>
+          <Text style={s.metricLabel}>Proposed Price</Text>
+          <Text style={s.metricValue}>PKR {Number(proposal.proposedPrice).toLocaleString()}</Text>
         </View>
-        <View style={s.priceBox}>
-          <Text style={s.priceLabel}>Delivery Time</Text>
-          <Text style={s.price}>{proposal.estimatedDeliveryTime}</Text>
+        <View style={s.metricCard}>
+          <Text style={s.metricLabel}>Delivery Time</Text>
+          <Text style={s.metricValue}>{proposal.estimatedDeliveryTime}</Text>
         </View>
       </View>
-      {proposal.coverMessage ? (
-        <Text style={s.message}>{proposal.coverMessage}</Text>
+
+      {proposal.coverMessage ? <Text style={s.message}>{proposal.coverMessage}</Text> : null}
+
+      {onAccept && proposal.status === 'PENDING' ? (
+        <PrimaryButton title={accepting ? 'Accepting...' : 'Accept Proposal'} onPress={onAccept} style={s.button} />
       ) : null}
-      {onAccept && proposal.status === 'PENDING' && (
-        <TouchableOpacity style={s.acceptBtn} onPress={onAccept} disabled={accepting} activeOpacity={0.8}>
-          <Text style={s.acceptText}>{accepting ? 'Accepting...' : 'Accept Proposal'}</Text>
-        </TouchableOpacity>
-      )}
     </View>
   );
 }
 
 const s = StyleSheet.create({
   card: {
-    backgroundColor: colors.bgCard,
-    borderRadius: borderRadius.lg,
-    borderWidth: 1,
-    borderColor: colors.border,
-    padding: spacing.lg,
-    marginBottom: spacing.md,
+    backgroundColor: colors.surfaceContainerLowest,
+    borderRadius: borderRadius.card,
+    borderWidth: spacing.xxs,
+    borderColor: colors.surfaceVariant,
+    padding: spacing.space24,
+    marginBottom: spacing.space16,
+    ...shadows.sm,
   },
-  header: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, marginBottom: spacing.md },
-  info: { flex: 1 },
-  name: { ...typography.bodyMedium, color: colors.textPrimary },
-  ratingRow: { flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: 2 },
-  star: { color: colors.star, fontSize: 13 },
-  rating: { ...typography.caption, color: colors.textSecondary },
-  priceRow: { flexDirection: 'row', gap: spacing.md, marginBottom: spacing.md },
-  priceBox: {
-    flex: 1, backgroundColor: colors.bgInput,
-    borderRadius: borderRadius.md, padding: spacing.md,
-  },
-  priceLabel: { ...typography.caption, color: colors.textMuted },
-  price: { ...typography.bodyMedium, color: colors.textPrimary, marginTop: 2 },
-  message: { ...typography.small, color: colors.textSecondary, marginBottom: spacing.md },
-  acceptBtn: {
-    backgroundColor: colors.primary,
-    borderRadius: borderRadius.md,
-    paddingVertical: spacing.md,
+  header: {
+    flexDirection: 'row',
     alignItems: 'center',
+    gap: spacing.space16,
+    marginBottom: spacing.space16,
   },
-  acceptText: { ...typography.buttonSmall, color: colors.textInverse },
+  info: {
+    flex: 1,
+  },
+  name: {
+    ...typography.bodyMedium,
+    color: colors.onSurface,
+  },
+  ratingRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.space4,
+    marginTop: spacing.space4,
+  },
+  star: {
+    ...typography.caption,
+    color: colors.star,
+  },
+  rating: {
+    ...typography.caption,
+    color: colors.secondary,
+  },
+  metrics: {
+    flexDirection: 'row',
+    gap: spacing.space12,
+    marginBottom: spacing.space16,
+  },
+  metricCard: {
+    flex: 1,
+    borderRadius: borderRadius.control,
+    backgroundColor: colors.surfaceContainerLow,
+    padding: spacing.space16,
+  },
+  metricLabel: {
+    ...typography.caption,
+    color: colors.outline,
+  },
+  metricValue: {
+    ...typography.bodyMedium,
+    color: colors.onSurface,
+    marginTop: spacing.space4,
+  },
+  message: {
+    ...typography.body,
+    color: colors.onSurfaceVariant,
+  },
+  button: {
+    marginTop: spacing.space16,
+  },
 });

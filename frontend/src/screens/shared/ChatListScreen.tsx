@@ -1,17 +1,18 @@
 import React, { useCallback, useState } from 'react';
-import { ActivityIndicator, FlatList, Pressable, RefreshControl, StatusBar, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, FlatList, Pressable, RefreshControl, StatusBar, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { borderRadius, colors, shadows, spacing, typography } from '../../theme';
 import { messageApi } from '../../api/messages';
 import { Conversation } from '../../types';
+import Avatar from '../../components/Avatar';
 
-const statusTone: Record<string, { bg: string; color: string; label: string }> = {
-  PENDING: { bg: '#FEF3C7', color: colors.pending, label: 'Pending' },
-  ACCEPTED: { bg: colors.accentLight, color: colors.accepted, label: 'Accepted' },
-  DECLINED: { bg: '#FEE2E2', color: colors.declined, label: 'Declined' },
-  PAID: { bg: '#EEF2FF', color: '#4F46E5', label: 'Paid' },
-  COMPLETED: { bg: colors.bgInput, color: colors.textSecondary, label: 'Completed' },
-  CANCELLED: { bg: colors.bgInput, color: colors.textSecondary, label: 'Cancelled' },
+const statusTone: Record<string, { label: string }> = {
+  PENDING: { label: 'Pending' },
+  ACCEPTED: { label: 'Accepted' },
+  DECLINED: { label: 'Declined' },
+  PAID: { label: 'Paid' },
+  COMPLETED: { label: 'Completed' },
+  CANCELLED: { label: 'Cancelled' },
 };
 
 function formatTime(value: string) {
@@ -50,11 +51,10 @@ export default function ChatListScreen() {
   useFocusEffect(
     useCallback(() => {
       load();
-    }, [])
+    }, []),
   );
 
   const renderItem = ({ item }: { item: Conversation }) => {
-    const tone = statusTone[item.bookingStatus] || statusTone.PENDING;
     const preview = item.lastMessage || 'No messages yet. Open the booking chat to start.';
 
     return (
@@ -67,120 +67,142 @@ export default function ChatListScreen() {
           })
         }
       >
-        <View style={s.avatar}>
-          <Text style={s.avatarText}>{item.otherUserName?.[0]?.toUpperCase() || '?'}</Text>
-        </View>
+        <Avatar name={item.otherUserName} uri={item.otherUserAvatarUrl} size={spacing.space64} />
         <View style={s.content}>
           <View style={s.topLine}>
             <Text style={s.name} numberOfLines={1}>{item.otherUserName}</Text>
             <Text style={s.time}>{formatTime(item.lastMessageAt)}</Text>
           </View>
+          <Text style={s.meta}>{statusTone[item.bookingStatus]?.label || 'Conversation'} • Booking #{item.bookingId}</Text>
           <Text style={[s.preview, item.unreadCount > 0 && s.previewUnread]} numberOfLines={2}>
             {preview}
           </Text>
-          <View style={s.metaRow}>
-            <View style={[s.badge, { backgroundColor: tone.bg }]}>
-              <Text style={[s.badgeText, { color: tone.color }]}>{tone.label}</Text>
-            </View>
-            <Text style={s.bookingText} numberOfLines={1}>
-              Booking #{item.bookingId} - {item.preferredDate} at {item.preferredTime}
-            </Text>
-          </View>
         </View>
-        {item.unreadCount > 0 && (
+        {item.unreadCount > 0 ? (
           <View style={s.unread}>
             <Text style={s.unreadText}>{item.unreadCount > 9 ? '9+' : item.unreadCount}</Text>
           </View>
-        )}
+        ) : null}
       </Pressable>
     );
   };
 
   return (
     <View style={s.container}>
-      <StatusBar barStyle="dark-content" />
-      <View style={s.header}>
-        <Text style={s.title}>Messages</Text>
-        <Text style={s.subtitle}>Booking conversations in one place</Text>
+      <StatusBar barStyle="dark-content" backgroundColor={colors.surfaceContainerLowest} />
+      <View style={s.topBar}>
+        <View style={s.topAvatar} />
+        <Text style={s.brand}>SkillLink</Text>
+        <View style={s.notificationDot} />
       </View>
-      {loading ? (
-        <View style={s.center}>
-          <ActivityIndicator color={colors.primary} />
-          <Text style={s.centerText}>Loading conversations...</Text>
-        </View>
-      ) : (
-        <FlatList
-          data={conversations}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.bookingId.toString()}
-          contentContainerStyle={s.list}
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => load(true)} />}
-          ListEmptyComponent={
-            <View style={s.center}>
-              <Text style={s.emptyTitle}>{error ? 'Something went wrong' : 'No conversations yet'}</Text>
-              <Text style={s.centerText}>{error || 'Chats appear here once you have a booking.'}</Text>
+
+      <FlatList
+        data={conversations}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.bookingId.toString()}
+        contentContainerStyle={s.list}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => load(true)} />}
+        ListHeaderComponent={
+          <View>
+            <Text style={s.title}>Messages</Text>
+            <Text style={s.subtitle}>Stay connected with your service providers and clients.</Text>
+            <View style={s.searchBar}>
+              <Text style={s.searchIcon}>⌕</Text>
+              <TextInput style={s.searchInput} placeholder="Search conversations..." placeholderTextColor={colors.outline} />
             </View>
-          }
-        />
-      )}
+          </View>
+        }
+        ListEmptyComponent={
+          <View style={s.center}>
+            {loading ? <ActivityIndicator color={colors.primaryContainer} /> : null}
+            <Text style={s.emptyTitle}>{error ? 'Something went wrong' : loading ? 'Loading...' : 'No conversations yet'}</Text>
+            <Text style={s.centerText}>{error || 'Chats appear here once you have a booking.'}</Text>
+          </View>
+        }
+      />
     </View>
   );
 }
 
 const s = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.bgSecondary },
-  header: {
-    backgroundColor: colors.bgPrimary,
-    paddingTop: 54,
-    paddingHorizontal: spacing.xxl,
-    paddingBottom: spacing.lg,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
+  container: { flex: 1, backgroundColor: colors.background },
+  topBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: colors.surfaceContainerLowest,
+    paddingHorizontal: spacing.space24,
+    paddingTop: spacing.space48,
+    paddingBottom: spacing.space20,
+    borderBottomWidth: spacing.xxs,
+    borderBottomColor: colors.surfaceVariant,
   },
-  title: { ...typography.h2, color: colors.textPrimary },
-  subtitle: { ...typography.small, color: colors.textSecondary, marginTop: 2 },
-  list: { padding: spacing.xxl, paddingBottom: 100 },
+  topAvatar: {
+    width: spacing.space40,
+    height: spacing.space40,
+    borderRadius: borderRadius.pill,
+    backgroundColor: colors.surfaceContainer,
+  },
+  brand: {
+    ...typography.h4,
+    color: colors.primaryContainer,
+  },
+  notificationDot: {
+    width: spacing.space16,
+    height: spacing.space16,
+    borderRadius: borderRadius.pill,
+    backgroundColor: colors.primaryContainer,
+  },
+  list: {
+    padding: spacing.space24,
+    paddingBottom: spacing.navHeight,
+  },
+  title: { ...typography.h1, color: colors.onSurface },
+  subtitle: { ...typography.bodyLg, color: colors.onSurfaceVariant, marginTop: spacing.space12, marginBottom: spacing.space24 },
+  searchBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.space12,
+    backgroundColor: colors.surfaceContainerLowest,
+    borderRadius: borderRadius.card,
+    borderWidth: spacing.xxs,
+    borderColor: colors.outlineVariant,
+    paddingHorizontal: spacing.space16,
+    paddingVertical: spacing.space14,
+    marginBottom: spacing.space24,
+  },
+  searchIcon: { ...typography.body, color: colors.onSurfaceVariant },
+  searchInput: { flex: 1, ...typography.bodyLg, color: colors.onSurface },
   card: {
     flexDirection: 'row',
-    gap: spacing.md,
-    backgroundColor: colors.bgCard,
-    borderRadius: borderRadius.lg,
-    borderWidth: 1,
-    borderColor: colors.border,
-    padding: spacing.lg,
-    marginBottom: spacing.md,
+    gap: spacing.space16,
+    backgroundColor: colors.surfaceContainerLowest,
+    borderRadius: borderRadius.card,
+    borderWidth: spacing.xxs,
+    borderColor: colors.surfaceVariant,
+    padding: spacing.space20,
+    marginBottom: spacing.space16,
+    alignItems: 'center',
     ...shadows.sm,
   },
-  avatar: {
-    width: 46,
-    height: 46,
-    borderRadius: 23,
-    backgroundColor: colors.primary,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  avatarText: { ...typography.bodyMedium, color: colors.textInverse, fontWeight: '700' },
   content: { flex: 1, minWidth: 0 },
-  topLine: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
-  name: { ...typography.bodyMedium, color: colors.textPrimary, flex: 1 },
-  time: { ...typography.caption, color: colors.textMuted },
-  preview: { ...typography.small, color: colors.textSecondary, marginTop: spacing.xs },
-  previewUnread: { color: colors.textPrimary, fontWeight: '600' },
-  metaRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, marginTop: spacing.sm },
-  badge: { paddingHorizontal: spacing.sm, paddingVertical: 3, borderRadius: borderRadius.full },
-  badgeText: { ...typography.captionMedium },
-  bookingText: { ...typography.caption, color: colors.textMuted, flex: 1 },
+  topLine: { flexDirection: 'row', alignItems: 'center', gap: spacing.space8 },
+  name: { ...typography.h4, color: colors.onSurface, flex: 1 },
+  time: { ...typography.body, color: colors.primary },
+  meta: { ...typography.caption, color: colors.onSurfaceVariant, marginTop: spacing.space4 },
+  preview: { ...typography.bodyLg, color: colors.onSurfaceVariant, marginTop: spacing.space8 },
+  previewUnread: { color: colors.onSurface, fontWeight: '600' },
   unread: {
-    minWidth: 24,
-    height: 24,
-    borderRadius: 12,
-    backgroundColor: colors.accent,
+    minWidth: spacing.space32,
+    height: spacing.space32,
+    borderRadius: borderRadius.pill,
+    backgroundColor: colors.primaryContainer,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 6,
+    paddingHorizontal: spacing.space8,
   },
-  unreadText: { ...typography.captionMedium, color: colors.textInverse, fontWeight: '700' },
-  center: { alignItems: 'center', justifyContent: 'center', padding: spacing.xxl, marginTop: spacing.huge },
-  centerText: { ...typography.small, color: colors.textMuted, marginTop: spacing.sm, textAlign: 'center' },
-  emptyTitle: { ...typography.bodyMedium, color: colors.textPrimary },
+  unreadText: { ...typography.captionMedium, color: colors.onPrimary },
+  center: { alignItems: 'center', justifyContent: 'center', padding: spacing.space24, marginTop: spacing.space48 },
+  emptyTitle: { ...typography.h4, color: colors.onSurface, marginTop: spacing.space12 },
+  centerText: { ...typography.body, color: colors.onSurfaceVariant, marginTop: spacing.space8, textAlign: 'center' },
 });

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, ScrollView, StyleSheet, Alert, Pressable } from 'react-native';
-import { colors, typography, spacing, borderRadius } from '../../theme';
+import { colors, typography, spacing, borderRadius, shadows } from '../../theme';
 import { jobApi } from '../../api/jobs';
 import GradientButton from '../../components/GradientButton';
 
@@ -29,28 +29,159 @@ export default function SubmitProposalScreen({ route, navigation }: any) {
   };
 
   return (
-    <ScrollView style={s.container} contentContainerStyle={s.content}>
-      <Pressable onPress={() => navigation.goBack()}><Text style={s.back}>Back</Text></Pressable>
-      <Text style={s.title}>Submit Proposal</Text>
-      <Text style={s.jobTitle}>{job.title}</Text>
-      <Text style={s.label}>Cover Message</Text>
-      <TextInput style={[s.input, s.area]} value={coverMessage} onChangeText={setCoverMessage} multiline placeholder="Tell the client how you can help..." placeholderTextColor={colors.textMuted} />
-      <Text style={s.label}>Proposed Price</Text>
-      <TextInput style={s.input} value={proposedPrice} onChangeText={setProposedPrice} keyboardType="numeric" placeholder="5000" placeholderTextColor={colors.textMuted} />
-      <Text style={s.label}>Estimated Delivery Time</Text>
-      <TextInput style={s.input} value={estimatedDeliveryTime} onChangeText={setEstimatedDeliveryTime} placeholder="e.g. 5 days" placeholderTextColor={colors.textMuted} />
-      <GradientButton title="Send Proposal" onPress={submit} loading={loading} style={{ marginTop: spacing.xl }} />
+    <ScrollView style={s.container} contentContainerStyle={s.content} showsVerticalScrollIndicator={false}>
+      <Pressable onPress={() => navigation.goBack()}><Text style={s.back}>← Back to Search</Text></Pressable>
+      <Text style={s.title}>{job.title}</Text>
+      <Text style={s.meta}>Posted 2 hours ago</Text>
+      <Text style={s.meta}>Est. Budget: ${Number(job.budget || 0).toLocaleString()}</Text>
+
+      <View style={s.card}>
+        <Text style={s.cardTitle}>Job Description</Text>
+        <Text style={s.body}>{job.description}</Text>
+      </View>
+
+      <View style={s.card}>
+        <Text style={s.cardTitle}>Submit a Proposal</Text>
+        <Text style={s.body}>Detail your approach and pricing to win this project.</Text>
+
+        <View style={s.row}>
+          <View style={s.half}>
+            <Text style={s.label}>Your Price (USD)</Text>
+            <TextInput style={s.input} value={proposedPrice} onChangeText={setProposedPrice} keyboardType="numeric" placeholder="$ 0.00" placeholderTextColor={colors.outline} />
+          </View>
+          <View style={s.half}>
+            <Text style={s.label}>Est. Delivery</Text>
+            <TextInput style={s.input} value={estimatedDeliveryTime} onChangeText={setEstimatedDeliveryTime} placeholder="Less than 1 week" placeholderTextColor={colors.outline} />
+          </View>
+        </View>
+
+        <Text style={s.label}>Cover Message</Text>
+        <TextInput
+          style={s.area}
+          value={coverMessage}
+          onChangeText={setCoverMessage}
+          multiline
+          placeholder="Introduce yourself and explain why you're a strong candidate for this job."
+          placeholderTextColor={colors.outline}
+        />
+
+        <View style={s.uploadBox}>
+          <Text style={s.uploadTitle}>Attachments (Optional)</Text>
+          <Text style={s.uploadBody}>Upload a file or drag and drop PDF, DOC, DOCX up to 10MB.</Text>
+        </View>
+
+        <GradientButton title="Send Proposal" onPress={submit} loading={loading} style={s.button} />
+        <Text style={s.footnote}>By submitting, you agree to the Provider Agreement.</Text>
+      </View>
     </ScrollView>
   );
 }
 
 const s = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.bgPrimary },
-  content: { padding: spacing.xxl, paddingTop: 54, paddingBottom: 100 },
-  back: { ...typography.button, color: colors.textSecondary, marginBottom: spacing.lg },
-  title: { ...typography.h2, color: colors.textPrimary },
-  jobTitle: { ...typography.body, color: colors.textSecondary, marginTop: spacing.sm },
-  label: { ...typography.smallMedium, color: colors.textSecondary, marginTop: spacing.lg, marginBottom: spacing.xs },
-  input: { backgroundColor: colors.bgInput, borderRadius: borderRadius.md, padding: spacing.lg, borderWidth: 1, borderColor: colors.border, color: colors.textPrimary, ...typography.body },
-  area: { minHeight: 140, textAlignVertical: 'top' },
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  content: {
+    padding: spacing.space20,
+    paddingTop: spacing.space48,
+    paddingBottom: spacing.navHeight,
+  },
+  back: {
+    ...typography.label,
+    color: colors.primary,
+  },
+  title: {
+    ...typography.h1,
+    color: colors.onSurface,
+    marginTop: spacing.space16,
+  },
+  meta: {
+    ...typography.body,
+    color: colors.onSurfaceVariant,
+    marginTop: spacing.space8,
+  },
+  card: {
+    backgroundColor: colors.surfaceContainerLowest,
+    borderRadius: borderRadius.card,
+    borderWidth: spacing.xxs,
+    borderColor: colors.surfaceVariant,
+    padding: spacing.space24,
+    marginTop: spacing.space24,
+    ...shadows.sm,
+  },
+  cardTitle: {
+    ...typography.h3,
+    color: colors.onSurface,
+    marginBottom: spacing.space12,
+  },
+  body: {
+    ...typography.body,
+    color: colors.onSurfaceVariant,
+  },
+  row: {
+    flexDirection: 'row',
+    gap: spacing.space12,
+    marginTop: spacing.space20,
+  },
+  half: {
+    flex: 1,
+  },
+  label: {
+    ...typography.label,
+    color: colors.onSurface,
+    marginTop: spacing.space20,
+    marginBottom: spacing.space8,
+  },
+  input: {
+    minHeight: spacing.buttonHeight,
+    borderRadius: borderRadius.control,
+    borderWidth: spacing.xxs,
+    borderColor: colors.outlineVariant,
+    backgroundColor: colors.surfaceContainerLow,
+    paddingHorizontal: spacing.space16,
+    paddingVertical: spacing.space14,
+    ...typography.body,
+    color: colors.onSurface,
+  },
+  area: {
+    minHeight: spacing.space80 + spacing.space48,
+    borderRadius: borderRadius.card,
+    borderWidth: spacing.xxs,
+    borderColor: colors.outlineVariant,
+    backgroundColor: colors.surfaceContainerLow,
+    padding: spacing.space16,
+    ...typography.body,
+    color: colors.onSurface,
+    textAlignVertical: 'top',
+  },
+  uploadBox: {
+    borderRadius: borderRadius.card,
+    borderWidth: spacing.xxs,
+    borderColor: colors.outlineVariant,
+    borderStyle: 'dashed',
+    padding: spacing.space24,
+    marginTop: spacing.space20,
+    alignItems: 'center',
+  },
+  uploadTitle: {
+    ...typography.label,
+    color: colors.primary,
+  },
+  uploadBody: {
+    ...typography.caption,
+    color: colors.onSurfaceVariant,
+    marginTop: spacing.space8,
+    textAlign: 'center',
+  },
+  button: {
+    width: '100%',
+    marginTop: spacing.space24,
+  },
+  footnote: {
+    ...typography.caption,
+    color: colors.outline,
+    textAlign: 'center',
+    marginTop: spacing.space12,
+  },
 });

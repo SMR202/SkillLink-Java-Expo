@@ -1,8 +1,9 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { colors, typography, spacing, borderRadius } from '../theme';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { borderRadius, colors, shadows, spacing, typography } from '../theme';
 import { JobPost } from '../types';
 import Badge from './Badge';
+import OutlineButton from './OutlineButton';
 
 interface JobCardProps {
   job: JobPost;
@@ -13,41 +14,28 @@ interface JobCardProps {
 
 function formatDate(value?: string | null) {
   if (!value) return null;
-  const d = new Date(value);
-  if (isNaN(d.getTime())) return value;
-  return d.toLocaleDateString([], { month: 'short', day: 'numeric' });
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
 }
 
 export default function JobCard({ job, onPress, actionLabel, onAction }: JobCardProps) {
   return (
-    <TouchableOpacity style={s.card} onPress={onPress} activeOpacity={0.75}>
+    <TouchableOpacity style={s.card} onPress={onPress} activeOpacity={0.94}>
       <View style={s.header}>
-        <View style={s.titleRow}>
+        <View style={s.titleBlock}>
           <Text style={s.title} numberOfLines={2}>{job.title}</Text>
-          <Badge status={job.status} />
+          <Text style={s.meta}>
+            {job.categoryName} • PKR {Number(job.budget).toLocaleString()}
+            {job.deadline ? ` • Due ${formatDate(job.deadline)}` : ''}
+          </Text>
         </View>
+        <Badge status={job.status} />
       </View>
-      <View style={s.meta}>
-        <Text style={s.category}>{job.categoryName}</Text>
-        <Text style={s.dot}>·</Text>
-        <Text style={s.budget}>PKR {Number(job.budget).toLocaleString()}</Text>
-        {job.deadline && (
-          <>
-            <Text style={s.dot}>·</Text>
-            <Text style={s.deadline}>Due {formatDate(job.deadline)}</Text>
-          </>
-        )}
-      </View>
-      {job.description ? (
-        <Text style={s.desc} numberOfLines={2}>{job.description}</Text>
-      ) : null}
+      {job.description ? <Text style={s.description} numberOfLines={2}>{job.description}</Text> : null}
       <View style={s.footer}>
         <Text style={s.proposals}>{job.proposalCount} proposal{job.proposalCount !== 1 ? 's' : ''}</Text>
-        {actionLabel && onAction && (
-          <TouchableOpacity style={s.actionBtn} onPress={onAction} activeOpacity={0.8}>
-            <Text style={s.actionText}>{actionLabel}</Text>
-          </TouchableOpacity>
-        )}
+        {actionLabel && onAction ? <OutlineButton title={actionLabel} onPress={onAction} style={s.actionButton} /> : null}
       </View>
     </TouchableOpacity>
   );
@@ -55,29 +43,46 @@ export default function JobCard({ job, onPress, actionLabel, onAction }: JobCard
 
 const s = StyleSheet.create({
   card: {
-    backgroundColor: colors.bgCard,
-    borderRadius: borderRadius.lg,
-    borderWidth: 1,
-    borderColor: colors.border,
-    padding: spacing.lg,
-    marginBottom: spacing.md,
+    backgroundColor: colors.surfaceContainerLowest,
+    borderRadius: borderRadius.card,
+    borderWidth: spacing.xxs,
+    borderColor: colors.surfaceVariant,
+    padding: spacing.space24,
+    marginBottom: spacing.space16,
+    ...shadows.sm,
   },
-  header: { marginBottom: spacing.xs },
-  titleRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', gap: spacing.sm },
-  title: { ...typography.bodyMedium, color: colors.textPrimary, flex: 1 },
-  meta: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs, marginBottom: spacing.sm },
-  category: { ...typography.small, color: colors.textSecondary },
-  dot: { color: colors.textMuted },
-  budget: { ...typography.smallMedium, color: colors.textPrimary },
-  deadline: { ...typography.small, color: colors.textMuted },
-  desc: { ...typography.small, color: colors.textSecondary },
-  footer: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: spacing.md },
-  proposals: { ...typography.caption, color: colors.textMuted },
-  actionBtn: {
-    backgroundColor: colors.primary,
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.sm,
-    borderRadius: borderRadius.md,
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    gap: spacing.space12,
   },
-  actionText: { ...typography.buttonSmall, color: colors.textInverse },
+  titleBlock: {
+    flex: 1,
+  },
+  title: {
+    ...typography.h4,
+    color: colors.onSurface,
+  },
+  meta: {
+    ...typography.caption,
+    color: colors.secondary,
+    marginTop: spacing.space8,
+  },
+  description: {
+    ...typography.body,
+    color: colors.onSurfaceVariant,
+    marginTop: spacing.space16,
+  },
+  footer: {
+    marginTop: spacing.space16,
+    gap: spacing.space12,
+  },
+  proposals: {
+    ...typography.caption,
+    color: colors.outline,
+  },
+  actionButton: {
+    width: '100%',
+  },
 });

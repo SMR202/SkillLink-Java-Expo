@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, Text, Pressable, StyleSheet, StatusBar } from 'react-native';
-import { colors, typography, spacing } from '../theme';
+import { Pressable, StatusBar, StyleSheet, Text, View } from 'react-native';
+import { colors, spacing, typography } from '../theme';
 
 interface ScreenHeaderProps {
   title: string;
@@ -12,12 +12,12 @@ interface ScreenHeaderProps {
 export default function ScreenHeader({ title, subtitle, onBack, rightComponent }: ScreenHeaderProps) {
   return (
     <View style={s.header}>
-      <StatusBar barStyle="dark-content" backgroundColor={colors.bgPrimary} />
-      {onBack && (
-        <Pressable onPress={onBack} hitSlop={12}>
-          <Text style={s.back}>← Back</Text>
+      <StatusBar barStyle="dark-content" backgroundColor={colors.surfaceContainerLowest} />
+      {onBack ? (
+        <Pressable onPress={onBack} hitSlop={spacing.space12} style={s.backButton}>
+          <Text style={s.backText}>Back</Text>
         </Pressable>
-      )}
+      ) : null}
       <View style={s.row}>
         <View style={s.titleBlock}>
           <Text style={s.title}>{title}</Text>
@@ -31,24 +31,36 @@ export default function ScreenHeader({ title, subtitle, onBack, rightComponent }
 
 const s = StyleSheet.create({
   header: {
-    backgroundColor: colors.bgPrimary,
-    paddingTop: 54,
-    paddingHorizontal: spacing.xxl,
-    paddingBottom: spacing.lg,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
+    backgroundColor: colors.surfaceContainerLowest,
+    paddingTop: spacing.space56,
+    paddingHorizontal: spacing.space24,
+    paddingBottom: spacing.space20,
+    borderBottomWidth: spacing.xxs,
+    borderBottomColor: colors.surfaceVariant,
   },
-  back: {
-    ...typography.smallMedium,
-    color: colors.accent,
-    marginBottom: spacing.sm,
+  backButton: {
+    marginBottom: spacing.space8,
+  },
+  backText: {
+    ...typography.label,
+    color: colors.secondary,
   },
   row: {
     flexDirection: 'row',
     alignItems: 'flex-start',
     justifyContent: 'space-between',
+    gap: spacing.space16,
   },
-  titleBlock: { flex: 1 },
-  title: { ...typography.h2, color: colors.textPrimary },
-  subtitle: { ...typography.small, color: colors.textSecondary, marginTop: 2 },
+  titleBlock: {
+    flex: 1,
+  },
+  title: {
+    ...typography.h3,
+    color: colors.onSurface,
+  },
+  subtitle: {
+    ...typography.body,
+    color: colors.onSurfaceVariant,
+    marginTop: spacing.space4,
+  },
 });

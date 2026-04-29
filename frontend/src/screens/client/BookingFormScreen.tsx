@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ScrollView, StatusBar } from 'react-native';
-import { colors, typography, spacing, borderRadius } from '../../theme';
+import { colors, typography, spacing, borderRadius, shadows } from '../../theme';
 import { bookingApi } from '../../api/bookings';
 import GradientButton from '../../components/GradientButton';
+import InputField from '../../components/InputField';
+import Badge from '../../components/Badge';
+import Avatar from '../../components/Avatar';
 
 export default function BookingFormScreen({ route, navigation }: any) {
   const { providerId, providerName } = route.params;
@@ -30,120 +33,373 @@ export default function BookingFormScreen({ route, navigation }: any) {
 
   if (bookingResult) return (
     <View style={s.container}>
-      <StatusBar barStyle="dark-content" />
-      <View style={s.confirmBox}>
-        <View style={s.confirmCircle}><Text style={{ fontSize: 32 }}>✓</Text></View>
+      <StatusBar barStyle="dark-content" backgroundColor={colors.background} />
+      <ScrollView contentContainerStyle={s.confirmContent} showsVerticalScrollIndicator={false}>
+        <View style={s.confirmCircle}>
+          <Text style={s.confirmCircleText}>✓</Text>
+        </View>
         <Text style={s.confirmTitle}>Booking Sent!</Text>
+
         <View style={s.confirmCard}>
           <View style={s.confirmRow}>
             <Text style={s.confirmLabel}>Booking ID</Text>
-            <Text style={s.confirmVal}>#{bookingResult.id}</Text>
+            <Text style={s.confirmValue}>#{bookingResult.id}</Text>
           </View>
           <View style={s.confirmDivider} />
           <View style={s.confirmRow}>
             <Text style={s.confirmLabel}>Provider</Text>
-            <Text style={s.confirmVal}>{providerName}</Text>
+            <Text style={s.confirmValue}>{providerName}</Text>
           </View>
           <View style={s.confirmDivider} />
           <View style={s.confirmRow}>
-            <Text style={s.confirmLabel}>Date & Time</Text>
-            <Text style={s.confirmVal}>{bookingResult.preferredDate} at {bookingResult.preferredTime}</Text>
+            <Text style={s.confirmLabel}>Date &amp; Time</Text>
+            <Text style={s.confirmValue}>{bookingResult.preferredDate} • {bookingResult.preferredTime}</Text>
           </View>
           <View style={s.confirmDivider} />
           <View style={s.confirmRow}>
             <Text style={s.confirmLabel}>Status</Text>
-            <View style={s.statusBadge}><Text style={s.statusText}>⏳ Pending</Text></View>
+            <Badge status="pending" label="Pending" />
           </View>
         </View>
-        <View style={s.notifRow}>
-          <Text style={s.notifIcon}>🔔</Text>
-          <Text style={s.notifText}>Provider has been notified of your request</Text>
+
+        <View style={s.noticeRow}>
+          <Text style={s.noticeIcon}>🔒</Text>
+          <Text style={s.noticeText}>The provider has been notified and can now review your request.</Text>
         </View>
-        <GradientButton onPress={() => navigation.popToTop()} title="Back to Home" style={{ marginTop: spacing.xl, width: '100%' }} />
-      </View>
+
+        <GradientButton onPress={() => navigation.popToTop()} title="Back to Home" style={s.confirmButton} />
+      </ScrollView>
     </View>
   );
 
   return (
     <View style={s.container}>
-      <StatusBar barStyle="dark-content" />
-      <ScrollView contentContainerStyle={s.scroll}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={s.backBtn}>
-          <Text style={s.backText}>← Back</Text>
-        </TouchableOpacity>
-
-        <Text style={s.title}>Book Service</Text>
-        <View style={s.providerRow}>
-          <View style={s.providerAvatar}><Text style={s.providerAvatarText}>{providerName?.[0]}</Text></View>
-          <Text style={s.providerLabel}>{providerName}</Text>
+      <StatusBar barStyle="dark-content" backgroundColor={colors.background} />
+      <ScrollView contentContainerStyle={s.scroll} showsVerticalScrollIndicator={false}>
+        <View style={s.header}>
+          <TouchableOpacity onPress={() => navigation.goBack()} style={s.backButton} activeOpacity={0.9}>
+            <Text style={s.backText}>←</Text>
+          </TouchableOpacity>
+          <Text style={s.title}>Request Booking</Text>
         </View>
 
-        {/* Date */}
-        <Text style={s.label}>Preferred Date</Text>
-        <TextInput style={[s.input, date && !isDateValid && s.inputError]} placeholder="YYYY-MM-DD (future dates only)"
-          placeholderTextColor={colors.textMuted} value={date} onChangeText={setDate} />
-        {date && !isDateValid && <Text style={s.errorHint}>Please enter a valid future date (YYYY-MM-DD)</Text>}
-        {isDateValid && <Text style={s.validHint}>✓ Valid date</Text>}
-
-        {/* Time */}
-        <Text style={s.label}>Preferred Time</Text>
-        <TextInput style={[s.input, time && !isTimeValid && s.inputError]} placeholder="HH:MM (e.g. 14:00)"
-          placeholderTextColor={colors.textMuted} value={time} onChangeText={setTime} />
-
-        {/* Description */}
-        <Text style={s.label}>Job Description</Text>
-        <TextInput style={[s.input, s.textArea]} placeholder="Describe the work you need done..."
-          placeholderTextColor={colors.textMuted} value={desc} onChangeText={setDesc}
-          multiline textAlignVertical="top" maxLength={500} />
-        <View style={s.charRow}>
-          <Text style={[s.charCount, isDescValid && { color: colors.accent }]}>
-            {desc.length}/500 characters {desc.length < 20 ? `(min 20)` : ''}
-          </Text>
-          <View style={s.charBar}>
-            <View style={[s.charFill, { width: `${Math.min(100, (desc.length / 500) * 100)}%` }]} />
+        <View style={s.providerCard}>
+          <Avatar name={providerName} size={spacing.space64} />
+          <View style={s.providerInfo}>
+            <Text style={s.providerName}>{providerName}</Text>
+            <Text style={s.providerRole}>Professional service provider</Text>
+          </View>
+          <View style={s.ratingChip}>
+            <Text style={s.ratingStar}>★</Text>
+            <Text style={s.ratingText}>4.9</Text>
           </View>
         </View>
 
-        <View style={{ height: spacing.xl }} />
-        <GradientButton onPress={handleSubmit} title="Confirm Booking" loading={loading}
-          disabled={!allValid} variant="accent" />
+        <View style={s.formCard}>
+          <Text style={s.sectionTitle}>Project Description</Text>
+          <Text style={s.sectionBody}>Briefly describe what you need help with to ensure it&apos;s a good fit.</Text>
+
+          <TextInput
+            style={s.textArea}
+            placeholder="E.g., I am looking for a 3-month coaching engagement to prepare for a transition to a VP role..."
+            placeholderTextColor={colors.outlineVariant}
+            value={desc}
+            onChangeText={setDesc}
+            multiline
+            textAlignVertical="top"
+            maxLength={500}
+          />
+
+          <View style={s.fieldRow}>
+            <View style={s.fieldColumn}>
+              <InputField
+                label="Preferred Start Date"
+                placeholder="YYYY-MM-DD"
+                value={date}
+                onChangeText={setDate}
+                containerStyle={s.compactField}
+              />
+              {date ? <Text style={[s.helperText, isDateValid ? s.helperTextValid : s.helperTextError]}>{isDateValid ? 'Future date looks good.' : 'Please use a future date in YYYY-MM-DD format.'}</Text> : null}
+            </View>
+
+            <View style={s.fieldColumn}>
+              <InputField
+                label="Preferred Time Window"
+                placeholder="HH:MM"
+                value={time}
+                onChangeText={setTime}
+                containerStyle={s.compactField}
+              />
+              {time ? <Text style={[s.helperText, isTimeValid ? s.helperTextValid : s.helperTextError]}>{isTimeValid ? 'Time format looks good.' : 'Please use HH:MM, for example 14:00.'}</Text> : null}
+            </View>
+          </View>
+
+          <View style={s.charRow}>
+            <Text style={s.charCount}>{desc.length}/500 characters{desc.length < 20 ? ' (min 20)' : ''}</Text>
+            <View style={s.charTrack}>
+              <View style={[s.charFill, { width: `${Math.min(100, (desc.length / 500) * 100)}%` }]} />
+            </View>
+          </View>
+
+          <View style={s.separator} />
+
+          <GradientButton onPress={handleSubmit} title="Send Booking Request" loading={loading} disabled={!allValid} style={s.submitButton} />
+
+          <View style={s.footnoteRow}>
+            <Text style={s.footnoteIcon}>🔒</Text>
+            <Text style={s.footnoteText}>
+              You won&apos;t be charged yet. The provider has 24 hours to review and accept your request.
+            </Text>
+          </View>
+        </View>
       </ScrollView>
     </View>
   );
 }
 
 const s = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.bgPrimary },
-  scroll: { paddingHorizontal: spacing.xxl, paddingTop: 50, paddingBottom: 100 },
-  backBtn: { marginBottom: spacing.xl },
-  backText: { ...typography.button, color: colors.textSecondary },
-  title: { ...typography.h2, color: colors.textPrimary, marginBottom: spacing.sm },
-  providerRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, marginBottom: spacing.xxl, backgroundColor: colors.bgSecondary, padding: spacing.lg, borderRadius: borderRadius.md },
-  providerAvatar: { width: 36, height: 36, borderRadius: 18, backgroundColor: colors.bgInput, justifyContent: 'center', alignItems: 'center' },
-  providerAvatarText: { ...typography.bodyMedium, color: colors.textPrimary },
-  providerLabel: { ...typography.bodyMedium, color: colors.textPrimary },
-  label: { ...typography.smallMedium, color: colors.textSecondary, marginBottom: spacing.xs, marginTop: spacing.lg },
-  input: { backgroundColor: colors.bgInput, borderRadius: borderRadius.md, paddingHorizontal: spacing.lg, paddingVertical: 14, color: colors.textPrimary, ...typography.body, borderWidth: 1, borderColor: colors.border },
-  inputError: { borderColor: colors.error },
-  textArea: { minHeight: 120, textAlignVertical: 'top' },
-  errorHint: { ...typography.caption, color: colors.error, marginTop: 4 },
-  validHint: { ...typography.caption, color: colors.accent, marginTop: 4 },
-  charRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: spacing.xs },
-  charCount: { ...typography.caption, color: colors.textMuted },
-  charBar: { width: 80, height: 4, backgroundColor: colors.border, borderRadius: 2, overflow: 'hidden' },
-  charFill: { height: 4, backgroundColor: colors.accent, borderRadius: 2 },
-  // Confirmation
-  confirmBox: { flex: 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: spacing.xxl },
-  confirmCircle: { width: 72, height: 72, borderRadius: 36, backgroundColor: colors.accentLight, justifyContent: 'center', alignItems: 'center', marginBottom: spacing.lg },
-  confirmTitle: { ...typography.h2, color: colors.textPrimary, marginBottom: spacing.xl },
-  confirmCard: { width: '100%', backgroundColor: colors.bgSecondary, borderRadius: borderRadius.lg, padding: spacing.xl, borderWidth: 1, borderColor: colors.border },
-  confirmRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: spacing.md },
-  confirmLabel: { ...typography.small, color: colors.textMuted },
-  confirmVal: { ...typography.bodyMedium, color: colors.textPrimary },
-  confirmDivider: { height: 1, backgroundColor: colors.border },
-  statusBadge: { backgroundColor: '#FEF3C7', paddingHorizontal: spacing.md, paddingVertical: 4, borderRadius: borderRadius.full },
-  statusText: { ...typography.captionMedium, color: colors.pending },
-  notifRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, marginTop: spacing.xl, backgroundColor: colors.bgSecondary, padding: spacing.lg, borderRadius: borderRadius.md, width: '100%' },
-  notifIcon: { fontSize: 18 },
-  notifText: { ...typography.small, color: colors.textSecondary, flex: 1 },
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  scroll: {
+    paddingHorizontal: spacing.space24,
+    paddingTop: spacing.space48,
+    paddingBottom: spacing.space80,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.space16,
+    marginBottom: spacing.space32,
+  },
+  backButton: {
+    width: spacing.space48,
+    height: spacing.space48,
+    borderRadius: borderRadius.pill,
+    backgroundColor: colors.surfaceContainer,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  backText: {
+    ...typography.h4,
+    color: colors.onSurfaceVariant,
+  },
+  title: {
+    ...typography.h2,
+    color: colors.onBackground,
+    flexShrink: 1,
+  },
+  providerCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.space16,
+    backgroundColor: colors.surfaceContainerLowest,
+    borderRadius: borderRadius.card,
+    borderWidth: spacing.xxs,
+    borderColor: colors.surfaceVariant,
+    padding: spacing.space24,
+    marginBottom: spacing.space32,
+    ...shadows.sm,
+  },
+  providerInfo: {
+    flex: 1,
+  },
+  providerName: {
+    ...typography.h3,
+    color: colors.onSurface,
+  },
+  providerRole: {
+    ...typography.body,
+    color: colors.secondary,
+    marginTop: spacing.space4,
+  },
+  ratingChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.space4,
+    paddingHorizontal: spacing.space12,
+    paddingVertical: spacing.space8,
+    borderRadius: borderRadius.pill,
+    backgroundColor: colors.surfaceContainerLow,
+  },
+  ratingStar: {
+    ...typography.caption,
+    color: colors.star,
+  },
+  ratingText: {
+    ...typography.captionMedium,
+    color: colors.onSurfaceVariant,
+  },
+  formCard: {
+    backgroundColor: colors.surfaceContainerLowest,
+    borderRadius: borderRadius.card,
+    borderWidth: spacing.xxs,
+    borderColor: colors.surfaceVariant,
+    padding: spacing.space24,
+    ...shadows.sm,
+  },
+  sectionTitle: {
+    ...typography.h4,
+    color: colors.onBackground,
+  },
+  sectionBody: {
+    ...typography.body,
+    color: colors.secondary,
+    marginTop: spacing.space8,
+    marginBottom: spacing.space16,
+  },
+  textArea: {
+    minHeight: spacing.space80 + spacing.space56,
+    borderRadius: borderRadius.control,
+    borderWidth: spacing.xxs,
+    borderColor: colors.outlineVariant,
+    backgroundColor: colors.surfaceContainerLow,
+    paddingHorizontal: spacing.space16,
+    paddingVertical: spacing.space16,
+    color: colors.onBackground,
+    ...typography.body,
+  },
+  fieldRow: {
+    gap: spacing.space16,
+    marginTop: spacing.space24,
+  },
+  fieldColumn: {
+    flex: 1,
+  },
+  compactField: {
+    marginBottom: 0,
+  },
+  helperText: {
+    ...typography.caption,
+    marginTop: spacing.space8,
+  },
+  helperTextValid: {
+    color: colors.success,
+  },
+  helperTextError: {
+    color: colors.error,
+  },
+  charRow: {
+    gap: spacing.space8,
+    marginTop: spacing.space16,
+  },
+  charCount: {
+    ...typography.caption,
+    color: colors.outline,
+  },
+  charTrack: {
+    width: spacing.space80,
+    height: spacing.space4,
+    borderRadius: borderRadius.pill,
+    backgroundColor: colors.surfaceVariant,
+    overflow: 'hidden',
+  },
+  charFill: {
+    height: spacing.space4,
+    borderRadius: borderRadius.pill,
+    backgroundColor: colors.primaryContainer,
+  },
+  separator: {
+    height: spacing.xxs,
+    backgroundColor: colors.surfaceVariant,
+    marginTop: spacing.space24,
+    marginBottom: spacing.space24,
+  },
+  submitButton: {
+    width: '100%',
+  },
+  footnoteRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: spacing.space8,
+    marginTop: spacing.space16,
+  },
+  footnoteIcon: {
+    ...typography.caption,
+    color: colors.secondary,
+  },
+  footnoteText: {
+    ...typography.caption,
+    color: colors.secondary,
+    flex: 1,
+    textAlign: 'center',
+  },
+  confirmContent: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    paddingHorizontal: spacing.space24,
+    paddingVertical: spacing.space48,
+  },
+  confirmCircle: {
+    width: spacing.space80,
+    height: spacing.space80,
+    borderRadius: borderRadius.pill,
+    backgroundColor: colors.primaryFixed,
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    marginBottom: spacing.space20,
+  },
+  confirmCircleText: {
+    ...typography.h3,
+    color: colors.primary,
+  },
+  confirmTitle: {
+    ...typography.h2,
+    color: colors.onSurface,
+    textAlign: 'center',
+    marginBottom: spacing.space24,
+  },
+  confirmCard: {
+    backgroundColor: colors.surfaceContainerLowest,
+    borderRadius: borderRadius.card,
+    borderWidth: spacing.xxs,
+    borderColor: colors.surfaceVariant,
+    padding: spacing.space24,
+    ...shadows.sm,
+  },
+  confirmRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: spacing.space12,
+    paddingVertical: spacing.space12,
+  },
+  confirmLabel: {
+    ...typography.small,
+    color: colors.outline,
+  },
+  confirmValue: {
+    ...typography.bodyMedium,
+    color: colors.onSurface,
+    flexShrink: 1,
+    textAlign: 'right',
+  },
+  confirmDivider: {
+    height: spacing.xxs,
+    backgroundColor: colors.surfaceVariant,
+  },
+  noticeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.space8,
+    backgroundColor: colors.surfaceContainerLow,
+    borderRadius: borderRadius.control,
+    padding: spacing.space16,
+    marginTop: spacing.space24,
+  },
+  noticeIcon: {
+    ...typography.caption,
+    color: colors.secondary,
+  },
+  noticeText: {
+    ...typography.body,
+    color: colors.onSurfaceVariant,
+    flex: 1,
+  },
+  confirmButton: {
+    width: '100%',
+    marginTop: spacing.space24,
+  },
 });

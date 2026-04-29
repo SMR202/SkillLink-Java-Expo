@@ -1,6 +1,6 @@
 import React from 'react';
-import { TouchableOpacity, Text, ActivityIndicator, StyleSheet, ViewStyle } from 'react-native';
-import { colors, borderRadius, typography } from '../theme';
+import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, ViewStyle } from 'react-native';
+import { borderRadius, colors, spacing, typography } from '../theme';
 
 interface DangerButtonProps {
   title: string;
@@ -12,31 +12,34 @@ interface DangerButtonProps {
 
 export default function DangerButton({ title, onPress, loading = false, disabled = false, style }: DangerButtonProps) {
   const isDisabled = disabled || loading;
+
   return (
     <TouchableOpacity
-      style={[s.btn, isDisabled && s.btnDisabled, style]}
+      style={[s.button, isDisabled && s.buttonDisabled, style]}
       onPress={onPress}
       disabled={isDisabled}
-      activeOpacity={0.8}
+      activeOpacity={0.9}
     >
-      {loading ? (
-        <ActivityIndicator size="small" color="#FFF" />
-      ) : (
-        <Text style={s.text}>{title}</Text>
-      )}
+      {loading ? <ActivityIndicator size="small" color={colors.onError} /> : <Text style={s.text}>{title}</Text>}
     </TouchableOpacity>
   );
 }
 
 const s = StyleSheet.create({
-  btn: {
+  button: {
+    minHeight: spacing.buttonHeight,
+    borderRadius: borderRadius.control,
     backgroundColor: colors.error,
-    borderRadius: borderRadius.md,
-    paddingVertical: 14,
     alignItems: 'center',
     justifyContent: 'center',
-    minHeight: 50,
+    paddingHorizontal: spacing.space24,
+    paddingVertical: spacing.space16,
   },
-  btnDisabled: { opacity: 0.5 },
-  text: { ...typography.button, color: '#FFFFFF' },
+  buttonDisabled: {
+    opacity: 0.55,
+  },
+  text: {
+    ...typography.button,
+    color: colors.onError,
+  },
 });

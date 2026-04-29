@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, Text, TextInput, StyleSheet, TextInputProps, ViewStyle } from 'react-native';
-import { colors, borderRadius, typography, spacing } from '../theme';
+import { StyleSheet, Text, TextInput, TextInputProps, View, ViewStyle } from 'react-native';
+import { borderRadius, colors, spacing, typography } from '../theme';
 
 interface InputFieldProps extends TextInputProps {
   label?: string;
@@ -11,10 +11,10 @@ interface InputFieldProps extends TextInputProps {
 export default function InputField({ label, error, containerStyle, ...props }: InputFieldProps) {
   return (
     <View style={[s.container, containerStyle]}>
-      {label && <Text style={s.label}>{label}</Text>}
+      {label ? <Text style={s.label}>{label}</Text> : null}
       <TextInput
         style={[s.input, !!error && s.inputError, props.style]}
-        placeholderTextColor={colors.textMuted}
+        placeholderTextColor={colors.outline}
         {...props}
       />
       {error ? <Text style={s.error}>{error}</Text> : null}
@@ -23,27 +23,31 @@ export default function InputField({ label, error, containerStyle, ...props }: I
 }
 
 const s = StyleSheet.create({
-  container: { marginBottom: spacing.lg },
+  container: {
+    marginBottom: spacing.space20,
+  },
   label: {
-    ...typography.smallMedium,
-    color: colors.textSecondary,
-    marginBottom: spacing.xs,
+    ...typography.label,
+    color: colors.onSurface,
+    marginBottom: spacing.space8,
   },
   input: {
-    backgroundColor: colors.bgInput,
-    borderRadius: borderRadius.md,
-    paddingHorizontal: spacing.lg,
-    paddingVertical: 14,
-    color: colors.textPrimary,
+    minHeight: spacing.buttonHeight,
+    borderRadius: borderRadius.control,
+    borderWidth: spacing.xxs,
+    borderColor: colors.outlineVariant,
+    backgroundColor: colors.surfaceContainerLow,
+    paddingHorizontal: spacing.space16,
+    paddingVertical: spacing.space14,
+    color: colors.onSurface,
     ...typography.body,
-    borderWidth: 1,
-    borderColor: colors.border,
-    minHeight: 50,
   },
-  inputError: { borderColor: colors.error },
+  inputError: {
+    borderColor: colors.error,
+  },
   error: {
     ...typography.caption,
     color: colors.error,
-    marginTop: spacing.xs,
+    marginTop: spacing.space8,
   },
 });

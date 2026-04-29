@@ -1,405 +1,433 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
-    View,
-    Text,
-    ScrollView,
-    TouchableOpacity,
-    StyleSheet,
-    StatusBar,
-} from "react-native";
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  StyleSheet,
+  StatusBar,
+} from 'react-native';
 import {
-    colors,
-    typography,
-    spacing,
-    borderRadius,
-    shadows,
-} from "../../theme";
-import { providerApi } from "../../api/providers";
-import { reviewApi } from "../../api/reviews";
-import { ProviderProfile, Review } from "../../types";
-import GradientButton from "../../components/GradientButton";
+  colors,
+  typography,
+  spacing,
+  borderRadius,
+  shadows,
+} from '../../theme';
+import { providerApi } from '../../api/providers';
+import { reviewApi } from '../../api/reviews';
+import { ProviderProfile, Review } from '../../types';
+import GradientButton from '../../components/GradientButton';
+import ReviewCard from '../../components/ReviewCard';
+import Avatar from '../../components/Avatar';
+import LoadingSpinner from '../../components/LoadingSpinner';
 
 export default function ProviderProfileScreen({ route, navigation }: any) {
-    const { providerId } = route.params;
-    const [provider, setProvider] = useState<ProviderProfile | null>(null);
-    const [reviews, setReviews] = useState<Review[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+  const { providerId } = route.params;
+  const [provider, setProvider] = useState<ProviderProfile | null>(null);
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-    useEffect(() => {
-        load();
-    }, []);
+  useEffect(() => {
+    load();
+  }, []);
 
-    const load = async () => {
-        setLoading(true);
-        setError(null);
-        try {
-            const [p, reviewsRes] = await Promise.all([
-                providerApi.getProfile(providerId),
-                reviewApi.getForProvider(providerId, 0, 10),
-            ]);
-            setProvider(p);
-            setReviews(reviewsRes.data?.data?.content || []);
-        } catch (e: any) {
-            setError(
-                e?.response?.data?.message ||
-                    "Failed to load provider profile.",
-            );
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    if (loading && !provider) {
-        return (
-            <View style={s.container}>
-                <Text style={s.loadingText}>Loading provider profile...</Text>
-            </View>
-        );
+  const load = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const [p, reviewsRes] = await Promise.all([
+        providerApi.getProfile(providerId),
+        reviewApi.getForProvider(providerId, 0, 10),
+      ]);
+      setProvider(p);
+      setReviews(reviewsRes.data?.data?.content || []);
+    } catch (e: any) {
+      setError(
+        e?.response?.data?.message ||
+          'Failed to load provider profile.',
+      );
+    } finally {
+      setLoading(false);
     }
+  };
 
-    if (!provider) {
-        return (
-            <View style={s.container}>
-                <View style={s.errorWrap}>
-                    <Text style={s.loadingText}>
-                        {error || "Provider not found."}
-                    </Text>
-                    <GradientButton
-                        title="Retry"
-                        onPress={load}
-                        style={{ marginTop: spacing.lg }}
-                    />
-                </View>
-            </View>
-        );
-    }
+  if (loading && !provider) {
+    return <LoadingSpinner message="Loading provider profile..." />;
+  }
 
-    const avgRating = provider.avgRating || 0;
-    const totalReviews = provider.totalReviews || reviews.length;
-
+  if (!provider) {
     return (
-        <View style={s.container}>
-            <StatusBar barStyle="dark-content" />
-            <ScrollView contentContainerStyle={s.scroll}>
-                <TouchableOpacity
-                    onPress={() => navigation.goBack()}
-                    style={s.backBtn}
-                >
-                    <Text style={s.backText}>← Back</Text>
-                </TouchableOpacity>
-
-                {/* Profile Header */}
-                <View style={s.profileHeader}>
-                    <View style={s.avatarLg}>
-                        <Text style={s.avatarLgText}>
-                            {provider.fullName?.[0]?.toUpperCase()}
-                        </Text>
-                    </View>
-                    <Text style={s.name}>{provider.fullName}</Text>
-                    <Text style={s.location}>
-                        📍 {provider.city || "No location"}
-                    </Text>
-                    {provider.isVerified && (
-                        <View style={s.verifiedRow}>
-                            <Text style={s.verifiedText}>
-                                ✓ Verified Professional
-                            </Text>
-                        </View>
-                    )}
-                </View>
-
-                {/* Stats Row */}
-                <View style={s.statsRow}>
-                    <View style={s.statItem}>
-                        <Text style={s.statVal}>★ {avgRating.toFixed(1)}</Text>
-                        <Text style={s.statSub}>/ 5.0</Text>
-                        <Text style={s.statLabel}>Rating</Text>
-                    </View>
-                    <View style={s.statDivider} />
-                    <View style={s.statItem}>
-                        <Text style={s.statVal}>{totalReviews}</Text>
-                        <Text style={s.statLabel}>Reviews</Text>
-                    </View>
-                    <View style={s.statDivider} />
-                    <View style={s.statItem}>
-                        <Text style={s.statVal}>
-                            {provider.isVerified ? "✓" : "—"}
-                        </Text>
-                        <Text style={s.statLabel}>Verified</Text>
-                    </View>
-                </View>
-
-                {/* Bio */}
-                {provider.bio && (
-                    <View style={s.section}>
-                        <Text style={s.sectionTitle}>About</Text>
-                        <Text style={s.bio}>{provider.bio}</Text>
-                    </View>
-                )}
-
-                {/* Skills */}
-                {provider.skills && provider.skills.length > 0 && (
-                    <View style={s.section}>
-                        <Text style={s.sectionTitle}>Skills & Expertise</Text>
-                        <View style={s.chipRow}>
-                            {provider.skills.map((sk: any) => (
-                                <View key={sk.id} style={s.chip}>
-                                    <Text style={s.chipText}>{sk.name}</Text>
-                                </View>
-                            ))}
-                        </View>
-                    </View>
-                )}
-
-                {/* Portfolio */}
-                {provider.portfolioLinks &&
-                    provider.portfolioLinks.length > 0 && (
-                        <View style={s.section}>
-                            <Text style={s.sectionTitle}>Portfolio</Text>
-                            {provider.portfolioLinks.map(
-                                (link: string, i: number) => (
-                                    <View key={i} style={s.linkRow}>
-                                        <Text style={s.linkIcon}>🔗</Text>
-                                        <Text style={s.link}>{link}</Text>
-                                    </View>
-                                ),
-                            )}
-                        </View>
-                    )}
-
-                {/* Reviews */}
-                <View style={s.section}>
-                    <View style={s.reviewHeader}>
-                        <Text style={s.sectionTitle}>Client Reviews</Text>
-                        <Text style={s.reviewCount}>
-                            {totalReviews} reviews
-                        </Text>
-                    </View>
-                    {reviews.length === 0 ? (
-                        <View style={s.reviewCard}>
-                            <Text style={s.reviewComment}>
-                                No reviews yet for this provider.
-                            </Text>
-                        </View>
-                    ) : (
-                        reviews.map((review) => (
-                            <View key={review.id} style={s.reviewCard}>
-                                <View style={s.reviewTop}>
-                                    <View style={s.reviewAvatar}>
-                                        <Text style={s.reviewAvatarText}>
-                                            {review.clientName?.[0]?.toUpperCase() ||
-                                                "?"}
-                                        </Text>
-                                    </View>
-                                    <View style={{ flex: 1 }}>
-                                        <Text style={s.reviewName}>
-                                            {review.clientName}
-                                        </Text>
-                                        <Text style={s.reviewDate}>
-                                            {new Date(
-                                                review.createdAt,
-                                            ).toLocaleDateString()}
-                                        </Text>
-                                    </View>
-                                    <View style={s.reviewStars}>
-                                        {[1, 2, 3, 4, 5].map((i) => (
-                                            <Text
-                                                key={i}
-                                                style={{
-                                                    color:
-                                                        i <= review.rating
-                                                            ? colors.star
-                                                            : colors.border,
-                                                    fontSize: 14,
-                                                }}
-                                            >
-                                                ★
-                                            </Text>
-                                        ))}
-                                    </View>
-                                </View>
-                                <Text style={s.reviewComment}>
-                                    {review.comment}
-                                </Text>
-                                {review.providerResponse ? (
-                                    <View style={s.providerReply}>
-                                        <Text style={s.providerReplyTitle}>
-                                            Provider response
-                                        </Text>
-                                        <Text style={s.providerReplyText}>
-                                            {review.providerResponse}
-                                        </Text>
-                                    </View>
-                                ) : null}
-                            </View>
-                        ))
-                    )}
-                </View>
-
-                {/* Book Button */}
-                <View
-                    style={{ marginTop: spacing.md, marginBottom: spacing.xxl }}
-                >
-                    <GradientButton
-                        onPress={() =>
-                            navigation.navigate("BookingForm", {
-                                providerId: provider.id,
-                                providerName: provider.fullName,
-                            })
-                        }
-                        title="Book Now"
-                        variant="accent"
-                    />
-                </View>
-            </ScrollView>
+      <View style={s.container}>
+        <View style={s.errorWrap}>
+          <Text style={s.errorText}>{error || 'Provider not found.'}</Text>
+          <GradientButton
+            title="Retry"
+            onPress={load}
+            style={s.retryButton}
+          />
         </View>
+      </View>
     );
+  }
+
+  const avgRating = provider.avgRating || 0;
+  const totalReviews = provider.totalReviews || reviews.length;
+
+  return (
+    <View style={s.container}>
+      <StatusBar barStyle="dark-content" backgroundColor={colors.background} />
+
+      <ScrollView contentContainerStyle={s.scroll} showsVerticalScrollIndicator={false}>
+        <View style={s.hero}>
+          <View style={s.headerButtons}>
+            <TouchableOpacity onPress={() => navigation.goBack()} style={s.roundButton} activeOpacity={0.9}>
+              <Text style={s.roundButtonText}>←</Text>
+            </TouchableOpacity>
+            <View style={s.roundButton}>
+              <Text style={s.roundButtonText}>⇪</Text>
+            </View>
+          </View>
+          <Text style={s.coverText}>COVER</Text>
+        </View>
+
+        <View style={s.profileCard}>
+          <View style={s.avatarWrap}>
+            <Avatar name={provider.fullName} uri={provider.avatarUrl} size={spacing.space80} />
+            <View style={s.onlineDot} />
+          </View>
+
+          <Text style={s.name}>{provider.fullName}</Text>
+          {provider.isVerified ? <Text style={s.badge}>Senior Consultant</Text> : null}
+
+          <View style={s.metaRow}>
+            <View style={s.metaGroup}>
+              <Text style={s.metaStar}>★</Text>
+              <Text style={s.metaPrimary}>{avgRating.toFixed(1)}</Text>
+              <Text style={s.metaSecondary}>({totalReviews} reviews)</Text>
+            </View>
+            <Text style={s.metaDivider}>•</Text>
+            <Text style={s.metaLocation}>{provider.city || 'Remote'}</Text>
+          </View>
+        </View>
+
+        {provider.bio ? (
+          <View style={s.section}>
+            <Text style={s.sectionTitle}>About</Text>
+            <View style={s.panel}>
+              <Text style={s.sectionBody}>{provider.bio}</Text>
+            </View>
+          </View>
+        ) : null}
+
+        {provider.skills && provider.skills.length > 0 ? (
+          <View style={s.section}>
+            <Text style={s.sectionTitle}>Expertise</Text>
+            <View style={s.panel}>
+              <View style={s.skillWrap}>
+                {provider.skills.map((skill) => (
+                  <View key={skill.id} style={s.skillChip}>
+                    <Text style={s.skillText}>{skill.name}</Text>
+                  </View>
+                ))}
+              </View>
+            </View>
+          </View>
+        ) : null}
+
+        {provider.portfolioLinks && provider.portfolioLinks.length > 0 ? (
+          <View style={s.section}>
+            <Text style={s.sectionTitle}>Portfolio</Text>
+            <View style={s.panel}>
+              {provider.portfolioLinks.map((link, index) => (
+                <Text key={index} style={s.portfolioLink}>{link}</Text>
+              ))}
+            </View>
+          </View>
+        ) : null}
+
+        <View style={s.section}>
+          <View style={s.reviewHeader}>
+            <Text style={s.sectionTitle}>Client Reviews</Text>
+            <Text style={s.viewAll}>View all →</Text>
+          </View>
+          {reviews.length === 0 ? (
+            <View style={s.panel}>
+              <Text style={s.sectionBody}>No reviews yet for this provider.</Text>
+            </View>
+          ) : (
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={s.reviewScroller}>
+              {reviews.map((review) => (
+                <View key={review.id} style={s.reviewSlide}>
+                  <ReviewCard
+                    clientName={review.clientName}
+                    rating={review.rating}
+                    comment={review.comment}
+                    createdAt={review.createdAt}
+                  />
+                  {review.providerResponse ? (
+                    <View style={s.replyCard}>
+                      <Text style={s.replyTitle}>Provider response</Text>
+                      <Text style={s.replyText}>{review.providerResponse}</Text>
+                    </View>
+                  ) : null}
+                </View>
+              ))}
+            </ScrollView>
+          )}
+        </View>
+      </ScrollView>
+
+      <View style={s.bottomBar}>
+        <View>
+          <Text style={s.bottomLabel}>Starting at</Text>
+          <Text style={s.bottomPrice}>$250/hr</Text>
+        </View>
+        <GradientButton
+          onPress={() =>
+            navigation.navigate('BookingForm', {
+              providerId: provider.id,
+              providerName: provider.fullName,
+            })
+          }
+          title={`Book ${provider.fullName.split(' ')[0]}`}
+          style={s.bottomButton}
+        />
+      </View>
+    </View>
+  );
 }
 
 const s = StyleSheet.create({
-    container: { flex: 1, backgroundColor: colors.bgPrimary },
-    scroll: {
-        paddingHorizontal: spacing.xxl,
-        paddingTop: 50,
-        paddingBottom: 40,
-    },
-    loadingText: {
-        ...typography.body,
-        color: colors.textMuted,
-        textAlign: "center",
-        marginTop: spacing.huge,
-    },
-    errorWrap: {
-        alignItems: "center",
-        marginTop: spacing.huge,
-        paddingHorizontal: spacing.xxl,
-    },
-    backBtn: { marginBottom: spacing.xl },
-    backText: { ...typography.button, color: colors.textSecondary },
-    profileHeader: { alignItems: "center", marginBottom: spacing.xxl },
-    avatarLg: {
-        width: 80,
-        height: 80,
-        borderRadius: 40,
-        backgroundColor: colors.bgInput,
-        justifyContent: "center",
-        alignItems: "center",
-        marginBottom: spacing.md,
-    },
-    avatarLgText: {
-        fontSize: 32,
-        fontWeight: "700",
-        color: colors.textPrimary,
-    },
-    name: { ...typography.h2, color: colors.textPrimary },
-    location: {
-        ...typography.small,
-        color: colors.textSecondary,
-        marginTop: spacing.xs,
-    },
-    verifiedRow: {
-        marginTop: spacing.sm,
-        backgroundColor: colors.accentLight,
-        paddingHorizontal: spacing.md,
-        paddingVertical: 4,
-        borderRadius: borderRadius.full,
-    },
-    verifiedText: { ...typography.captionMedium, color: colors.accentDark },
-    statsRow: {
-        flexDirection: "row",
-        alignItems: "center",
-        backgroundColor: colors.bgSecondary,
-        borderRadius: borderRadius.lg,
-        paddingVertical: spacing.lg,
-        paddingHorizontal: spacing.xxl,
-        marginBottom: spacing.xxl,
-        borderWidth: 1,
-        borderColor: colors.border,
-    },
-    statItem: { flex: 1, alignItems: "center" },
-    statVal: { ...typography.h3, color: colors.textPrimary },
-    statSub: { ...typography.caption, color: colors.textMuted },
-    statLabel: { ...typography.caption, color: colors.textMuted, marginTop: 2 },
-    statDivider: { width: 1, height: 36, backgroundColor: colors.border },
-    section: { marginBottom: spacing.xxl },
-    sectionTitle: {
-        ...typography.h4,
-        color: colors.textPrimary,
-        marginBottom: spacing.md,
-    },
-    bio: { ...typography.body, color: colors.textSecondary, lineHeight: 24 },
-    chipRow: { flexDirection: "row", flexWrap: "wrap", gap: spacing.sm },
-    chip: {
-        paddingHorizontal: spacing.md,
-        paddingVertical: 6,
-        borderRadius: borderRadius.full,
-        backgroundColor: colors.bgInput,
-        borderWidth: 1,
-        borderColor: colors.border,
-    },
-    chipText: { ...typography.smallMedium, color: colors.textPrimary },
-    linkRow: {
-        flexDirection: "row",
-        alignItems: "center",
-        gap: spacing.sm,
-        marginBottom: spacing.sm,
-    },
-    linkIcon: { fontSize: 14 },
-    link: { ...typography.body, color: colors.accent },
-    reviewHeader: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        marginBottom: spacing.md,
-    },
-    reviewCount: { ...typography.small, color: colors.textMuted },
-    reviewCard: {
-        backgroundColor: colors.bgSecondary,
-        borderRadius: borderRadius.md,
-        padding: spacing.lg,
-        marginBottom: spacing.md,
-        borderWidth: 1,
-        borderColor: colors.border,
-    },
-    reviewTop: {
-        flexDirection: "row",
-        alignItems: "center",
-        gap: spacing.md,
-        marginBottom: spacing.sm,
-    },
-    reviewAvatar: {
-        width: 32,
-        height: 32,
-        borderRadius: 16,
-        backgroundColor: colors.border,
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    reviewAvatarText: {
-        ...typography.captionMedium,
-        color: colors.textSecondary,
-    },
-    reviewName: { ...typography.smallMedium, color: colors.textPrimary },
-    reviewDate: { ...typography.caption, color: colors.textMuted },
-    reviewStars: { flexDirection: "row", gap: 1 },
-    reviewComment: {
-        ...typography.small,
-        color: colors.textSecondary,
-        lineHeight: 20,
-    },
-    providerReply: {
-        marginTop: spacing.sm,
-        padding: spacing.sm,
-        borderRadius: borderRadius.sm,
-        backgroundColor: colors.bgPrimary,
-        borderWidth: 1,
-        borderColor: colors.border,
-    },
-    providerReplyTitle: {
-        ...typography.captionMedium,
-        color: colors.textPrimary,
-        marginBottom: 2,
-    },
-    providerReplyText: { ...typography.small, color: colors.textSecondary },
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  scroll: {
+    paddingBottom: spacing.navHeight + spacing.space40,
+  },
+  hero: {
+    height: spacing.space80 + spacing.space80 + spacing.space40,
+    backgroundColor: colors.surfaceContainer,
+    paddingHorizontal: spacing.space24,
+    paddingTop: spacing.space48,
+    justifyContent: 'space-between',
+  },
+  headerButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  roundButton: {
+    width: spacing.space40,
+    height: spacing.space40,
+    borderRadius: borderRadius.pill,
+    backgroundColor: colors.surfaceContainerLowest,
+    alignItems: 'center',
+    justifyContent: 'center',
+    ...shadows.md,
+  },
+  roundButtonText: {
+    ...typography.bodyMedium,
+    color: colors.onSurface,
+  },
+  coverText: {
+    ...typography.h1,
+    color: colors.surfaceContainerHighest,
+    textAlign: 'center',
+    opacity: 0.75,
+    marginBottom: spacing.space32,
+  },
+  profileCard: {
+    marginHorizontal: spacing.space16,
+    marginTop: -spacing.space80,
+    backgroundColor: colors.surfaceContainerLowest,
+    borderRadius: borderRadius.card,
+    borderWidth: spacing.xxs,
+    borderColor: colors.surfaceVariant,
+    padding: spacing.space24,
+    alignItems: 'center',
+    ...shadows.sm,
+  },
+  avatarWrap: {
+    marginBottom: spacing.space16,
+  },
+  onlineDot: {
+    position: 'absolute',
+    right: spacing.space4,
+    bottom: spacing.space4,
+    width: spacing.space16,
+    height: spacing.space16,
+    borderRadius: borderRadius.pill,
+    backgroundColor: colors.success,
+    borderWidth: spacing.xxs,
+    borderColor: colors.surfaceContainerLowest,
+  },
+  name: {
+    ...typography.h2,
+    color: colors.onSurface,
+    textAlign: 'center',
+  },
+  badge: {
+    ...typography.captionMedium,
+    color: colors.primaryContainer,
+    backgroundColor: colors.primaryFixed,
+    borderRadius: borderRadius.pill,
+    paddingHorizontal: spacing.space12,
+    paddingVertical: spacing.space8,
+    marginTop: spacing.space12,
+  },
+  metaRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.space8,
+    marginTop: spacing.space16,
+  },
+  metaGroup: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.space4,
+  },
+  metaStar: {
+    ...typography.caption,
+    color: colors.star,
+  },
+  metaPrimary: {
+    ...typography.captionMedium,
+    color: colors.onSurface,
+  },
+  metaSecondary: {
+    ...typography.caption,
+    color: colors.outline,
+  },
+  metaDivider: {
+    ...typography.caption,
+    color: colors.outlineVariant,
+  },
+  metaLocation: {
+    ...typography.caption,
+    color: colors.onSurfaceVariant,
+  },
+  section: {
+    marginTop: spacing.space32,
+    paddingHorizontal: spacing.space16,
+  },
+  sectionTitle: {
+    ...typography.h3,
+    color: colors.onSurface,
+    marginBottom: spacing.space16,
+  },
+  panel: {
+    backgroundColor: colors.surfaceContainerLowest,
+    borderRadius: borderRadius.card,
+    borderWidth: spacing.xxs,
+    borderColor: colors.surfaceVariant,
+    padding: spacing.space20,
+    ...shadows.sm,
+  },
+  sectionBody: {
+    ...typography.bodyLg,
+    color: colors.onSurfaceVariant,
+  },
+  skillWrap: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.space12,
+  },
+  skillChip: {
+    borderRadius: borderRadius.pill,
+    borderWidth: spacing.xxs,
+    borderColor: colors.outlineVariant,
+    backgroundColor: colors.surfaceContainerLow,
+    paddingHorizontal: spacing.space16,
+    paddingVertical: spacing.space12,
+  },
+  skillText: {
+    ...typography.caption,
+    color: colors.onSurface,
+  },
+  portfolioLink: {
+    ...typography.body,
+    color: colors.primary,
+    marginBottom: spacing.space12,
+  },
+  reviewHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  viewAll: {
+    ...typography.label,
+    color: colors.primary,
+  },
+  reviewScroller: {
+    gap: spacing.space12,
+    paddingRight: spacing.space16,
+  },
+  reviewSlide: {
+    width: spacing.space96 * 2 + spacing.space32,
+  },
+  replyCard: {
+    marginTop: -spacing.space4,
+    backgroundColor: colors.surfaceContainerLow,
+    borderBottomLeftRadius: borderRadius.card,
+    borderBottomRightRadius: borderRadius.card,
+    paddingHorizontal: spacing.space20,
+    paddingBottom: spacing.space20,
+    paddingTop: spacing.space12,
+    borderWidth: spacing.xxs,
+    borderColor: colors.surfaceVariant,
+    borderTopWidth: 0,
+  },
+  replyTitle: {
+    ...typography.captionMedium,
+    color: colors.onSurface,
+    marginBottom: spacing.space4,
+  },
+  replyText: {
+    ...typography.caption,
+    color: colors.onSurfaceVariant,
+  },
+  bottomBar: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.space16,
+    backgroundColor: colors.surfaceContainerLowest,
+    borderTopWidth: spacing.xxs,
+    borderTopColor: colors.surfaceVariant,
+    paddingHorizontal: spacing.space16,
+    paddingTop: spacing.space16,
+    paddingBottom: spacing.space24,
+    ...shadows.md,
+  },
+  bottomLabel: {
+    ...typography.caption,
+    color: colors.outline,
+  },
+  bottomPrice: {
+    ...typography.h3,
+    color: colors.onSurface,
+  },
+  bottomButton: {
+    flex: 1,
+  },
+  errorWrap: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: spacing.space24,
+  },
+  errorText: {
+    ...typography.body,
+    color: colors.onSurfaceVariant,
+    textAlign: 'center',
+  },
+  retryButton: {
+    marginTop: spacing.space16,
+    width: '100%',
+  },
 });

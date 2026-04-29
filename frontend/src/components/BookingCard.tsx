@@ -1,9 +1,9 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { colors, typography, spacing, borderRadius } from '../theme';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { borderRadius, colors, shadows, spacing, typography } from '../theme';
 import { Booking } from '../types';
-import Badge from './Badge';
 import Avatar from './Avatar';
+import Badge from './Badge';
 
 interface BookingCardProps {
   booking: Booking;
@@ -11,45 +11,61 @@ interface BookingCardProps {
   showProvider?: boolean;
 }
 
-function formatDate(value: string) {
-  const d = new Date(value);
-  if (isNaN(d.getTime())) return value;
-  return d.toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' });
-}
-
 export default function BookingCard({ booking, onPress, showProvider = true }: BookingCardProps) {
   const personName = showProvider ? booking.providerName : booking.clientName;
   const personAvatarUrl = showProvider ? booking.providerAvatarUrl : null;
 
   return (
-    <TouchableOpacity style={s.card} onPress={onPress} activeOpacity={0.75}>
-      <View style={s.header}>
-        <Avatar name={personName} uri={personAvatarUrl} size={42} />
+    <TouchableOpacity style={s.card} onPress={onPress} activeOpacity={0.94}>
+      <View style={s.topRow}>
+        <Avatar name={personName} uri={personAvatarUrl} size={spacing.space48} />
         <View style={s.info}>
           <Text style={s.name}>{personName}</Text>
-          <Text style={s.date}>{booking.preferredDate} · {booking.preferredTime}</Text>
+          <Text style={s.date}>{booking.preferredDate} • {booking.preferredTime}</Text>
         </View>
         <Badge status={booking.status} />
       </View>
       <Text style={s.description} numberOfLines={2}>{booking.jobDescription}</Text>
-      <Text style={s.bookingId}>Booking #{booking.id}</Text>
+      <Text style={s.meta}>Booking #{booking.id}</Text>
     </TouchableOpacity>
   );
 }
 
 const s = StyleSheet.create({
   card: {
-    backgroundColor: colors.bgCard,
-    borderRadius: borderRadius.lg,
-    borderWidth: 1,
-    borderColor: colors.border,
-    padding: spacing.lg,
-    marginBottom: spacing.md,
+    backgroundColor: colors.surfaceContainerLowest,
+    borderRadius: borderRadius.card,
+    borderWidth: spacing.xxs,
+    borderColor: colors.surfaceVariant,
+    padding: spacing.space24,
+    marginBottom: spacing.space16,
+    ...shadows.sm,
   },
-  header: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, marginBottom: spacing.sm },
-  info: { flex: 1 },
-  name: { ...typography.bodyMedium, color: colors.textPrimary },
-  date: { ...typography.caption, color: colors.textMuted, marginTop: 2 },
-  description: { ...typography.small, color: colors.textSecondary },
-  bookingId: { ...typography.caption, color: colors.textMuted, marginTop: spacing.xs },
+  topRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.space16,
+    marginBottom: spacing.space16,
+  },
+  info: {
+    flex: 1,
+  },
+  name: {
+    ...typography.bodyMedium,
+    color: colors.onSurface,
+  },
+  date: {
+    ...typography.caption,
+    color: colors.outline,
+    marginTop: spacing.space4,
+  },
+  description: {
+    ...typography.body,
+    color: colors.onSurfaceVariant,
+  },
+  meta: {
+    ...typography.caption,
+    color: colors.outline,
+    marginTop: spacing.space12,
+  },
 });

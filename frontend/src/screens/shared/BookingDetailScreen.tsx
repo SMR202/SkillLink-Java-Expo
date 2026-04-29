@@ -4,15 +4,9 @@ import { borderRadius, colors, shadows, spacing, typography } from '../../theme'
 import { bookingApi } from '../../api/bookings';
 import { Booking } from '../../types';
 import { useAuthStore } from '../../store/authStore';
-
-const statusConfig: Record<string, { color: string; bg: string; label: string }> = {
-  PENDING: { color: colors.pending, bg: '#FEF3C7', label: 'Pending' },
-  ACCEPTED: { color: colors.accepted, bg: colors.accentLight, label: 'Accepted' },
-  DECLINED: { color: colors.declined, bg: '#FEE2E2', label: 'Declined' },
-  PAID: { color: '#4F46E5', bg: '#EEF2FF', label: 'Paid' },
-  COMPLETED: { color: colors.textSecondary, bg: colors.bgInput, label: 'Completed' },
-  CANCELLED: { color: colors.textSecondary, bg: colors.bgInput, label: 'Cancelled' },
-};
+import Badge from '../../components/Badge';
+import Avatar from '../../components/Avatar';
+import GradientButton from '../../components/GradientButton';
 
 const statusOrder = ['PENDING', 'ACCEPTED', 'PAID', 'COMPLETED'];
 
@@ -55,10 +49,10 @@ export default function BookingDetailScreen({ route, navigation }: any) {
     if (!booking) return [];
     const currentIndex = statusOrder.indexOf(booking.status);
     const base = [
-      { key: 'PENDING', title: 'Request sent', detail: `Created ${formatDate(booking.createdAt)}` },
-      { key: 'ACCEPTED', title: 'Provider accepted', detail: 'The booking is ready for payment.' },
-      { key: 'PAID', title: 'Payment received', detail: 'Work can be completed and closed.' },
-      { key: 'COMPLETED', title: 'Completed', detail: 'The service has been marked complete.' },
+      { key: 'PENDING', title: 'Requested', detail: `Created ${formatDate(booking.createdAt)}` },
+      { key: 'ACCEPTED', title: 'Accepted', detail: 'Provider has accepted your request.' },
+      { key: 'PAID', title: 'Payment', detail: 'Complete payment to confirm the session.' },
+      { key: 'COMPLETED', title: 'Completed', detail: 'The booking has been closed.' },
     ];
 
     if (booking.status === 'DECLINED') {
@@ -77,9 +71,9 @@ export default function BookingDetailScreen({ route, navigation }: any) {
   if (loading && !booking) {
     return (
       <View style={s.container}>
-        <StatusBar barStyle="dark-content" />
+        <StatusBar barStyle="dark-content" backgroundColor={colors.background} />
         <View style={s.center}>
-          <ActivityIndicator color={colors.primary} />
+          <ActivityIndicator color={colors.primaryContainer} />
           <Text style={s.muted}>Loading booking details...</Text>
         </View>
       </View>
@@ -89,11 +83,7 @@ export default function BookingDetailScreen({ route, navigation }: any) {
   if (!booking) {
     return (
       <View style={s.container}>
-        <StatusBar barStyle="dark-content" />
-        <View style={s.header}>
-          <Pressable onPress={() => navigation.goBack()}><Text style={s.back}>Back</Text></Pressable>
-          <Text style={s.title}>Booking Details</Text>
-        </View>
+        <StatusBar barStyle="dark-content" backgroundColor={colors.background} />
         <View style={s.center}>
           <Text style={s.emptyTitle}>Booking unavailable</Text>
           <Text style={s.muted}>{error || 'This booking could not be found.'}</Text>
@@ -102,95 +92,85 @@ export default function BookingDetailScreen({ route, navigation }: any) {
     );
   }
 
-  const cfg = statusConfig[booking.status] || statusConfig.PENDING;
-
   return (
     <View style={s.container}>
-      <StatusBar barStyle="dark-content" />
-      <View style={s.header}>
-        <Pressable onPress={() => navigation.goBack()}><Text style={s.back}>Back</Text></Pressable>
-        <View style={s.headerRow}>
-          <View>
-            <Text style={s.title}>Booking #{booking.id}</Text>
-            <Text style={s.subtitle}>{otherUserName}</Text>
-          </View>
-          <View style={[s.badge, { backgroundColor: cfg.bg }]}>
-            <Text style={[s.badgeText, { color: cfg.color }]}>{cfg.label}</Text>
-          </View>
-        </View>
+      <StatusBar barStyle="dark-content" backgroundColor={colors.surfaceContainerLowest} />
+      <View style={s.topBar}>
+        <Pressable onPress={() => navigation.goBack()}><Text style={s.back}>←</Text></Pressable>
+        <Text style={s.title}>Booking Details</Text>
+        <Text style={s.help}>?</Text>
       </View>
 
-      <ScrollView contentContainerStyle={s.body}>
-        {error && <Text style={s.inlineError}>{error}</Text>}
-
-        <View style={s.card}>
-          <Text style={s.sectionTitle}>Schedule</Text>
-          <View style={s.infoGrid}>
-            <View style={s.infoItem}>
-              <Text style={s.label}>Date</Text>
-              <Text style={s.value}>{booking.preferredDate}</Text>
+      <ScrollView contentContainerStyle={s.body} showsVerticalScrollIndicator={false}>
+        <View style={s.profileCard}>
+          <View style={s.profileTop}>
+            <Avatar name={otherUserName} size={spacing.space80} />
+            <View style={s.profileInfo}>
+              <Text style={s.profileName}>{otherUserName}</Text>
+              <Text style={s.profileRole}>Service Provider</Text>
+              <Text style={s.profileRating}>★ 4.9 (124 reviews)</Text>
             </View>
-            <View style={s.infoItem}>
-              <Text style={s.label}>Time</Text>
-              <Text style={s.value}>{booking.preferredTime}</Text>
-            </View>
+            <Badge status={booking.status} label={booking.status} />
           </View>
-        </View>
-
-        <View style={s.card}>
-          <Text style={s.sectionTitle}>Job Description</Text>
-          <Text style={s.description}>{booking.jobDescription}</Text>
-        </View>
-
-        <View style={s.card}>
-          <Text style={s.sectionTitle}>People</Text>
-          <View style={s.peopleRow}>
-            <View style={s.avatar}><Text style={s.avatarText}>{booking.clientName?.[0]?.toUpperCase()}</Text></View>
-            <View style={s.personText}>
-              <Text style={s.value}>{booking.clientName}</Text>
-              <Text style={s.label}>Client</Text>
-            </View>
-          </View>
-          <View style={s.peopleRow}>
-            <View style={s.avatar}><Text style={s.avatarText}>{booking.providerName?.[0]?.toUpperCase()}</Text></View>
-            <View style={s.personText}>
-              <Text style={s.value}>{booking.providerName}</Text>
-              <Text style={s.label}>Provider</Text>
-            </View>
-          </View>
-        </View>
-
-        <View style={s.card}>
-          <Text style={s.sectionTitle}>Timeline</Text>
-          {timeline.map((item: any, index) => {
-            const active = item.state === 'done' || item.state === 'current';
-            return (
-              <View key={item.key} style={s.timelineRow}>
-                <View style={s.timelineRail}>
-                  <View style={[s.dot, active && s.dotActive, item.key === 'DECLINED' && s.dotError]} />
-                  {index < timeline.length - 1 && <View style={[s.line, active && s.lineActive]} />}
-                </View>
-                <View style={s.timelineText}>
-                  <Text style={[s.timelineTitle, item.state === 'next' && s.timelineNext]}>{item.title}</Text>
-                  <Text style={s.timelineDetail}>{item.detail}</Text>
-                </View>
-              </View>
-            );
-          })}
-        </View>
-
-        <View style={s.actions}>
-          {(booking.status === 'PENDING' || booking.status === 'ACCEPTED') && (
-            <Pressable
-              style={s.primaryAction}
+          {(booking.status === 'PENDING' || booking.status === 'ACCEPTED') ? (
+            <GradientButton
+              title="Message"
               onPress={() => navigation.navigate('Chat', { bookingId: booking.id, otherUserName })}
-            >
-              <Text style={s.primaryActionText}>Open Chat</Text>
-            </Pressable>
-          )}
-          {isClient && booking.status === 'ACCEPTED' && (
-            <Pressable
-              style={s.secondaryAction}
+              style={s.fullButton}
+              variant="outline"
+            />
+          ) : null}
+        </View>
+
+        <View style={s.card}>
+          <Text style={s.cardTitle}>Booking Status</Text>
+          <View style={s.timelineRow}>
+            {timeline.map((item: any) => (
+              <View key={item.key} style={s.timelineStep}>
+                <View style={[s.timelineDot, item.state !== 'next' && s.timelineDotActive]} />
+                <Text style={[s.timelineLabel, item.state === 'current' && s.timelineLabelActive]}>{item.title}</Text>
+              </View>
+            ))}
+          </View>
+          <View style={s.infoBanner}>
+            <Text style={s.infoBannerText}>
+              {booking.status === 'ACCEPTED'
+                ? 'Provider has accepted your request. Please complete the payment to confirm the appointment.'
+                : booking.status === 'DECLINED'
+                  ? booking.declineReason || 'This booking request was declined.'
+                  : 'We will keep this booking updated as it progresses.'}
+            </Text>
+          </View>
+        </View>
+
+        <View style={s.card}>
+          <Text style={s.cardTitle}>Schedule</Text>
+          <Text style={s.infoLabel}>Date</Text>
+          <Text style={s.infoValue}>{booking.preferredDate}</Text>
+          <View style={s.divider} />
+          <Text style={s.infoLabel}>Time</Text>
+          <Text style={s.infoValue}>{booking.preferredTime}</Text>
+        </View>
+
+        <View style={s.card}>
+          <Text style={s.cardTitle}>Service Details</Text>
+          <Text style={s.infoLabel}>Client Notes</Text>
+          <View style={s.notesBox}>
+            <Text style={s.notesText}>{booking.jobDescription}</Text>
+          </View>
+        </View>
+
+        {isClient && booking.status === 'ACCEPTED' ? (
+          <View style={s.paymentCard}>
+            <Text style={s.paymentTitle}>Payment Summary</Text>
+            <View style={s.summaryRow}><Text style={s.summaryLabel}>Service Fee</Text><Text style={s.summaryValue}>$225.00</Text></View>
+            <View style={s.summaryRow}><Text style={s.summaryLabel}>Platform Fee</Text><Text style={s.summaryValue}>$15.00</Text></View>
+            <View style={s.summaryRow}><Text style={s.summaryLabel}>Taxes</Text><Text style={s.summaryValue}>$18.50</Text></View>
+            <View style={s.divider} />
+            <Text style={s.totalLabel}>TOTAL DUE</Text>
+            <Text style={s.totalValue}>$258.50</Text>
+            <GradientButton
+              title="Pay Now to Confirm"
               onPress={() =>
                 navigation.navigate('Checkout', {
                   bookingId: booking.id,
@@ -199,78 +179,61 @@ export default function BookingDetailScreen({ route, navigation }: any) {
                   preferredDate: booking.preferredDate,
                 })
               }
-            >
-              <Text style={s.secondaryActionText}>Pay Now</Text>
-            </Pressable>
-          )}
-          {isClient && booking.status === 'COMPLETED' && (
-            <Pressable
-              style={s.secondaryAction}
-              onPress={() => navigation.navigate('ReviewForm', { bookingId: booking.id, providerName: booking.providerName })}
-            >
-              <Text style={s.secondaryActionText}>Leave Review</Text>
-            </Pressable>
-          )}
-        </View>
+              style={s.fullButton}
+            />
+          </View>
+        ) : null}
+
+        {isClient && booking.status === 'COMPLETED' ? (
+          <GradientButton
+            title="Leave Review"
+            onPress={() => navigation.navigate('ReviewForm', { bookingId: booking.id, providerName: booking.providerName })}
+            style={s.fullButton}
+            variant="outline"
+          />
+        ) : null}
       </ScrollView>
     </View>
   );
 }
 
 const s = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.bgSecondary },
-  header: {
-    backgroundColor: colors.bgPrimary,
-    paddingTop: 54,
-    paddingHorizontal: spacing.xxl,
-    paddingBottom: spacing.lg,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-  },
-  back: { ...typography.smallMedium, color: colors.accent, marginBottom: spacing.sm },
-  headerRow: { flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between', gap: spacing.md },
-  title: { ...typography.h2, color: colors.textPrimary },
-  subtitle: { ...typography.small, color: colors.textSecondary, marginTop: 2 },
-  body: { padding: spacing.xxl, paddingBottom: spacing.huge },
-  card: {
-    backgroundColor: colors.bgCard,
-    borderRadius: borderRadius.lg,
-    borderWidth: 1,
-    borderColor: colors.border,
-    padding: spacing.lg,
-    marginBottom: spacing.md,
-    ...shadows.sm,
-  },
-  sectionTitle: { ...typography.h4, color: colors.textPrimary, marginBottom: spacing.md },
-  badge: { paddingHorizontal: spacing.md, paddingVertical: 5, borderRadius: borderRadius.full },
-  badgeText: { ...typography.captionMedium },
-  infoGrid: { flexDirection: 'row', gap: spacing.md },
-  infoItem: { flex: 1, backgroundColor: colors.bgInput, borderRadius: borderRadius.md, padding: spacing.md },
-  label: { ...typography.caption, color: colors.textMuted },
-  value: { ...typography.bodyMedium, color: colors.textPrimary, marginTop: 2 },
-  description: { ...typography.body, color: colors.textSecondary },
-  peopleRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, paddingVertical: spacing.sm },
-  avatar: { width: 36, height: 36, borderRadius: 18, backgroundColor: colors.bgInput, alignItems: 'center', justifyContent: 'center' },
-  avatarText: { ...typography.smallMedium, color: colors.textPrimary },
-  personText: { flex: 1 },
-  timelineRow: { flexDirection: 'row', minHeight: 62 },
-  timelineRail: { width: 24, alignItems: 'center' },
-  dot: { width: 14, height: 14, borderRadius: 7, backgroundColor: colors.border, marginTop: 2 },
-  dotActive: { backgroundColor: colors.accent },
-  dotError: { backgroundColor: colors.error },
-  line: { flex: 1, width: 2, backgroundColor: colors.border, marginVertical: 4 },
-  lineActive: { backgroundColor: colors.accentLight },
-  timelineText: { flex: 1, paddingBottom: spacing.md },
-  timelineTitle: { ...typography.bodyMedium, color: colors.textPrimary },
-  timelineNext: { color: colors.textMuted },
-  timelineDetail: { ...typography.small, color: colors.textSecondary, marginTop: 2 },
-  actions: { gap: spacing.md, marginTop: spacing.sm },
-  primaryAction: { backgroundColor: colors.primary, borderRadius: borderRadius.md, paddingVertical: 14, alignItems: 'center' },
-  primaryActionText: { ...typography.button, color: colors.textInverse },
-  secondaryAction: { backgroundColor: colors.accentLight, borderRadius: borderRadius.md, paddingVertical: 14, alignItems: 'center' },
-  secondaryActionText: { ...typography.button, color: colors.accent },
-  center: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: spacing.xxl },
-  muted: { ...typography.small, color: colors.textMuted, marginTop: spacing.sm, textAlign: 'center' },
-  emptyTitle: { ...typography.bodyMedium, color: colors.textPrimary },
-  inlineError: { ...typography.small, color: colors.error, marginBottom: spacing.md },
+  container: { flex: 1, backgroundColor: colors.background },
+  topBar: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', backgroundColor: colors.surfaceContainerLowest, paddingHorizontal: spacing.space20, paddingTop: spacing.space48, paddingBottom: spacing.space16, borderBottomWidth: spacing.xxs, borderBottomColor: colors.surfaceVariant },
+  back: { ...typography.h3, color: colors.onSurface },
+  title: { ...typography.h4, color: colors.onSurface },
+  help: { ...typography.h4, color: colors.onSurfaceVariant },
+  body: { padding: spacing.space16, paddingBottom: spacing.navHeight },
+  profileCard: { backgroundColor: colors.surfaceContainerLowest, borderRadius: borderRadius.card, borderWidth: spacing.xxs, borderColor: colors.surfaceVariant, padding: spacing.space20, marginBottom: spacing.space20, ...shadows.sm },
+  profileTop: { flexDirection: 'row', gap: spacing.space16, marginBottom: spacing.space20 },
+  profileInfo: { flex: 1 },
+  profileName: { ...typography.h3, color: colors.onSurface },
+  profileRole: { ...typography.body, color: colors.onSurfaceVariant, marginTop: spacing.space4 },
+  profileRating: { ...typography.caption, color: colors.tertiaryContainer, marginTop: spacing.space8 },
+  fullButton: { width: '100%' },
+  card: { backgroundColor: colors.surfaceContainerLowest, borderRadius: borderRadius.card, borderWidth: spacing.xxs, borderColor: colors.surfaceVariant, padding: spacing.space20, marginBottom: spacing.space20, ...shadows.sm },
+  cardTitle: { ...typography.h4, color: colors.onSurface, marginBottom: spacing.space16 },
+  timelineRow: { flexDirection: 'row', justifyContent: 'space-between', gap: spacing.space8 },
+  timelineStep: { flex: 1, alignItems: 'center' },
+  timelineDot: { width: spacing.space32, height: spacing.space32, borderRadius: borderRadius.pill, backgroundColor: colors.surfaceVariant, marginBottom: spacing.space8 },
+  timelineDotActive: { backgroundColor: colors.primaryContainer },
+  timelineLabel: { ...typography.caption, color: colors.outline, textAlign: 'center' },
+  timelineLabelActive: { color: colors.primary },
+  infoBanner: { marginTop: spacing.space20, backgroundColor: colors.surfaceContainerLow, borderRadius: borderRadius.card, padding: spacing.space16 },
+  infoBannerText: { ...typography.body, color: colors.onSurfaceVariant },
+  infoLabel: { ...typography.caption, color: colors.outline },
+  infoValue: { ...typography.bodyLg, color: colors.onSurface, marginTop: spacing.space4 },
+  divider: { height: spacing.xxs, backgroundColor: colors.surfaceVariant, marginVertical: spacing.space16 },
+  notesBox: { backgroundColor: colors.surfaceContainerLow, borderRadius: borderRadius.card, padding: spacing.space16 },
+  notesText: { ...typography.body, color: colors.onSurface },
+  paymentCard: { backgroundColor: colors.surfaceContainerLowest, borderRadius: borderRadius.card, borderTopWidth: spacing.xxs, borderTopColor: colors.primaryContainer, borderWidth: spacing.xxs, borderColor: colors.surfaceVariant, padding: spacing.space20, marginBottom: spacing.space20, ...shadows.sm },
+  paymentTitle: { ...typography.h3, color: colors.onSurface, marginBottom: spacing.space20 },
+  summaryRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: spacing.space12 },
+  summaryLabel: { ...typography.body, color: colors.onSurfaceVariant },
+  summaryValue: { ...typography.body, color: colors.onSurface },
+  totalLabel: { ...typography.label, color: colors.onSurface, marginBottom: spacing.space8 },
+  totalValue: { ...typography.h2, color: colors.onSurface, marginBottom: spacing.space20 },
+  center: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: spacing.space24 },
+  emptyTitle: { ...typography.h4, color: colors.onSurface },
+  muted: { ...typography.body, color: colors.onSurfaceVariant, marginTop: spacing.space8, textAlign: 'center' },
 });

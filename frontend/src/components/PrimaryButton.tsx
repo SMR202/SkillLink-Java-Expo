@@ -1,6 +1,6 @@
 import React from 'react';
-import { TouchableOpacity, Text, ActivityIndicator, StyleSheet, ViewStyle } from 'react-native';
-import { colors, borderRadius, typography, spacing } from '../theme';
+import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, ViewStyle } from 'react-native';
+import { borderRadius, colors, shadows, spacing, typography } from '../theme';
 
 interface PrimaryButtonProps {
   title: string;
@@ -12,31 +12,35 @@ interface PrimaryButtonProps {
 
 export default function PrimaryButton({ title, onPress, loading = false, disabled = false, style }: PrimaryButtonProps) {
   const isDisabled = disabled || loading;
+
   return (
     <TouchableOpacity
-      style={[s.btn, isDisabled && s.btnDisabled, style]}
+      style={[s.button, isDisabled && s.buttonDisabled, style]}
       onPress={onPress}
       disabled={isDisabled}
-      activeOpacity={0.8}
+      activeOpacity={0.9}
     >
-      {loading ? (
-        <ActivityIndicator size="small" color={colors.textInverse} />
-      ) : (
-        <Text style={s.text}>{title}</Text>
-      )}
+      {loading ? <ActivityIndicator size="small" color={colors.onPrimary} /> : <Text style={s.text}>{title}</Text>}
     </TouchableOpacity>
   );
 }
 
 const s = StyleSheet.create({
-  btn: {
-    backgroundColor: colors.primary,
-    borderRadius: borderRadius.md,
-    paddingVertical: 14,
+  button: {
+    minHeight: spacing.buttonHeight,
+    borderRadius: borderRadius.control,
+    backgroundColor: colors.primaryContainer,
     alignItems: 'center',
     justifyContent: 'center',
-    minHeight: 50,
+    paddingHorizontal: spacing.space24,
+    paddingVertical: spacing.space16,
+    ...shadows.lg,
   },
-  btnDisabled: { opacity: 0.5 },
-  text: { ...typography.button, color: colors.textInverse },
+  buttonDisabled: {
+    opacity: 0.55,
+  },
+  text: {
+    ...typography.button,
+    color: colors.onPrimary,
+  },
 });

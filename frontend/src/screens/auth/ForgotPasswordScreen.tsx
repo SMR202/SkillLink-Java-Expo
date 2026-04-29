@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
-import { colors, typography, spacing, borderRadius } from '../../theme';
+import { View, Text, TouchableOpacity, StyleSheet, Alert, ScrollView } from 'react-native';
+import { colors, typography, spacing, borderRadius, shadows } from '../../theme';
 import { authApi } from '../../api/auth';
 import GradientButton from '../../components/GradientButton';
+import InputField from '../../components/InputField';
 
 export default function ForgotPasswordScreen({ navigation }: any) {
   const [email, setEmail] = useState('');
@@ -19,44 +20,212 @@ export default function ForgotPasswordScreen({ navigation }: any) {
 
   return (
     <View style={s.container}>
-      <TouchableOpacity onPress={() => navigation.goBack()} style={s.backBtn}>
-        <Text style={s.backText}>← Back</Text>
-      </TouchableOpacity>
+      <ScrollView contentContainerStyle={s.content} showsVerticalScrollIndicator={false}>
+        <View style={s.brandRow}>
+          <Text style={s.brandMark}>▦</Text>
+          <Text style={s.brandText}>SkillLink</Text>
+        </View>
 
-      <View style={s.card}>
-        {sent ? (
-          <View style={s.sentBox}>
-            <Text style={{ fontSize: 40 }}>📧</Text>
-            <Text style={s.sentTitle}>Check your email</Text>
-            <Text style={s.sentDesc}>We've sent a password reset link to {email}</Text>
-            <GradientButton onPress={() => navigation.goBack()} title="Back to Login" style={{ marginTop: spacing.xl }} />
-          </View>
-        ) : (
-          <>
-            <Text style={s.title}>Reset Password</Text>
-            <Text style={s.desc}>Enter your email and we'll send you a reset link.</Text>
-            <Text style={s.label}>Email</Text>
-            <TextInput style={s.input} placeholder="you@email.com" placeholderTextColor={colors.textMuted}
-              value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none" />
-            <View style={{ height: spacing.lg }} />
-            <GradientButton onPress={handleSubmit} title="Send Reset Link" loading={loading} />
-          </>
-        )}
-      </View>
+        <View style={s.card}>
+          <View style={s.cardTopBorder} />
+
+          {sent ? (
+            <View style={s.centeredState}>
+              <View style={s.successHalo}>
+                <View style={s.successCore}>
+                  <Text style={s.successIcon}>✓</Text>
+                </View>
+              </View>
+              <Text style={s.title}>Check your email</Text>
+              <Text style={s.description}>
+                We&apos;ve sent reset instructions to your email address. Please check your inbox and spam folder.
+              </Text>
+
+              <View style={s.infoPanel}>
+                <Text style={s.infoIcon}>i</Text>
+                <Text style={s.infoText}>
+                  Didn&apos;t receive the email? It might take a few minutes. You can request a new link if it doesn&apos;t arrive.
+                </Text>
+              </View>
+
+              <GradientButton onPress={handleSubmit} title="Resend Email" loading={loading} style={s.fullButton} variant="outline" />
+
+              <TouchableOpacity onPress={() => navigation.goBack()} style={s.bottomLink} activeOpacity={0.85}>
+                <Text style={s.bottomLinkText}>Return to Login</Text>
+              </TouchableOpacity>
+            </View>
+          ) : (
+            <View>
+              <View style={s.centeredState}>
+                <View style={s.iconCircle}>
+                  <Text style={s.iconText}>⌁</Text>
+                </View>
+                <Text style={s.title}>Forgot Password</Text>
+                <Text style={s.description}>
+                  Enter your email address and we&apos;ll send you a link to securely reset your password.
+                </Text>
+              </View>
+
+              <InputField
+                label="Email Address"
+                placeholder="name@example.com"
+                value={email}
+                onChangeText={setEmail}
+                keyboardType="email-address"
+                autoCapitalize="none"
+              />
+
+              <GradientButton onPress={handleSubmit} title="Send Reset Link" loading={loading} style={s.fullButton} />
+
+              <View style={s.divider} />
+
+              <TouchableOpacity onPress={() => navigation.goBack()} style={s.backToLogin} activeOpacity={0.85}>
+                <Text style={s.backToLoginText}>Back to Login</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
+      </ScrollView>
     </View>
   );
 }
 
 const s = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.bgPrimary, paddingHorizontal: spacing.xxl, justifyContent: 'center' },
-  backBtn: { position: 'absolute', top: 50, left: spacing.xxl, zIndex: 10 },
-  backText: { ...typography.button, color: colors.textSecondary },
-  card: {},
-  title: { ...typography.h2, color: colors.textPrimary, marginBottom: spacing.sm },
-  desc: { ...typography.body, color: colors.textSecondary, marginBottom: spacing.xl },
-  label: { ...typography.smallMedium, color: colors.textSecondary, marginBottom: spacing.xs },
-  input: { backgroundColor: colors.bgInput, borderRadius: borderRadius.md, paddingHorizontal: spacing.lg, paddingVertical: 14, color: colors.textPrimary, ...typography.body, borderWidth: 1, borderColor: colors.border },
-  sentBox: { alignItems: 'center' },
-  sentTitle: { ...typography.h2, color: colors.textPrimary, marginTop: spacing.lg },
-  sentDesc: { ...typography.body, color: colors.textSecondary, marginTop: spacing.sm, textAlign: 'center' },
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  content: {
+    flexGrow: 1,
+    paddingHorizontal: spacing.space24,
+    paddingVertical: spacing.space48,
+    alignItems: 'center',
+  },
+  brandRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.space8,
+    marginBottom: spacing.space32,
+  },
+  brandMark: {
+    ...typography.h4,
+    color: colors.primary,
+  },
+  brandText: {
+    ...typography.h3,
+    color: colors.primary,
+  },
+  card: {
+    width: '100%',
+    maxWidth: spacing.space96 * 4 + spacing.space56,
+    backgroundColor: colors.surfaceContainerLowest,
+    borderRadius: borderRadius.xxl,
+    borderWidth: spacing.xxs,
+    borderColor: colors.surfaceVariant,
+    paddingHorizontal: spacing.space24,
+    paddingVertical: spacing.space32,
+    position: 'relative',
+    overflow: 'hidden',
+    ...shadows.sm,
+  },
+  cardTopBorder: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: spacing.space4,
+    backgroundColor: colors.primaryContainer,
+  },
+  centeredState: {
+    alignItems: 'center',
+    marginBottom: spacing.space24,
+  },
+  iconCircle: {
+    width: spacing.space64,
+    height: spacing.space64,
+    borderRadius: borderRadius.pill,
+    backgroundColor: colors.surfaceContainer,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: spacing.space20,
+  },
+  iconText: {
+    ...typography.h4,
+    color: colors.primary,
+  },
+  successHalo: {
+    width: spacing.space80,
+    height: spacing.space80,
+    borderRadius: borderRadius.pill,
+    backgroundColor: colors.surfaceContainer,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: spacing.space20,
+  },
+  successCore: {
+    width: spacing.space56,
+    height: spacing.space56,
+    borderRadius: borderRadius.pill,
+    backgroundColor: colors.primaryFixedDim,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  successIcon: {
+    ...typography.h4,
+    color: colors.primary,
+  },
+  title: {
+    ...typography.h2,
+    color: colors.onSurface,
+    textAlign: 'center',
+  },
+  description: {
+    ...typography.body,
+    color: colors.onSurfaceVariant,
+    textAlign: 'center',
+    marginTop: spacing.space12,
+    marginBottom: spacing.space8,
+  },
+  fullButton: {
+    width: '100%',
+    marginTop: spacing.space16,
+  },
+  divider: {
+    height: spacing.xxs,
+    backgroundColor: colors.surfaceVariant,
+    marginTop: spacing.space32,
+    marginBottom: spacing.space24,
+  },
+  backToLogin: {
+    alignItems: 'center',
+  },
+  backToLoginText: {
+    ...typography.label,
+    color: colors.secondary,
+  },
+  infoPanel: {
+    flexDirection: 'row',
+    gap: spacing.space12,
+    backgroundColor: colors.surfaceContainerLow,
+    borderRadius: borderRadius.control,
+    padding: spacing.space16,
+    marginTop: spacing.space16,
+    marginBottom: spacing.space24,
+  },
+  infoIcon: {
+    ...typography.captionMedium,
+    color: colors.outline,
+  },
+  infoText: {
+    ...typography.caption,
+    color: colors.onSurfaceVariant,
+    flex: 1,
+  },
+  bottomLink: {
+    marginTop: spacing.space20,
+  },
+  bottomLinkText: {
+    ...typography.label,
+    color: colors.primary,
+  },
 });

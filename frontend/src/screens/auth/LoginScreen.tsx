@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import {
-  View, Text, TextInput, TouchableOpacity, StyleSheet,
+  View, Text, TouchableOpacity, StyleSheet,
   KeyboardAvoidingView, Platform, ScrollView, Alert,
 } from 'react-native';
-import { colors, typography, spacing, borderRadius } from '../../theme';
+import { colors, typography, spacing, borderRadius, shadows } from '../../theme';
 import { authApi } from '../../api/auth';
 import { useAuthStore } from '../../store/authStore';
 import GradientButton from '../../components/GradientButton';
+import InputField from '../../components/InputField';
 
 export default function LoginScreen({ navigation }: any) {
   const [email, setEmail] = useState('');
@@ -28,57 +29,52 @@ export default function LoginScreen({ navigation }: any) {
 
   return (
     <View style={s.container}>
-      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
-        <ScrollView contentContainerStyle={s.content} keyboardShouldPersistTaps="handled">
-          {/* Logo */}
-          <View style={s.logoArea}>
-            <View style={s.logoCircle}>
-              <Text style={s.logoText}>S</Text>
-            </View>
+      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={s.flex}>
+        <ScrollView contentContainerStyle={s.content} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
+          <View style={s.header}>
             <Text style={s.brand}>SkillLink</Text>
-            <Text style={s.tagline}>Find skilled professionals near you</Text>
+            <Text style={s.subtitle}>Welcome back. Please enter your details.</Text>
           </View>
 
-          {/* Form */}
-          <View style={s.form}>
-            <Text style={s.heading}>Welcome back</Text>
+          <View style={s.formCard}>
+            <View style={s.formTopBorder} />
 
-            <Text style={s.label}>Email</Text>
-            <TextInput
-              style={s.input}
-              placeholder="you@email.com"
-              placeholderTextColor={colors.textMuted}
-              value={email} onChangeText={setEmail}
-              keyboardType="email-address" autoCapitalize="none"
+            <InputField
+              label="Email"
+              placeholder="Enter your email"
+              value={email}
+              onChangeText={setEmail}
+              keyboardType="email-address"
+              autoCapitalize="none"
             />
 
-            <Text style={s.label}>Password</Text>
-            <View style={s.passwordRow}>
-              <TextInput
-                style={[s.input, { flex: 1, marginBottom: 0 }]}
-                placeholder="Enter your password"
-                placeholderTextColor={colors.textMuted}
-                value={password} onChangeText={setPassword}
-                secureTextEntry={!showPassword}
-              />
-              <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={s.eyeBtn}>
-                <Text style={s.eye}>{showPassword ? '🙈' : '👁️'}</Text>
+            <View style={s.passwordHeader}>
+              <Text style={s.passwordLabel}>Password</Text>
+              <TouchableOpacity onPress={() => setShowPassword(!showPassword)} activeOpacity={0.85}>
+                <Text style={s.showPassword}>{showPassword ? 'Hide' : 'Show'}</Text>
               </TouchableOpacity>
             </View>
 
-            <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')} style={s.forgotRow}>
-              <Text style={s.forgotText}>Forgot password?</Text>
+            <InputField
+              placeholder="Enter your password"
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry={!showPassword}
+              containerStyle={s.passwordField}
+            />
+
+            <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')} style={s.forgotLink} activeOpacity={0.85}>
+              <Text style={s.forgotText}>Forgot Password?</Text>
             </TouchableOpacity>
 
-            <GradientButton onPress={handleLogin} title="Sign In" loading={loading} />
+            <GradientButton onPress={handleLogin} title="Log In" loading={loading} style={s.primaryButton} />
+          </View>
 
-            <View style={s.dividerRow}>
-              <View style={s.dividerLine} />
-              <Text style={s.dividerText}>or</Text>
-              <View style={s.dividerLine} />
-            </View>
-
-            <GradientButton onPress={() => navigation.navigate('Signup')} title="Create an Account" variant="outline" />
+          <View style={s.footer}>
+            <Text style={s.footerText}>Don&apos;t have an account?</Text>
+            <TouchableOpacity onPress={() => navigation.navigate('Signup')} activeOpacity={0.85}>
+              <Text style={s.footerLink}>Sign Up</Text>
+            </TouchableOpacity>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -87,23 +83,94 @@ export default function LoginScreen({ navigation }: any) {
 }
 
 const s = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.bgPrimary },
-  content: { flexGrow: 1, justifyContent: 'center', paddingHorizontal: spacing.xxl, paddingVertical: spacing.huge },
-  logoArea: { alignItems: 'center', marginBottom: spacing.xxxl },
-  logoCircle: { width: 56, height: 56, borderRadius: 16, backgroundColor: colors.primary, justifyContent: 'center', alignItems: 'center', marginBottom: spacing.md },
-  logoText: { fontSize: 24, fontWeight: '700', color: '#FFFFFF' },
-  brand: { ...typography.h1, color: colors.textPrimary, marginTop: spacing.xs },
-  tagline: { ...typography.small, color: colors.textSecondary, marginTop: spacing.xs },
-  form: {},
-  heading: { ...typography.h2, color: colors.textPrimary, marginBottom: spacing.xxl },
-  label: { ...typography.smallMedium, color: colors.textSecondary, marginBottom: spacing.xs, marginTop: spacing.lg },
-  input: { backgroundColor: colors.bgInput, borderRadius: borderRadius.md, paddingHorizontal: spacing.lg, paddingVertical: 14, color: colors.textPrimary, ...typography.body, borderWidth: 1, borderColor: colors.border },
-  passwordRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
-  eyeBtn: { padding: spacing.md },
-  eye: { fontSize: 18 },
-  forgotRow: { alignSelf: 'flex-end', marginVertical: spacing.md },
-  forgotText: { ...typography.small, color: colors.textSecondary },
-  dividerRow: { flexDirection: 'row', alignItems: 'center', marginVertical: spacing.xl },
-  dividerLine: { flex: 1, height: 1, backgroundColor: colors.divider },
-  dividerText: { ...typography.small, color: colors.textMuted, marginHorizontal: spacing.lg },
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  flex: {
+    flex: 1,
+  },
+  content: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    paddingHorizontal: spacing.space24,
+    paddingVertical: spacing.space80,
+  },
+  header: {
+    alignItems: 'center',
+    marginBottom: spacing.space48,
+  },
+  brand: {
+    ...typography.h2,
+    color: colors.primaryContainer,
+    textAlign: 'center',
+  },
+  subtitle: {
+    ...typography.bodyLg,
+    color: colors.onSurfaceVariant,
+    textAlign: 'center',
+    marginTop: spacing.space8,
+  },
+  formCard: {
+    backgroundColor: colors.surfaceContainerLowest,
+    borderRadius: borderRadius.xxl,
+    borderWidth: spacing.xxs,
+    borderColor: colors.surfaceVariant,
+    paddingHorizontal: spacing.space24,
+    paddingVertical: spacing.space32,
+    ...shadows.sm,
+  },
+  formTopBorder: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: spacing.space4,
+    borderTopLeftRadius: borderRadius.xxl,
+    borderTopRightRadius: borderRadius.xxl,
+    backgroundColor: colors.inversePrimary,
+  },
+  passwordHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: spacing.space8,
+  },
+  passwordLabel: {
+    ...typography.label,
+    color: colors.onSurface,
+  },
+  showPassword: {
+    ...typography.caption,
+    color: colors.primary,
+  },
+  passwordField: {
+    marginBottom: spacing.space8,
+  },
+  forgotLink: {
+    alignSelf: 'flex-end',
+    marginBottom: spacing.space24,
+  },
+  forgotText: {
+    ...typography.body,
+    color: colors.secondary,
+  },
+  primaryButton: {
+    width: '100%',
+  },
+  footer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: spacing.space8,
+    marginTop: spacing.space40,
+  },
+  footerText: {
+    ...typography.bodyLg,
+    color: colors.onSurface,
+  },
+  footerLink: {
+    ...typography.label,
+    color: colors.primaryContainer,
+  },
 });

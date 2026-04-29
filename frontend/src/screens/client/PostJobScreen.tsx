@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, ScrollView, StyleSheet, Alert, Pressable } from 'react-native';
-import { colors, typography, spacing, borderRadius } from '../../theme';
+import { colors, typography, spacing, borderRadius, shadows } from '../../theme';
 import { providerApi } from '../../api/providers';
 import { jobApi } from '../../api/jobs';
 import { SkillCategory } from '../../types';
 import GradientButton from '../../components/GradientButton';
+import InputField from '../../components/InputField';
 
 export default function PostJobScreen({ navigation }: any) {
   const [categories, setCategories] = useState<SkillCategory[]>([]);
@@ -35,43 +36,204 @@ export default function PostJobScreen({ navigation }: any) {
   };
 
   return (
-    <ScrollView style={s.container} contentContainerStyle={s.content}>
-      <Pressable onPress={() => navigation.goBack()}><Text style={s.back}>Back</Text></Pressable>
-      <Text style={s.title}>Post a Job</Text>
-      <Text style={s.label}>Job Title</Text>
-      <TextInput style={s.input} value={title} onChangeText={setTitle} placeholder="e.g. Build a portfolio website" placeholderTextColor={colors.textMuted} />
-      <Text style={s.label}>Category</Text>
-      <View style={s.chips}>
-        {categories.map((cat) => (
-          <Pressable key={cat.id} onPress={() => setCategoryId(cat.id)} style={[s.chip, categoryId === cat.id && s.chipActive]}>
-            <Text style={[s.chipText, categoryId === cat.id && s.chipTextActive]}>{cat.name}</Text>
-          </Pressable>
-        ))}
+    <View style={s.container}>
+      <View style={s.topBar}>
+        <View style={s.brandRow}>
+          <Text style={s.brandMark}>▦</Text>
+          <Text style={s.brandText}>SkillLink</Text>
+        </View>
+        <View style={s.avatarDot} />
       </View>
-      <Text style={s.label}>Description</Text>
-      <TextInput style={[s.input, s.area]} value={description} onChangeText={setDescription} multiline placeholder="Describe what you need..." placeholderTextColor={colors.textMuted} />
-      <Text style={s.label}>Budget</Text>
-      <TextInput style={s.input} value={budget} onChangeText={setBudget} keyboardType="numeric" placeholder="5000" placeholderTextColor={colors.textMuted} />
-      <Text style={s.label}>Location</Text>
-      <TextInput style={s.input} value={location} onChangeText={setLocation} placeholder="Optional" placeholderTextColor={colors.textMuted} />
-      <Text style={s.label}>Deadline</Text>
-      <TextInput style={s.input} value={deadline} onChangeText={setDeadline} placeholder="YYYY-MM-DD" placeholderTextColor={colors.textMuted} />
-      <GradientButton title="Post Job" onPress={submit} loading={loading} style={{ marginTop: spacing.xl }} />
-    </ScrollView>
+
+      <ScrollView contentContainerStyle={s.content} showsVerticalScrollIndicator={false}>
+        <Pressable onPress={() => navigation.goBack()}>
+          <Text style={s.back}>Back</Text>
+        </Pressable>
+
+        <Text style={s.title}>Post a Job</Text>
+        <Text style={s.subtitle}>Detail your requirements to connect with elite professionals in our network.</Text>
+
+        <View style={s.card}>
+          <InputField
+            label="Job Title"
+            value={title}
+            onChangeText={setTitle}
+            placeholder="e.g. Senior Brand Designer needed for product launch"
+          />
+
+          <Text style={s.label}>Category</Text>
+          <View style={s.chips}>
+            {categories.map((cat) => (
+              <Pressable key={cat.id} onPress={() => setCategoryId(cat.id)} style={[s.chip, categoryId === cat.id && s.chipActive]}>
+                <Text style={[s.chipText, categoryId === cat.id && s.chipTextActive]}>{cat.name}</Text>
+              </Pressable>
+            ))}
+          </View>
+        </View>
+
+        <View style={s.card}>
+          <Text style={s.label}>Description</Text>
+          <TextInput
+            style={s.area}
+            value={description}
+            onChangeText={setDescription}
+            multiline
+            placeholder="Provide a detailed overview of the project scope, required deliverables, and any specific methodologies or tools required..."
+            placeholderTextColor={colors.onSurfaceVariant}
+            textAlignVertical="top"
+          />
+
+          <InputField
+            label="Estimated Budget"
+            value={budget}
+            onChangeText={setBudget}
+            keyboardType="numeric"
+            placeholder="$ 0.00"
+            containerStyle={s.inlineInput}
+          />
+        </View>
+
+        <View style={s.card}>
+          <InputField
+            label="Location (Optional)"
+            value={location}
+            onChangeText={setLocation}
+            placeholder="e.g. Remote or New York, NY"
+          />
+
+          <InputField
+            label="Deadline"
+            value={deadline}
+            onChangeText={setDeadline}
+            placeholder="mm/dd/yyyy"
+            containerStyle={s.inlineInput}
+          />
+        </View>
+
+        <GradientButton title="Post Job" onPress={submit} loading={loading} style={s.submitButton} />
+        <Text style={s.footnote}>By posting, you agree to our Marketplace Terms of Service.</Text>
+      </ScrollView>
+    </View>
   );
 }
 
 const s = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.bgPrimary },
-  content: { padding: spacing.xxl, paddingTop: 54, paddingBottom: 100 },
-  back: { ...typography.button, color: colors.textSecondary, marginBottom: spacing.lg },
-  title: { ...typography.h2, color: colors.textPrimary },
-  label: { ...typography.smallMedium, color: colors.textSecondary, marginTop: spacing.lg, marginBottom: spacing.xs },
-  input: { backgroundColor: colors.bgInput, borderRadius: borderRadius.md, padding: spacing.lg, borderWidth: 1, borderColor: colors.border, color: colors.textPrimary, ...typography.body },
-  area: { minHeight: 120, textAlignVertical: 'top' },
-  chips: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
-  chip: { paddingHorizontal: spacing.md, paddingVertical: spacing.sm, borderRadius: borderRadius.full, backgroundColor: colors.bgInput, borderWidth: 1, borderColor: colors.border },
-  chipActive: { backgroundColor: colors.primary, borderColor: colors.primary },
-  chipText: { ...typography.captionMedium, color: colors.textSecondary },
-  chipTextActive: { color: '#fff' },
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  topBar: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: colors.surfaceContainerLowest,
+    paddingHorizontal: spacing.space24,
+    paddingTop: spacing.space48,
+    paddingBottom: spacing.space20,
+    borderBottomWidth: spacing.xxs,
+    borderBottomColor: colors.surfaceVariant,
+  },
+  brandRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.space12,
+  },
+  brandMark: {
+    ...typography.h4,
+    color: colors.onSurface,
+  },
+  brandText: {
+    ...typography.h3,
+    color: colors.primaryContainer,
+  },
+  avatarDot: {
+    width: spacing.space44,
+    height: spacing.space44,
+    borderRadius: borderRadius.pill,
+    backgroundColor: colors.surfaceContainer,
+    borderWidth: spacing.xxs,
+    borderColor: colors.surfaceVariant,
+  },
+  content: {
+    paddingHorizontal: spacing.space20,
+    paddingTop: spacing.space24,
+    paddingBottom: spacing.navHeight,
+  },
+  back: {
+    ...typography.label,
+    color: colors.secondary,
+  },
+  title: {
+    ...typography.h1,
+    color: colors.onSurface,
+    marginTop: spacing.space20,
+  },
+  subtitle: {
+    ...typography.bodyLg,
+    color: colors.onSurfaceVariant,
+    marginTop: spacing.space12,
+    marginBottom: spacing.space32,
+  },
+  card: {
+    backgroundColor: colors.surfaceContainerLowest,
+    borderRadius: borderRadius.card,
+    borderWidth: spacing.xxs,
+    borderColor: colors.surfaceVariant,
+    padding: spacing.space24,
+    marginBottom: spacing.space24,
+    ...shadows.sm,
+  },
+  label: {
+    ...typography.label,
+    color: colors.onSurface,
+    marginBottom: spacing.space8,
+  },
+  chips: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.space8,
+  },
+  chip: {
+    borderRadius: borderRadius.pill,
+    borderWidth: spacing.xxs,
+    borderColor: colors.outlineVariant,
+    backgroundColor: colors.surfaceContainerLow,
+    paddingHorizontal: spacing.space16,
+    paddingVertical: spacing.space12,
+  },
+  chipActive: {
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
+  },
+  chipText: {
+    ...typography.captionMedium,
+    color: colors.onSurfaceVariant,
+  },
+  chipTextActive: {
+    color: colors.onPrimary,
+  },
+  area: {
+    minHeight: spacing.space80 + spacing.space80,
+    backgroundColor: colors.surfaceContainerLow,
+    borderRadius: borderRadius.control,
+    borderWidth: spacing.xxs,
+    borderColor: colors.outlineVariant,
+    padding: spacing.space20,
+    ...typography.bodyLg,
+    color: colors.onSurface,
+  },
+  inlineInput: {
+    marginBottom: 0,
+    marginTop: spacing.space20,
+  },
+  submitButton: {
+    width: '100%',
+    marginTop: spacing.space8,
+  },
+  footnote: {
+    ...typography.body,
+    color: colors.onSurfaceVariant,
+    textAlign: 'center',
+    marginTop: spacing.space20,
+  },
 });

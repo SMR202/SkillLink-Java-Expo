@@ -1,17 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import {
-  View, Text, FlatList, TextInput, StyleSheet,
-  RefreshControl, Alert, KeyboardAvoidingView, Platform,
+  View, Text, FlatList, StyleSheet,
+  RefreshControl, Alert, KeyboardAvoidingView, Platform, TouchableOpacity,
 } from 'react-native';
-import { colors, typography, spacing, borderRadius } from '../../theme';
+import { colors, typography, spacing } from '../../theme';
 import { jobApi } from '../../api/jobs';
 import { JobPost, Proposal } from '../../types';
-import ScreenHeader from '../../components/ScreenHeader';
 import ProposalCard from '../../components/ProposalCard';
 import EmptyState from '../../components/EmptyState';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import InputField from '../../components/InputField';
-import PrimaryButton from '../../components/PrimaryButton';
 
 export default function JobProposalsScreen({ route, navigation }: any) {
   const job: JobPost = route.params?.job;
@@ -21,7 +19,6 @@ export default function JobProposalsScreen({ route, navigation }: any) {
   const [error, setError] = useState<string | null>(null);
   const [accepting, setAccepting] = useState<number | null>(null);
 
-  // Accept proposal modal fields
   const [acceptingId, setAcceptingId] = useState<number | null>(null);
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
@@ -74,31 +71,34 @@ export default function JobProposalsScreen({ route, navigation }: any) {
   if (!job) {
     return (
       <View style={s.container}>
-        <ScreenHeader title="Proposals" onBack={() => navigation.goBack()} />
-        <EmptyState icon="❌" title="Job not found" />
+        <View style={s.header}>
+          <TouchableOpacity onPress={() => navigation.goBack()}><Text style={s.back}>←</Text></TouchableOpacity>
+          <Text style={s.title}>Proposals</Text>
+        </View>
+        <EmptyState icon="×" title="Job not found" />
       </View>
     );
   }
 
   return (
     <KeyboardAvoidingView style={s.container} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-      <ScreenHeader
-        title="Proposals"
-        subtitle={job.title}
-        onBack={() => navigation.goBack()}
-      />
+      <View style={s.header}>
+        <TouchableOpacity onPress={() => navigation.goBack()}><Text style={s.back}>←</Text></TouchableOpacity>
+        <View style={s.headerText}>
+          <Text style={s.title}>Proposals</Text>
+          <Text style={s.subtitle}>{job.title}</Text>
+        </View>
+      </View>
 
-      {/* Accept booking date/time input */}
-      <View style={s.bookingBox}>
-        <Text style={s.boxTitle}>Schedule the Booking</Text>
-        <Text style={s.boxSubtitle}>Set preferred date and time before accepting a proposal.</Text>
-        <View style={s.row}>
+      <View style={s.scheduleCard}>
+        <Text style={s.scheduleTitle}>Schedule the booking</Text>
+        <Text style={s.scheduleBody}>Set your preferred date and time before accepting a proposal.</Text>
+        <View style={s.scheduleRow}>
           <InputField
             label="Date (YYYY-MM-DD)"
             value={date}
             onChangeText={setDate}
             placeholder="2026-05-15"
-            placeholderTextColor={colors.textMuted}
             error={dateErr}
             containerStyle={s.half}
           />
@@ -107,7 +107,6 @@ export default function JobProposalsScreen({ route, navigation }: any) {
             value={time}
             onChangeText={setTime}
             placeholder="14:00"
-            placeholderTextColor={colors.textMuted}
             error={timeErr}
             containerStyle={s.half}
           />
@@ -131,8 +130,8 @@ export default function JobProposalsScreen({ route, navigation }: any) {
           )}
           ListEmptyComponent={
             error
-              ? <EmptyState icon="⚠️" title="Couldn't load proposals" subtitle={error} />
-              : <EmptyState icon="📬" title="No proposals yet" subtitle="Providers haven't applied to this job yet." />
+              ? <EmptyState icon="!" title="Couldn't load proposals" subtitle={error} />
+              : <EmptyState icon="⌂" title="No proposals yet" subtitle="Providers haven't applied to this job yet." />
           }
         />
       )}
@@ -141,17 +140,64 @@ export default function JobProposalsScreen({ route, navigation }: any) {
 }
 
 const s = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.bgSecondary },
-  bookingBox: {
-    backgroundColor: colors.bgPrimary,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-    padding: spacing.xxl,
-    paddingBottom: spacing.md,
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
   },
-  boxTitle: { ...typography.h4, color: colors.textPrimary, marginBottom: spacing.xs },
-  boxSubtitle: { ...typography.small, color: colors.textSecondary, marginBottom: spacing.md },
-  row: { flexDirection: 'row', gap: spacing.md },
-  half: { flex: 1 },
-  list: { padding: spacing.xxl, paddingBottom: 100 },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.space16,
+    backgroundColor: colors.surfaceContainerLowest,
+    paddingHorizontal: spacing.space24,
+    paddingTop: spacing.space48,
+    paddingBottom: spacing.space16,
+    borderBottomWidth: spacing.xxs,
+    borderBottomColor: colors.surfaceVariant,
+  },
+  back: {
+    ...typography.h3,
+    color: colors.onSurface,
+  },
+  headerText: {
+    flex: 1,
+  },
+  title: {
+    ...typography.h3,
+    color: colors.onSurface,
+  },
+  subtitle: {
+    ...typography.body,
+    color: colors.onSurfaceVariant,
+    marginTop: spacing.space4,
+  },
+  scheduleCard: {
+    backgroundColor: colors.surfaceContainerLowest,
+    margin: spacing.space20,
+    borderWidth: spacing.xxs,
+    borderColor: colors.surfaceVariant,
+    borderRadius: spacing.space16,
+    padding: spacing.space24,
+  },
+  scheduleTitle: {
+    ...typography.h4,
+    color: colors.onSurface,
+  },
+  scheduleBody: {
+    ...typography.body,
+    color: colors.onSurfaceVariant,
+    marginTop: spacing.space8,
+    marginBottom: spacing.space16,
+  },
+  scheduleRow: {
+    flexDirection: 'row',
+    gap: spacing.space12,
+  },
+  half: {
+    flex: 1,
+  },
+  list: {
+    paddingHorizontal: spacing.space20,
+    paddingBottom: spacing.navHeight,
+  },
 });

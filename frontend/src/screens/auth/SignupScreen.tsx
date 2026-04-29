@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import {
-  View, Text, TextInput, TouchableOpacity, StyleSheet,
+  View, Text, TouchableOpacity, StyleSheet,
   KeyboardAvoidingView, Platform, ScrollView, Modal,
 } from 'react-native';
-import { colors, typography, spacing, borderRadius } from '../../theme';
+import { colors, typography, spacing, borderRadius, shadows } from '../../theme';
 import { authApi } from '../../api/auth';
 import { useAuthStore } from '../../store/authStore';
 import GradientButton from '../../components/GradientButton';
+import InputField from '../../components/InputField';
 import { User } from '../../types';
 
 type Step = 'info' | 'role';
@@ -80,88 +81,114 @@ export default function SignupScreen({ navigation }: any) {
 
   return (
     <View style={s.container}>
-      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
-        <ScrollView contentContainerStyle={s.content} keyboardShouldPersistTaps="handled">
-          {/* Header */}
+      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={s.flex}>
+        <ScrollView contentContainerStyle={s.content} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
           <View style={s.header}>
-            <Text style={s.title}>Create Account</Text>
-            <Text style={s.subtitle}>
-              {step === 'info' ? 'Enter your details to get started' : 'How will you use SkillLink?'}
-            </Text>
-            <View style={s.stepRow}>
-              <View style={[s.stepDot, s.stepActive]} />
-              <View style={[s.stepLine, step === 'role' && s.stepLineActive]} />
-              <View style={[s.stepDot, step === 'role' && s.stepActive]} />
-            </View>
+            <Text style={s.brand}>SkillLink</Text>
+            <Text style={s.title}>Create an account</Text>
+            <Text style={s.subtitle}>Join the premium network of professionals.</Text>
           </View>
 
-          {step === 'info' ? (
-            <View style={s.form}>
-              <Text style={s.label}>Full Name</Text>
-              <TextInput style={s.input} placeholder="John Doe" placeholderTextColor={colors.textMuted}
-                value={fullName} onChangeText={setFullName} />
+          <View style={s.card}>
+            <View style={s.cardTopBorder} />
 
-              <Text style={s.label}>Email</Text>
-              <TextInput style={s.input} placeholder="you@email.com" placeholderTextColor={colors.textMuted}
-                value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none"
-                onEndEditing={() => {
-                  if (email && !isValidEmail(email)) showEmailFormatAlert();
-                }} />
-
-              <Text style={s.label}>Password</Text>
-              <TextInput style={s.input} placeholder="Min 8 chars, 1 number, 1 special" placeholderTextColor={colors.textMuted}
-                value={password} onChangeText={setPassword} secureTextEntry
-                onEndEditing={() => {
-                  if (password && !isStrongPassword(password)) showPasswordFormatAlert();
-                }} />
-
-              <Text style={s.label}>Confirm Password</Text>
-              <TextInput style={s.input} placeholder="Re-enter password" placeholderTextColor={colors.textMuted}
-                value={confirmPassword} onChangeText={setConfirmPassword} secureTextEntry />
-
-              <View style={{ height: spacing.lg }} />
-              <GradientButton onPress={handleNext} title="Continue" />
+            <View style={s.roleSwitcher}>
+              <TouchableOpacity
+                style={[s.rolePill, role !== 'PROVIDER' && s.rolePillActive]}
+                onPress={() => step === 'role' && setRole('CLIENT')}
+                activeOpacity={0.9}
+              >
+                <Text style={[s.rolePillText, role !== 'PROVIDER' && s.rolePillTextActive]}>Client</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[s.rolePill, role === 'PROVIDER' && s.rolePillActive]}
+                onPress={() => step === 'role' && setRole('PROVIDER')}
+                activeOpacity={0.9}
+              >
+                <Text style={[s.rolePillText, role === 'PROVIDER' && s.rolePillTextActive]}>Provider</Text>
+              </TouchableOpacity>
             </View>
-          ) : (
-            <View style={s.form}>
-              <TouchableOpacity
-                style={[s.roleCard, role === 'CLIENT' && s.roleCardActive]}
-                onPress={() => setRole('CLIENT')} activeOpacity={0.7}
-              >
-                <Text style={s.roleIcon}>🔍</Text>
-                <View style={s.roleInfo}>
-                  <Text style={s.roleTitle}>I need a service</Text>
-                  <Text style={s.roleDesc}>Find and hire skilled professionals</Text>
-                </View>
-                {role === 'CLIENT' && <Text style={s.check}>✓</Text>}
-              </TouchableOpacity>
 
-              <TouchableOpacity
-                style={[s.roleCard, role === 'PROVIDER' && s.roleCardActive]}
-                onPress={() => setRole('PROVIDER')} activeOpacity={0.7}
-              >
-                <Text style={s.roleIcon}>🛠️</Text>
-                <View style={s.roleInfo}>
-                  <Text style={s.roleTitle}>I offer services</Text>
-                  <Text style={s.roleDesc}>Get discovered by clients near you</Text>
-                </View>
-                {role === 'PROVIDER' && <Text style={s.check}>✓</Text>}
-              </TouchableOpacity>
+            {step === 'info' ? (
+              <View>
+                <InputField label="Full Name" placeholder="Jane Doe" value={fullName} onChangeText={setFullName} />
 
-              <View style={s.btnRow}>
-                <TouchableOpacity onPress={() => setStep('info')} style={s.backBtn}>
-                  <Text style={s.backText}>← Back</Text>
+                <InputField
+                  label="Email Address"
+                  placeholder="jane@example.com"
+                  value={email}
+                  onChangeText={setEmail}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  onEndEditing={() => {
+                    if (email && !isValidEmail(email)) showEmailFormatAlert();
+                  }}
+                />
+
+                <InputField
+                  label="Password"
+                  placeholder="••••••••"
+                  value={password}
+                  onChangeText={setPassword}
+                  secureTextEntry
+                  onEndEditing={() => {
+                    if (password && !isStrongPassword(password)) showPasswordFormatAlert();
+                  }}
+                />
+
+                <InputField
+                  label="Confirm Password"
+                  placeholder="••••••••"
+                  value={confirmPassword}
+                  onChangeText={setConfirmPassword}
+                  secureTextEntry
+                />
+
+                <Text style={s.termsText}>
+                  By creating an account, you agree to our <Text style={s.termsLink}>Terms of Service</Text> and <Text style={s.termsLink}>Privacy Policy</Text>.
+                </Text>
+
+                <GradientButton onPress={handleNext} title="Continue" style={s.submitButton} />
+              </View>
+            ) : (
+              <View>
+                <Text style={s.stepTitle}>Choose your role</Text>
+                <Text style={s.stepBody}>Select how you&apos;ll use SkillLink. You can update your profile details later.</Text>
+
+                <TouchableOpacity
+                  style={[s.roleCard, role === 'CLIENT' && s.roleCardActive]}
+                  onPress={() => setRole('CLIENT')}
+                  activeOpacity={0.92}
+                >
+                  <Text style={s.roleCardTitle}>I need a service</Text>
+                  <Text style={s.roleCardBody}>Find and hire skilled professionals.</Text>
                 </TouchableOpacity>
-                <View style={{ flex: 1 }}>
-                  <GradientButton onPress={handleSignup} title="Create Account" loading={loading} />
+
+                <TouchableOpacity
+                  style={[s.roleCard, role === 'PROVIDER' && s.roleCardActive]}
+                  onPress={() => setRole('PROVIDER')}
+                  activeOpacity={0.92}
+                >
+                  <Text style={s.roleCardTitle}>I offer services</Text>
+                  <Text style={s.roleCardBody}>Get discovered by clients near you.</Text>
+                </TouchableOpacity>
+
+                <View style={s.actionRow}>
+                  <TouchableOpacity onPress={() => setStep('info')} style={s.backButton} activeOpacity={0.85}>
+                    <Text style={s.backButtonText}>Back</Text>
+                  </TouchableOpacity>
+                  <GradientButton onPress={handleSignup} title="Create Account" loading={loading} style={s.actionPrimary} />
                 </View>
               </View>
-            </View>
-          )}
+            )}
+          </View>
 
-          <TouchableOpacity onPress={() => navigation.goBack()} style={s.loginLink}>
-            <Text style={s.loginText}>Already have an account? <Text style={s.loginBold}>Sign In</Text></Text>
-          </TouchableOpacity>
+          <View style={s.footer}>
+            <Text style={s.footerText}>Already have an account?</Text>
+            <TouchableOpacity onPress={() => navigation.goBack()} activeOpacity={0.85}>
+              <Text style={s.footerLink}>Log In</Text>
+            </TouchableOpacity>
+          </View>
         </ScrollView>
       </KeyboardAvoidingView>
 
@@ -170,13 +197,7 @@ export default function SignupScreen({ navigation }: any) {
           <View style={s.modalCard}>
             <Text style={s.modalTitle}>{popup?.title}</Text>
             <Text style={s.modalText}>{popup?.message}</Text>
-            <TouchableOpacity
-              style={s.modalButton}
-              onPress={closePopup}
-              activeOpacity={0.8}
-            >
-              <Text style={s.modalButtonText}>OK</Text>
-            </TouchableOpacity>
+            <GradientButton onPress={closePopup} title="OK" style={s.modalButton} />
           </View>
         </View>
       </Modal>
@@ -185,55 +206,192 @@ export default function SignupScreen({ navigation }: any) {
 }
 
 const s = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.bgPrimary },
-  content: { flexGrow: 1, justifyContent: 'center', paddingHorizontal: spacing.xxl, paddingVertical: spacing.huge },
-  header: { alignItems: 'center', marginBottom: spacing.xxxl },
-  title: { ...typography.h1, color: colors.textPrimary },
-  subtitle: { ...typography.body, color: colors.textSecondary, marginTop: spacing.xs },
-  stepRow: { flexDirection: 'row', alignItems: 'center', marginTop: spacing.xl },
-  stepDot: { width: 8, height: 8, borderRadius: 4, backgroundColor: colors.border },
-  stepActive: { backgroundColor: colors.primary },
-  stepLine: { width: 40, height: 2, backgroundColor: colors.border, marginHorizontal: spacing.sm },
-  stepLineActive: { backgroundColor: colors.primary },
-  form: {},
-  label: { ...typography.smallMedium, color: colors.textSecondary, marginBottom: spacing.xs, marginTop: spacing.lg },
-  input: { backgroundColor: colors.bgInput, borderRadius: borderRadius.md, paddingHorizontal: spacing.lg, paddingVertical: 14, color: colors.textPrimary, ...typography.body, borderWidth: 1, borderColor: colors.border },
-  roleCard: { flexDirection: 'row', alignItems: 'center', backgroundColor: colors.bgInput, borderRadius: borderRadius.lg, padding: spacing.lg, marginBottom: spacing.md, borderWidth: 1.5, borderColor: colors.border },
-  roleCardActive: { borderColor: colors.primary, backgroundColor: '#F9FAFB' },
-  roleIcon: { fontSize: 28, marginRight: spacing.lg },
-  roleInfo: { flex: 1 },
-  roleTitle: { ...typography.h4, color: colors.textPrimary },
-  roleDesc: { ...typography.small, color: colors.textSecondary, marginTop: 2 },
-  check: { fontSize: 18, fontWeight: '700', color: colors.primary },
-  btnRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, marginTop: spacing.lg },
-  backBtn: { paddingVertical: 16, paddingHorizontal: spacing.lg },
-  backText: { ...typography.button, color: colors.textSecondary },
-  loginLink: { alignItems: 'center', marginTop: spacing.xxl },
-  loginText: { ...typography.body, color: colors.textSecondary },
-  loginBold: { color: colors.textPrimary, fontWeight: '600' },
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  flex: {
+    flex: 1,
+  },
+  content: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    paddingHorizontal: spacing.space24,
+    paddingVertical: spacing.space48,
+  },
+  header: {
+    alignItems: 'center',
+    marginBottom: spacing.space32,
+  },
+  brand: {
+    ...typography.h3,
+    color: colors.primaryContainer,
+    textAlign: 'center',
+  },
+  title: {
+    ...typography.h1,
+    color: colors.onSurface,
+    textAlign: 'center',
+    marginTop: spacing.space12,
+  },
+  subtitle: {
+    ...typography.bodyLg,
+    color: colors.onSurfaceVariant,
+    textAlign: 'center',
+    marginTop: spacing.space12,
+  },
+  card: {
+    backgroundColor: colors.surfaceContainerLowest,
+    borderRadius: borderRadius.xxl,
+    borderWidth: spacing.xxs,
+    borderColor: colors.surfaceVariant,
+    paddingHorizontal: spacing.space24,
+    paddingVertical: spacing.space32,
+    position: 'relative',
+    overflow: 'hidden',
+    ...shadows.sm,
+  },
+  cardTopBorder: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: spacing.space4,
+    backgroundColor: colors.primaryContainer,
+  },
+  roleSwitcher: {
+    flexDirection: 'row',
+    backgroundColor: colors.surfaceContainer,
+    borderRadius: borderRadius.pill,
+    padding: spacing.space4,
+    marginBottom: spacing.space24,
+  },
+  rolePill: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: borderRadius.pill,
+    paddingVertical: spacing.space16,
+    paddingHorizontal: spacing.space16,
+  },
+  rolePillActive: {
+    backgroundColor: colors.surfaceContainerLowest,
+  },
+  rolePillText: {
+    ...typography.bodyMedium,
+    color: colors.onSurfaceVariant,
+  },
+  rolePillTextActive: {
+    color: colors.primaryContainer,
+  },
+  termsText: {
+    ...typography.body,
+    color: colors.onSurfaceVariant,
+    textAlign: 'center',
+    marginTop: spacing.space8,
+    marginBottom: spacing.space20,
+  },
+  termsLink: {
+    color: colors.primaryContainer,
+  },
+  submitButton: {
+    width: '100%',
+  },
+  stepTitle: {
+    ...typography.h3,
+    color: colors.onSurface,
+  },
+  stepBody: {
+    ...typography.body,
+    color: colors.onSurfaceVariant,
+    marginTop: spacing.space8,
+    marginBottom: spacing.space24,
+  },
+  roleCard: {
+    borderRadius: borderRadius.card,
+    borderWidth: spacing.xxs,
+    borderColor: colors.surfaceVariant,
+    backgroundColor: colors.surfaceContainerLowest,
+    padding: spacing.space24,
+    marginBottom: spacing.space16,
+  },
+  roleCardActive: {
+    borderColor: colors.primaryContainer,
+    backgroundColor: colors.surfaceContainerLow,
+  },
+  roleCardTitle: {
+    ...typography.h4,
+    color: colors.onSurface,
+  },
+  roleCardBody: {
+    ...typography.body,
+    color: colors.onSurfaceVariant,
+    marginTop: spacing.space8,
+  },
+  actionRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.space12,
+    marginTop: spacing.space8,
+  },
+  backButton: {
+    minHeight: spacing.buttonHeight,
+    borderRadius: borderRadius.control,
+    paddingHorizontal: spacing.space20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.surfaceContainer,
+  },
+  backButtonText: {
+    ...typography.button,
+    color: colors.secondary,
+  },
+  actionPrimary: {
+    flex: 1,
+  },
+  footer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: spacing.space8,
+    marginTop: spacing.space40,
+  },
+  footerText: {
+    ...typography.bodyLg,
+    color: colors.onSurface,
+  },
+  footerLink: {
+    ...typography.label,
+    color: colors.primaryContainer,
+  },
   modalOverlay: {
     flex: 1,
     backgroundColor: colors.overlay,
     alignItems: 'center',
     justifyContent: 'center',
-    padding: spacing.xxl,
+    padding: spacing.space24,
   },
   modalCard: {
     width: '100%',
-    maxWidth: 420,
-    backgroundColor: colors.bgCard,
-    borderRadius: borderRadius.lg,
-    padding: spacing.xxl,
-    borderWidth: 1,
-    borderColor: colors.border,
+    maxWidth: spacing.space96 * 4 + spacing.space32,
+    backgroundColor: colors.surfaceContainerLowest,
+    borderRadius: borderRadius.card,
+    borderWidth: spacing.xxs,
+    borderColor: colors.surfaceVariant,
+    padding: spacing.space24,
+    ...shadows.md,
   },
-  modalTitle: { ...typography.h3, color: colors.textPrimary, marginBottom: spacing.sm },
-  modalText: { ...typography.body, color: colors.textSecondary, marginBottom: spacing.xl },
+  modalTitle: {
+    ...typography.h3,
+    color: colors.onSurface,
+  },
+  modalText: {
+    ...typography.body,
+    color: colors.onSurfaceVariant,
+    marginTop: spacing.space12,
+  },
   modalButton: {
-    backgroundColor: colors.primary,
-    borderRadius: borderRadius.md,
-    paddingVertical: 14,
-    alignItems: 'center',
+    marginTop: spacing.space24,
+    width: '100%',
   },
-  modalButtonText: { ...typography.button, color: colors.textInverse },
 });

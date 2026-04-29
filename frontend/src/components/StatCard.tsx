@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { colors, typography, spacing, borderRadius } from '../theme';
+import { StyleSheet, Text, View } from 'react-native';
+import { borderRadius, colors, shadows, spacing, typography } from '../theme';
 
 interface StatCardProps {
   value: number | string;
@@ -9,11 +9,12 @@ interface StatCardProps {
   icon?: string;
 }
 
-export default function StatCard({ value, label, color = colors.textPrimary, icon }: StatCardProps) {
+export default function StatCard({ value, label, color = colors.onSurface, icon }: StatCardProps) {
   const display = typeof value === 'number' ? value.toLocaleString() : value;
+
   return (
     <View style={s.card}>
-      {icon ? <Text style={s.icon}>{icon}</Text> : null}
+      <View style={s.iconWrap}>{icon ? <Text style={s.icon}>{icon}</Text> : <View style={s.iconPlaceholder} />}</View>
       <Text style={[s.value, { color }]}>{display}</Text>
       <Text style={s.label}>{label}</Text>
     </View>
@@ -23,15 +24,39 @@ export default function StatCard({ value, label, color = colors.textPrimary, ico
 const s = StyleSheet.create({
   card: {
     flex: 1,
-    backgroundColor: colors.bgCard,
-    borderRadius: borderRadius.lg,
-    borderWidth: 1,
-    borderColor: colors.border,
-    padding: spacing.lg,
+    minWidth: spacing.space100,
+    backgroundColor: colors.surfaceContainerLowest,
+    borderRadius: borderRadius.card,
+    borderWidth: spacing.xxs,
+    borderColor: colors.surfaceVariant,
+    padding: spacing.space24,
     alignItems: 'center',
-    minWidth: 90,
+    ...shadows.sm,
   },
-  icon: { fontSize: 22, marginBottom: spacing.xs },
-  value: { ...typography.h2, marginTop: spacing.xs },
-  label: { ...typography.caption, color: colors.textMuted, marginTop: 4, textAlign: 'center' },
+  iconWrap: {
+    width: spacing.space48,
+    height: spacing.space48,
+    borderRadius: borderRadius.pill,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.surfaceContainerLow,
+    marginBottom: spacing.space16,
+  },
+  iconPlaceholder: {
+    width: spacing.space16,
+    height: spacing.space16,
+  },
+  icon: {
+    ...typography.h4,
+    color: colors.primary,
+  },
+  value: {
+    ...typography.h2,
+  },
+  label: {
+    ...typography.label,
+    color: colors.onSurfaceVariant,
+    marginTop: spacing.space8,
+    textAlign: 'center',
+  },
 });
