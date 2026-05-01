@@ -13,6 +13,10 @@ import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -43,7 +47,17 @@ class MessageServiceTest {
                 .build();
         otherUser = User.builder().id(3L).fullName("Other User").email("other@test.com").role(Role.CLIENT).build();
         provider = ProviderProfile.builder().id(10L).user(providerUser).build();
-        booking = Booking.builder().id(100L).client(client).provider(provider).status(BookingStatus.ACCEPTED).build();
+        booking = Booking.builder()
+                .id(100L)
+                .client(client)
+                .provider(provider)
+                .preferredDate(LocalDate.now().plusDays(1))
+                .preferredTime(LocalTime.of(10, 0))
+                .jobDescription("Fix the leaking kitchen tap")
+                .status(BookingStatus.ACCEPTED)
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
     }
 
     @Test
@@ -100,5 +114,48 @@ class MessageServiceTest {
         assertThrows(ForbiddenException.class, () -> messageService.markAsRead(otherUser.getId(), 100L));
 
         verify(messageRepository, never()).markAllAsReadForBooking(anyLong(), anyLong());
+    }
+
+    @Test
+    @DisplayName("Should return ordered messages for booking participant")
+    void shouldReturnMessages_whenParticipant() {
+        Message message = Message.builder()
+                .id(5L)
+                .booking(booking)
+                .sender(providerUser)
+                .content("I can arrive at 10")
+                .isRead(false)
+                .sentAt(LocalDateTime.now())
+                .build();
+        when(bookingRepository.findById(100L)).thenReturn(Optional.of(booking));
+        when(messageRepository.findByBookingIdOrderBySentAtAsc(100L)).thenReturn(List.of(message));
+
+        List<MessageResponse> responses = messageService.getMessages(providerUser.getId(), 100L);
+
+        assertEquals(1, responses.size());
+        assertEquals("I can arrive at 10", responses.get(0).getContent());
+    }
+
+    @Test
+    @DisplayName("Should map conversation with last message and unread count")
+    void shouldMapConversation_withLastMessageAndUnreadCount() {
+        Message lastMessage = Message.builder()
+                .id(6L)
+                .booking(booking)
+                .sender(client)
+                .content("See you tomorrow")
+                .isRead(false)
+                .sentAt(LocalDateTime.now())
+                .build();
+        when(bookingRepository.findConversationsForUser(client.getId())).thenReturn(List.of(booking));
+        when(messageRepository.findTopByBookingIdOrderBySentAtDesc(100L)).thenReturn(lastMessage);
+        when(messageRepository.countUnreadByBookingIdAndNotSender(100L, client.getId())).thenReturn(2L);
+
+        var conversations = messageService.getConversations(client.getId());
+
+        assertEquals(1, conversations.size());
+        assertEquals(providerUser.getId(), conversations.get(0).getOtherUserId());
+        assertEquals("See you tomorrow", conversations.get(0).getLastMessage());
+        assertEquals(2L, conversations.get(0).getUnreadCount());
     }
 }

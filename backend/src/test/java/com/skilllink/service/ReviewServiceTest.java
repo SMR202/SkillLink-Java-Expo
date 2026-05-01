@@ -125,4 +125,56 @@ class ReviewServiceTest {
             p.getAvgRating() == 4.5 && p.getTotalReviews() == 2
         ));
     }
+
+    @Test
+    @DisplayName("Should throw when non-client submits review")
+    void shouldThrow_whenReviewerIsNotBookingClient() {
+        when(bookingRepository.findById(100L)).thenReturn(Optional.of(booking));
+
+        assertThrows(ForbiddenException.class, () -> {
+            ReviewRequest req = new ReviewRequest();
+            req.setBookingId(100L);
+            req.setRating(5);
+            req.setReviewText("Great experience with this provider");
+            reviewService.submitReview(providerUser.getId(), req);
+        });
+    }
+
+    @Test
+    @DisplayName("Should allow reviewed provider to respond")
+    void shouldRespondToReview_whenReviewedProvider() {
+        Review review = Review.builder()
+            .id(20L)
+            .booking(booking)
+            .client(client)
+            .provider(provider)
+            .rating(5)
+            .comment("Great work")
+            .build();
+        when(reviewRepository.findById(20L)).thenReturn(Optional.of(review));
+        when(reviewRepository.save(any(Review.class))).thenAnswer(inv -> inv.getArgument(0));
+
+        ReviewResponse response = reviewService.respondToReview(providerUser.getId(), 20L, "Thank you");
+
+        assertEquals("Thank you", response.getProviderResponse());
+        assertNotNull(response.getRespondedAt());
+    }
+
+    @Test
+    @DisplayName("Should reject review response from another user")
+    void shouldRejectReviewResponse_fromOtherUser() {
+        User otherProviderUser = User.builder().id(99L).fullName("Other").email("other@test.com").role(Role.PROVIDER).build();
+        Review review = Review.builder()
+            .id(20L)
+            .booking(booking)
+            .client(client)
+            .provider(provider)
+            .rating(5)
+            .comment("Great work")
+            .build();
+        when(reviewRepository.findById(20L)).thenReturn(Optional.of(review));
+
+        assertThrows(ForbiddenException.class,
+            () -> reviewService.respondToReview(otherProviderUser.getId(), 20L, "Thanks"));
+    }
 }

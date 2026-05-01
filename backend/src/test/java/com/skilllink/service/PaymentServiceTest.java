@@ -3,6 +3,7 @@ package com.skilllink.service;
 import com.skilllink.dto.request.PaymentCheckoutRequest;
 import com.skilllink.dto.response.PaymentResponse;
 import com.skilllink.entity.*;
+import com.skilllink.exception.BadRequestException;
 import com.skilllink.exception.ForbiddenException;
 import com.skilllink.exception.ResourceNotFoundException;
 import com.skilllink.repository.*;
@@ -105,5 +106,43 @@ class PaymentServiceTest {
         assertNotNull(res.getTransactionRef());
         assertTrue(res.getTransactionRef().startsWith("TXN-"));
         verify(bookingRepository).save(argThat(b -> b.getStatus() == BookingStatus.PAID));
+    }
+
+    @Test
+    @DisplayName("Should throw when duplicate payment exists")
+    void shouldThrow_whenDuplicatePaymentExists() {
+        when(bookingRepository.findById(100L)).thenReturn(Optional.of(booking));
+        when(paymentRepository.existsByBookingId(100L)).thenReturn(true);
+
+        PaymentCheckoutRequest req = new PaymentCheckoutRequest();
+        req.setBookingId(100L);
+
+        assertThrows(BadRequestException.class, () -> paymentService.checkout(1L, req));
+
+        verify(paymentRepository, never()).save(any());
+    }
+
+    @Test
+    @DisplayName("Should throw when non-client tries to pay")
+    void shouldThrow_whenNonClientPays() {
+        when(bookingRepository.findById(100L)).thenReturn(Optional.of(booking));
+
+        PaymentCheckoutRequest req = new PaymentCheckoutRequest();
+        req.setBookingId(100L);
+
+        assertThrows(ForbiddenException.class, () -> paymentService.checkout(2L, req));
+    }
+
+    @Test
+    @DisplayName("Should default null provider earnings to zero")
+    void shouldDefaultNullEarningsToZero() {
+        when(paymentRepository.sumEarningsByProviderId(2L)).thenReturn(null);
+        when(paymentRepository.countCompletedByProviderId(2L)).thenReturn(null);
+
+        var earnings = paymentService.getEarnings(2L);
+
+        assertEquals(BigDecimal.ZERO, earnings.getTotalEarnings());
+        assertEquals(0L, earnings.getCompletedPayments());
+        assertEquals(0L, earnings.getTotalBookingsCompleted());
     }
 }
